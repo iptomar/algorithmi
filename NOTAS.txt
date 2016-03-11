@@ -1,0 +1,22 @@
+
+syntaxe highlight do sen?o e do ent?o 
+
+
+
+
+
+PSI
+
+Definir a ajuda rápida dos menus ( tabMain )
+- exemplos de código
+- explicaç?o dos exemplos
+
+Definir a ajuda global do programa
+
+- contruir o site
+- fazer testes ao core
+- traduzir para linguagem C , Java , etc.
+- traduzir para ingles , alem?o , árabe
+
+
+
