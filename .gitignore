@@ -1,0 +1,9 @@
+build/
+bin/
+code/
+dist/
+ficha02/
+nbproject/
+users/
+Problema.prob
+build.xml
