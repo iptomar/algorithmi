@@ -127,7 +127,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 if(acceptChanges){
                     //Remove From Foward
                     if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
-                        changesList.subList(changeIndex, changesList.size()-1);
+                            changesList = new ArrayList<>(changesList.subList(0, changeIndex));
                     }
 
                     //Add current program to pile

@@ -307,6 +307,7 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
             editMenu(x, y);
             //algorithm.parse();
             
+            //Fire Event
             algorithm.FireEvent(algorithm.myProgram.getTokens());
             
             algorithm.refresh();
