@@ -232,6 +232,8 @@ public class Fluxograma extends javax.swing.JFrame {
         btZoomOut = new javax.swing.JButton();
         btZoomIn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         tbProgram = new javax.swing.JTabbedPane();
         mainMenu = new javax.swing.JMenuBar();
         mnFile = new javax.swing.JMenu();
@@ -322,7 +324,6 @@ public class Fluxograma extends javax.swing.JFrame {
         txtPath.setBackground(new java.awt.Color(204, 204, 204));
         txtPath.setColumns(20);
         txtPath.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        txtPath.setForeground(new java.awt.Color(0, 0, 0));
         txtPath.setLineWrap(true);
         txtPath.setRows(5);
         jScrollPane3.setViewportView(txtPath);
@@ -521,6 +522,28 @@ public class Fluxograma extends javax.swing.JFrame {
 
         jLabel4.setText("        ");
         jToolBar1.add(jLabel4);
+
+        jButton1.setText("Undo");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+
+        jButton2.setText("Redo");
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton2);
 
         jPanel5.add(jToolBar1, java.awt.BorderLayout.NORTH);
         jPanel5.add(tbProgram, java.awt.BorderLayout.CENTER);
@@ -1167,6 +1190,14 @@ public class Fluxograma extends javax.swing.JFrame {
         mnPropertiesActionPerformed(null);
     }//GEN-LAST:event_lblUserMouseClicked
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        myProgram.getMain().redoChanges();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        myProgram.getMain().undoChanges();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public void updateGUI() {
         setTitle(EditorI18N.get("APPLICATION.title")
                 + " [" + myProgram.getFileName() + "]");
@@ -1225,6 +1256,8 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JButton btSaveFileAs;
     private javax.swing.JButton btZoomIn;
     private javax.swing.JButton btZoomOut;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1308,10 +1341,14 @@ public class Fluxograma extends javax.swing.JFrame {
         } catch (Exception ex) {
             newProgram(false);
         }
+
         showProgramInfo();
         updateFileList(myProgram.fileName);
         lstProgramFiles.setSelectedValue(FileUtils.getFileFromPath(myProgram.getFileName()), true);
         FLog.printLn("User :" + user.getCode() + " - " + user.getName() + " - " + user.getFullName());
+        
+        //Save Into Changes Pile
+        myProgram.getMain().FireEvent(myProgram.getTokens());
     }
 
     public void showProgramInfo() {
