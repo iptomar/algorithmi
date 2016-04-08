@@ -892,7 +892,7 @@ public class FlowChartProperties extends MenuDialog {
 
         tpProperties.addTab("Fonte", pnFont);
 
-        lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder("Língua"));
+        lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder("Lingua"));
         lstLang.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "pt_PT", "en_US" };
             public int getSize() { return strings.length; }
