@@ -107,6 +107,7 @@ public class Fluxograma extends javax.swing.JFrame {
         try {
             File file = new File(FProperties.get(FProperties.keyLastProgramOpened));
             if (file.exists()) {
+                //Creates Program From File
                 myProgram = Program.loadProgram(file.getAbsolutePath());
                 createDisplaytoProgram();
                 FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.opened", myProgram.getFileName());
@@ -834,14 +835,24 @@ public class Fluxograma extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnSaveFileActionPerformed
 
+    /**
+     * CREATED MAIN/MEMORY/FUNCTION TAB DISPLAYS
+     */
     private void createDisplaytoProgram() {
+        
+        //Creat Main Program
         createMainEditor(myProgram.getMain());
+        
+        //Create Global Memory (If Global Memory Exists)
         if (myProgram.getGlobalMem() != null) {
             createMemoryEditor(myProgram.getGlobalMem());
         }
+        
+        //Create Functions (If Functions Exists)
         for (FunctionGraph func : myProgram.getFunctions()) {
             createFunctionEditor(func);
         }
+        
         tbProgram.setSelectedIndex(0);
         FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName());
     }
@@ -1191,11 +1202,15 @@ public class Fluxograma extends javax.swing.JFrame {
     }//GEN-LAST:event_lblUserMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        myProgram.getMain().redoChanges();
+        //myProgram.getMain().redoChanges();
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().redoChanges();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        myProgram.getMain().undoChanges();
+        //myProgram.getMain().undoChanges();
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().undoChanges();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public void updateGUI() {
@@ -1348,7 +1363,7 @@ public class Fluxograma extends javax.swing.JFrame {
         FLog.printLn("User :" + user.getCode() + " - " + user.getName() + " - " + user.getFullName());
         
         //Save Into Changes Pile
-        myProgram.getMain().FireEvent(myProgram.getTokens());
+        //myProgram.getMain().FireEvent(myProgram.getTokens());
     }
 
     public void showProgramInfo() {

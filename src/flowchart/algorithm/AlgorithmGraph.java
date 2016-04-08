@@ -107,8 +107,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     // NOTE : to serialize object - Not work without transient
     transient public Program myProgram; // program where the algorithm belongs  ( definition of global memory , other functions, and main )
     
-    ArrayList<String> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
-
+    //ArrayList<String> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
+    ArrayList<StorableShape> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
+    
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
 
@@ -122,21 +123,21 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //Event Dispacher
         GUIeventListener evt = new GUIeventListener() {
             @Override
-            public void onChangeGUI(String tokens) {
+            public void onChangeGUI(Arrow arrow, Fshape shape) {
                 
                 if(acceptChanges){
                     //Remove From Foward
                     if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
-                            changesList = new ArrayList<>(changesList.subList(0, changeIndex));
+                        changesList = new ArrayList<>(changesList.subList(0, changeIndex));
                     }
-
+                
                     //Add current program to pile
-                    changesList.add(tokens);
-
+                    changesList.add(new StorableShape(arrow, shape));
+                
                     //Update Index
                     changeIndex = changesList.size()-1;
                 }
-
+  
             }
         };
         
@@ -653,7 +654,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(createBottomArrow(arrow, shape));
         alignPatterns();
 
-
+        FireEvent(arrow, shape);
+ 
     }
 
     /**
@@ -1040,14 +1042,15 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     
     /**
      * Fire the event, tell everyone that something has happened.
-     * @param program program to store
+     * @param arrow
+     * @param shape
      */
-    public void FireEvent(String tokens) {
+    public void FireEvent(Arrow arrow, Fshape shape) {
         Object[] Listeners = ListenerList.getListenerList();
         // Process each of the event listeners in turn.
         for (int i = 0; i < Listeners.length; i++) {
             if (Listeners[i] == GUIeventListener.class) {
-                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(tokens);
+                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(arrow, shape);
             }
         }
     }
@@ -1056,33 +1059,21 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * UNDO ACTION
      */
     public void undoChanges(){
+        
         try {
-            
             if(changeIndex >= 0){
                 
-                //Remove changs acceptable to pevent repaint modifications to count
-                acceptChanges = false;
+                acceptChanges = !acceptChanges;
                 
-                //Remove Graphic Shapes
-                graph.removeAll();
-
-                //Inic Algorithm Components
-                initProgram();
-                alignPatterns();
-
-                //Rebuild Program Based on Tokens
-                changeIndex--;
-                setProgram(ProgramFile.rebuildFromTokens(changesList.get(changeIndex), this));
+                StorableShape node = changesList.get(changeIndex);
+                removeSimpleNode(node.getShape());
+                refresh();
+                changeIndex--; 
                 
-                //Revalidate and repaint Shapes
-                graph.revalidate();
-                graph.repaint();
+                acceptChanges = !acceptChanges;
                 
-                acceptChanges = true;
             }
-            
-            
-        } catch (FlowchartException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -1093,34 +1084,22 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * REDO ACTION
      */
     public void redoChanges(){
+        
         try {
             
             if(changeIndex+1 <= changesList.size()-1){
                 
-                //Remove changs acceptable to pevent repaint modifications to count
-                acceptChanges = false;
+                acceptChanges = !acceptChanges;
                 
-                //Remove Graphic Shapes
-                graph.removeAll();
-
-                //Inic Algorithm Components
-                initProgram();
-                alignPatterns();
-
-                //Rebuild Program Based on Tokens
                 changeIndex++;
-                setProgram(ProgramFile.rebuildFromTokens(changesList.get(changeIndex), this));
+                StorableShape node = changesList.get(changeIndex);
+                addSimpleShape(node.getArrow(), node.getShape());
+                refresh();
                 
-
-                //Revalidate and repaint Shapes
-                graph.revalidate();
-                graph.repaint();
-                
-                acceptChanges = true;
+                acceptChanges = !acceptChanges;
             }
-            
-            
-        } catch (FlowchartException ex) {
+        
+        } catch (Exception ex) {
             Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
         }
         
