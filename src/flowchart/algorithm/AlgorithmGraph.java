@@ -123,7 +123,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //Event Dispacher
         GUIeventListener evt = new GUIeventListener() {
             @Override
-            public void onChangeGUI(Arrow arrow, Fshape shape) {
+            public void onChangeGUI(Arrow arrow, Fshape shape, String type) {
                 
                 if(acceptChanges){
                     //Remove From Foward
@@ -132,7 +132,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                     }
                 
                     //Add current program to pile
-                    changesList.add(new StorableShape(arrow, shape));
+                    changesList.add(new StorableShape(arrow, shape, type));
                 
                     //Update Index
                     changeIndex = changesList.size()-1;
@@ -654,7 +654,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(createBottomArrow(arrow, shape));
         alignPatterns();
 
-        FireEvent(arrow, shape);
+        //Fire Event
+        FireEvent(arrow, shape, "SimpleShape");
  
     }
 
@@ -704,6 +705,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(new ArrowLL_IF(ifElse, connector));
 
         alignPatterns();
+        
+        //Fire Event
+        FireEvent(arrow, ifElse, "IfThenElseShape");
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -740,6 +744,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         arrowWhileDo.level = arrow.level;
         add(arrowWhileDo);
         alignPatterns();
+        
+        //Fire Event
+        FireEvent(arrow, doWhile, "DoWhileShape");
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -766,6 +773,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(new ArrowRB_While(whileORfor));
 
         alignPatterns();
+        
+        //Fire Event
+        FireEvent(arrow, whileORfor, "WhileDoShape");
     }
 
     /**
@@ -1045,12 +1055,12 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param arrow
      * @param shape
      */
-    public void FireEvent(Arrow arrow, Fshape shape) {
+    public void FireEvent(Arrow arrow, Fshape shape, String type) {
         Object[] Listeners = ListenerList.getListenerList();
         // Process each of the event listeners in turn.
         for (int i = 0; i < Listeners.length; i++) {
             if (Listeners[i] == GUIeventListener.class) {
-                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(arrow, shape);
+                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(arrow, shape, type);
             }
         }
     }
@@ -1063,13 +1073,37 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         try {
             if(changeIndex >= 0){
                 
+                //Disbale Chages Acceptable
                 acceptChanges = !acceptChanges;
                 
+                //Get Node
                 StorableShape node = changesList.get(changeIndex);
-                removeSimpleNode(node.getShape());
+                
+                //Chose Removal Type
+                switch(node.getType()){
+                    case "SimpleShape":
+                        removeSimpleNode(node.getShape());
+                        break;
+                    case "IfThenElseShape":
+                        removeIf(node.getShape());
+                        break;
+                    case "DoWhileShape":
+                        removeDoWhile(node.getShape());
+                        break;
+                    case "WhileDoShape":
+                        removeWhile(node.getShape());
+                        break;
+                        
+                }
+                
+                
+                //Refresh JPanel
                 refresh();
+                
+                //Decrease Index
                 changeIndex--; 
                 
+                //Enable Chages Acceptable
                 acceptChanges = !acceptChanges;
                 
             }
@@ -1089,13 +1123,36 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             
             if(changeIndex+1 <= changesList.size()-1){
                 
+                //Disbale Chages Acceptable
                 acceptChanges = !acceptChanges;
                 
+                //Increase Index
                 changeIndex++;
-                StorableShape node = changesList.get(changeIndex);
-                addSimpleShape(node.getArrow(), node.getShape());
-                refresh();
                 
+                //Get Node
+                StorableShape node = changesList.get(changeIndex);
+
+                //Chose Removal Type
+                switch(node.getType()){
+                    case "SimpleShape":
+                        addSimpleShape(node.getArrow(), node.getShape());
+                        break;
+                    case "IfThenElseShape":
+                        addShapeIfElse(node.getArrow(), (IfThenElse)node.getShape());
+                        break;
+                    case "DoWhileShape":
+                        addShapeDoWhile(node.getArrow(), node.getShape());
+                        break;
+                    case "WhileDoShape":
+                        addShapeWhileDo(node.getArrow(), node.getShape());
+                        break;
+                        
+                }
+                
+                //Refresh JPanel
+                refresh();
+                       
+                //Enable Chages Acceptable
                 acceptChanges = !acceptChanges;
             }
         

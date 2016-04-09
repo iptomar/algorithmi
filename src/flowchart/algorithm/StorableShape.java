@@ -17,15 +17,18 @@ public class StorableShape implements Cloneable, Serializable{
 
     private final Arrow arrow;
     private final Fshape shape;
+    private final String type;
 
     /**
      *
      * @param arrow
      * @param shape
+     * @param type
      */
-    public StorableShape(Arrow arrow, Fshape shape) {
+    public StorableShape(Arrow arrow, Fshape shape, String type) {
         this.arrow = arrow;
         this.shape = shape;
+        this.type = type;
     }
 
     public Arrow getArrow() {
@@ -35,7 +38,9 @@ public class StorableShape implements Cloneable, Serializable{
     public Fshape getShape() {
         return shape;
     }
-    
-    
-    
+
+    public String getType() {
+        return type;
+    }
+        
 }
