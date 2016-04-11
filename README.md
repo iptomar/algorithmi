@@ -3,6 +3,7 @@
 
 <pre>
   <lable><b>To Do:</b></lable>
-  <p style="margin-left:40px;">Editor:</p>
+  <p>&nbsp;&nbsp;Editor:</p>
+  <p>&nbsp;&nbsp;Undo/Redo: 70% Completes - Renato</p>
   
 </pre>
