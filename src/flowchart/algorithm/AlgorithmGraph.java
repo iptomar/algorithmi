@@ -64,6 +64,7 @@ import flowchart.read.Read;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
 import flowchart.terminator.End;
+import flowchart.write.Write;
 import i18n.FkeyWord;
 import ui.FLog;
 import java.awt.BorderLayout;
@@ -108,7 +109,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     
     //ArrayList<String> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
     ArrayList<StorableShape> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
-    ArrayList<Fshape> shapes = new ArrayList<>();  //Stors program changes for Undo/Redo
+    ArrayList<Arrow_RR_IF> arrowList = new ArrayList<>();  //Stors program changes for Undo/Redo
     
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
@@ -123,23 +124,35 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //Event Dispacher
         GUIeventListener evt = new GUIeventListener() {
             @Override
-            public void onChangeGUI(Arrow arrow, Fshape shape, String type) {
+            public void onChangeGUI(Fshape shape, String type, Boolean action) {
                 
                 if(acceptChanges){
                     /*
-                        //Remove From Foward
-                        if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
+                    //Remove From Foward
+                    if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
                         changesList = new ArrayList<>(changesList.subList(0, changeIndex));
-                        }
-                        */
-                        
-                        //Add current program to pile
-                        changesList.add(new StorableShape(arrow, shape, type));
-                    try {
-                        shapes.add(shape.clone());
-                    } catch (CloneNotSupportedException ex) {
-                        Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    */
+                        
+                    String arrowType = "";
+                    if(shape.parent instanceof ArrowNext){
+                        arrowType = "Next";
+                    }
+                    else if(shape.parent instanceof ArrowLL_IF || shape.parent instanceof ArrowLT){
+                        arrowType = "Left";
+                    }
+                    else if(shape.parent instanceof Arrow_RR_IF || shape.parent instanceof ArrowRT){
+                        arrowType = "Right";
+                    }
+                    
+                    //Add current program to pile
+                    changesList.add(new StorableShape(shape.parent.parent, shape, type, arrowType, action));
+                    
+                    if(shape.right instanceof Arrow_RR_IF){
+                        arrowList.add((Arrow_RR_IF)shape.right);
+                    }
+                    
+                    
                 
                     //Update Index
                     changeIndex = changesList.size()-1;
@@ -404,6 +417,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param node
      */
     private void removeSimpleNode(Fshape node) {
+        
         //REMOVE next-next
         Arrow arrowTop = (Arrow) node.parent;
         Arrow arrowBottom = (Arrow) node.next;
@@ -441,6 +455,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             remove(arrowBottom);
             add(new ArrowRB_While(arrowTop.parent));
         }
+        
 
     }
 
@@ -516,8 +531,10 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     //------------------      REMOVE IF                      --------------------------------------------
     //----------------------------------------------------------------------------------------------------
     private void removeIf(Fshape ifElse) {
+        
 //        removeAllNodesBetween(ifElse.left, ifElse.next);
 //        removeAllNodesBetween(ifElse.right, ifElse.next);
+
         Fshape conector = ifElse.next;
         //redirect parent
         ((Arrow) conector.next).setLink(ifElse, conector.next.next);
@@ -525,15 +542,16 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         removeSimpleNode(ifElse);
         remove(conector);
 
-        Fshape previous = ifElse.parent.parent; // shape -> arrow -> ifElse
-        Fshape next = ifElse.next.next.next; // conector-> arrow -> shape
-
+        //Fshape previous = ifElse.parent.parent; // shape -> arrow -> ifElse
+        //Fshape next = ifElse.next.next.next; // conector-> arrow -> shape
+                
     }
 
     //----------------------------------------------------------------------------------------------------
     //------------------      REMOVE DO WHILE                  --------------------------------------------
     //----------------------------------------------------------------------------------------------------
     private void removeDoWhile(Fshape doWhile) {
+  
         Fshape _do = doWhile.parent.parent;
         //remove all nodes
 //        removeAllNodesBetween(_do.right, doWhile);
@@ -563,14 +581,19 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      */
     public void removePattern(Fshape node) {
         if (node instanceof IfThenElse) {
+            FireEvent(node, "IfThenElseShape", true); //Fire Event
             removeIf(node);
         }
-        if (node instanceof While_Do || node instanceof For_Next) {
+        else if (node instanceof While_Do || node instanceof For_Next) {
+            FireEvent(node, "WhileDoShape", true);    //Fire Event
             removeWhile(node);
         }
-        if (node instanceof Do_While) {
+        else if (node instanceof Do_While) {
+            FireEvent(node, "DoWhileShape", true);    //Fire Event
             removeDoWhile(node);
-        } else {
+        } 
+        else {
+            FireEvent(node, "SimpleShape", true);     //Fire Event
             removeSimpleNode(node);
         }
         alignPatterns();
@@ -649,13 +672,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param shape new pattern
      */
     public void addSimpleShape(Arrow arrow, Fshape shape) {
-        
-        //Fire Event
-        FireEvent(arrow, shape, "SimpleShape");
-        
-        //Clean Shape Pointers
-        shape.clean();
-        
+
         shape.level = arrow.level;
         //remove this arrow
         remove(arrow);
@@ -666,6 +683,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //next arrow
         add(createBottomArrow(arrow, shape));
         alignPatterns();
+        
+        //Fire Event
+        FireEvent(shape, "SimpleShape", false);
         
     }
 
@@ -717,7 +737,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         alignPatterns();
         
         //Fire Event
-        FireEvent(arrow, ifElse, "IfThenElseShape");
+        FireEvent(ifElse, "IfThenElseShape", false);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -756,7 +776,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         alignPatterns();
         
         //Fire Event
-        FireEvent(arrow, doWhile, "DoWhileShape");
+        FireEvent(doWhile, "DoWhileShape", false);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -785,7 +805,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         alignPatterns();
         
         //Fire Event
-        FireEvent(arrow, whileORfor, "WhileDoShape");
+        FireEvent(whileORfor, "WhileDoShape", false);
     }
 
     /**
@@ -1062,16 +1082,112 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     
     /**
      * Fire the event, tell everyone that something has happened.
-     * @param arrow
+     * @param type
+     * @param action
      * @param shape
      */
-    public void FireEvent(Arrow arrow, Fshape shape, String type) {
+    public void FireEvent(Fshape shape, String type, Boolean action) {
         Object[] Listeners = ListenerList.getListenerList();
         // Process each of the event listeners in turn.
         for (int i = 0; i < Listeners.length; i++) {
             if (Listeners[i] == GUIeventListener.class) {
-                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(arrow, shape, type);
+                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(shape, type, action);
             }
+        }
+    }
+    
+    public void undoRedoActions(StorableShape node){
+        switch(node.getType()){
+            case "SimpleShape":
+                
+                if(node.toRemove()){
+                    removePattern(node.getShape());
+                }
+                else{
+                    switch (node.getArrow()) {
+                        case "Next":
+                            node.getParent().next.algorithm.addSimpleShape((Arrow)node.getParent().next, node.getShape());
+                            break;
+                        case "Left":
+                            node.getParent().left.algorithm.addSimpleShape((Arrow)node.getParent().left, node.getShape());
+                            break;
+                        case "Right":
+                            node.getParent().right.algorithm.addSimpleShape((Arrow)node.getParent().right, node.getShape());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+                        
+            case "IfThenElseShape":
+                
+                if(node.toRemove()){
+                    removePattern((IfThenElse)node.getShape());
+                }
+                else{
+                    switch (node.getArrow()) {
+                        case "Next":
+                            node.getParent().next.algorithm.addShapeIfElse((Arrow)node.getParent().next, (IfThenElse)node.getShape());
+                            break;
+                        case "Left":
+                            node.getParent().left.algorithm.addShapeIfElse((Arrow)node.getParent().left, (IfThenElse)node.getShape());
+                            break;
+                        case "Right":
+                            node.getParent().right.algorithm.addShapeIfElse((Arrow)node.getParent().right, (IfThenElse)node.getShape());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                break;
+                   
+            case "DoWhileShape":
+                
+                if(node.toRemove()){
+                    removePattern((Do_While)node.getShape());
+                }
+                else{
+                    switch (node.getArrow()) {
+                        case "Next":
+                            node.getParent().next.algorithm.addShapeDoWhile((Arrow)node.getParent().next, (IfThenElse)node.getShape());
+                            break;
+                        case "Left":
+                            node.getParent().left.algorithm.addShapeDoWhile((Arrow)node.getParent().left, (IfThenElse)node.getShape());
+                            break;
+                        case "Right":
+                            node.getParent().right.algorithm.addShapeDoWhile((Arrow)node.getParent().right, (IfThenElse)node.getShape());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+    
+               break;
+                        
+            case "WhileDoShape":
+                
+                if(node.toRemove()){
+                    removePattern((While_Do)node.getShape());
+                }
+                else{
+                    switch (node.getArrow()) {
+                        case "Next":
+                            node.getParent().next.algorithm.addShapeWhileDo((Arrow)node.getParent().next, (IfThenElse)node.getShape());
+                            break;
+                        case "Left":
+                            node.getParent().left.algorithm.addShapeWhileDo((Arrow)node.getParent().left, (IfThenElse)node.getShape());
+                            break;
+                        case "Right":
+                            node.getParent().right.algorithm.addShapeWhileDo((Arrow)node.getParent().right, (IfThenElse)node.getShape());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                break;
         }
     }
     
@@ -1089,23 +1205,10 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 //Get Node
                 StorableShape node = changesList.get(changeIndex);
                 
-                //Chose Removal Type
-                switch(node.getType()){
-                    case "SimpleShape":
-                        removeSimpleNode(node.getShape());
-                        break;
-                    case "IfThenElseShape":
-                        removeIf(node.getShape());
-                        break;
-                    case "DoWhileShape":
-                        removeDoWhile(node.getShape());
-                        break;
-                    case "WhileDoShape":
-                        removeWhile(node.getShape());
-                        break;
-                        
-                }
-                
+                //Undo_Redo Actions
+                node.invertRemove();
+                undoRedoActions(node);
+                node.invertRemove();
                 
                 //Refresh JPanel
                 refresh();
@@ -1142,24 +1245,9 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 
                 //Get Node
                 StorableShape node = changesList.get(changeIndex);
-                Fshape shape = shapes.get(0);
 
-                //Chose Removal Type
-                switch(node.getType()){
-                    case "SimpleShape":
-                        node.getArrow().algorithm.addSimpleShape(node.getArrow(), shape.clone());
-                        break;
-                    case "IfThenElseShape":
-                        node.getArrow().algorithm.addShapeIfElse(node.getArrow(), (IfThenElse)node.getShape());
-                        break;
-                    case "DoWhileShape":
-                        node.getArrow().algorithm.addShapeDoWhile(node.getArrow(), node.getShape());
-                        break;
-                    case "WhileDoShape":
-                        node.getArrow().algorithm.addShapeWhileDo(node.getArrow(), node.getShape());
-                        break;
-                        
-                }
+               //Undo_Redo Actions
+                undoRedoActions(node);
                 
                 //Refresh JPanel
                 refresh();
@@ -1173,6 +1261,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         }
         
     }
+    
     
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

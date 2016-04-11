@@ -20,7 +20,6 @@
 //////////////////////////////////////////////////////////////////////////////
 package flowchart.algorithm;
 
-import flowchart.arrow.Arrow;
 import flowchart.shape.Fshape;
 import java.util.EventListener;
 
@@ -34,9 +33,9 @@ import java.util.EventListener;
 public interface GUIeventListener extends EventListener {
     /**
      * when GUI changes
-     * @param arrow
      * @param shape
+     * @param action
      * @param type
      */
-    void onChangeGUI(Arrow arrow, Fshape shape, String type);
+    void onChangeGUI(Fshape shape, String type, Boolean action);
 }

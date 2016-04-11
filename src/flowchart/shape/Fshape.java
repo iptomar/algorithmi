@@ -566,14 +566,6 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         return (Fshape)super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void clean(){
-        this.parent = null;
-        this.next = null;
-        this.left = null;
-        this.right = null;
-        this.level = 0;
-    }
-    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
