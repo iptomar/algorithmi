@@ -3,6 +3,6 @@
 
 <pre>
   <lable><b>To Do:</b></lable>
-  <p style="padding-left:10px;">Editor:</p>
+  <p style="margin-left:40px;">Editor:</p>
   
 </pre>
