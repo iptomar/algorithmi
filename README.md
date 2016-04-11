@@ -4,8 +4,7 @@
 <pre>
   <lable><b>To Do:</b></lable>
   <p>
-    &nbsp;&nbsp;Editor:
-    <br>
+    &nbsp;&nbsp;Editor
     &nbsp;&nbsp;Undo/Redo: 70% Completes - Renato
   </p>
   <p></p>
