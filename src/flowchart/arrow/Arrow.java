@@ -134,6 +134,13 @@ public abstract class Arrow extends Fshape{
          return "";
      }
    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    @Override
+    public Arrow clone() throws CloneNotSupportedException {
+        return (Arrow)super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+     
+     
      
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

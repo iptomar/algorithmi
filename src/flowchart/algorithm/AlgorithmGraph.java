@@ -64,7 +64,6 @@ import flowchart.read.Read;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
 import flowchart.terminator.End;
-import flowchart.utils.ProgramFile;
 import i18n.FkeyWord;
 import ui.FLog;
 import java.awt.BorderLayout;
@@ -109,6 +108,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     
     //ArrayList<String> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
     ArrayList<StorableShape> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
+    ArrayList<Fshape> shapes = new ArrayList<>();  //Stors program changes for Undo/Redo
     
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
@@ -126,13 +126,20 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             public void onChangeGUI(Arrow arrow, Fshape shape, String type) {
                 
                 if(acceptChanges){
-                    //Remove From Foward
-                    if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
+                    /*
+                        //Remove From Foward
+                        if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
                         changesList = new ArrayList<>(changesList.subList(0, changeIndex));
+                        }
+                        */
+                        
+                        //Add current program to pile
+                        changesList.add(new StorableShape(arrow, shape, type));
+                    try {
+                        shapes.add(shape.clone());
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                
-                    //Add current program to pile
-                    changesList.add(new StorableShape(arrow, shape, type));
                 
                     //Update Index
                     changeIndex = changesList.size()-1;
@@ -643,6 +650,12 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      */
     public void addSimpleShape(Arrow arrow, Fshape shape) {
         
+        //Fire Event
+        FireEvent(arrow, shape, "SimpleShape");
+        
+        //Clean Shape Pointers
+        shape.clean();
+        
         shape.level = arrow.level;
         //remove this arrow
         remove(arrow);
@@ -653,10 +666,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //next arrow
         add(createBottomArrow(arrow, shape));
         alignPatterns();
-
-        //Fire Event
-        FireEvent(arrow, shape, "SimpleShape");
- 
+        
     }
 
     /**
@@ -1132,20 +1142,21 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 
                 //Get Node
                 StorableShape node = changesList.get(changeIndex);
+                Fshape shape = shapes.get(0);
 
                 //Chose Removal Type
                 switch(node.getType()){
                     case "SimpleShape":
-                        addSimpleShape(node.getArrow(), node.getShape());
+                        node.getArrow().algorithm.addSimpleShape(node.getArrow(), shape.clone());
                         break;
                     case "IfThenElseShape":
-                        addShapeIfElse(node.getArrow(), (IfThenElse)node.getShape());
+                        node.getArrow().algorithm.addShapeIfElse(node.getArrow(), (IfThenElse)node.getShape());
                         break;
                     case "DoWhileShape":
-                        addShapeDoWhile(node.getArrow(), node.getShape());
+                        node.getArrow().algorithm.addShapeDoWhile(node.getArrow(), node.getShape());
                         break;
                     case "WhileDoShape":
-                        addShapeWhileDo(node.getArrow(), node.getShape());
+                        node.getArrow().algorithm.addShapeWhileDo(node.getArrow(), node.getShape());
                         break;
                         
                 }
