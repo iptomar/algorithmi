@@ -1,14 +1,8 @@
-<b>Algorithmi CORE</b>
+<b>Algorithmi CORE</b><br>
 <i>IPT PSI 2016</i>
 
 <pre>
-  <lable>To Do:</lable>
-  <ul>
-  
-    <li>Editor:</li>
-    <ul>
-      <li>Undo/Redo:</li>
-    </ul>
-  </ul>
+  <lable><b>To Do:</b></lable>
+  <p>Editor:</p>
   
 </pre>
