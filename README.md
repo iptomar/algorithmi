@@ -8,6 +8,25 @@
     &nbsp;&nbsp;&nbsp;Undo/Redo: 70% Completed - Renato
     &nbsp;&nbsp;&nbsp;Drag&Drop: ?% Completed - Florencio
   </p>
-  <p></p>
+  
+  <p>
+    &nbsp;&nbsp;Language Translator:
+    &nbsp;&nbsp;&nbsp; Java: ?% Completed - Rodolfo
+  </p>
+  
+  <p>
+    &nbsp;&nbsp;Updater:
+    &nbsp;&nbsp;&nbsp; ?% Completed - Bruno Xavier
+  </p>
+  
+  <p>
+    &nbsp;&nbsp;Algoritmi:
+    &nbsp;&nbsp;&nbsp; ?% Completed - Luis Marques
+  </p>
+  
+  <p>
+    &nbsp;&nbsp;Mooshak:
+    &nbsp;&nbsp;&nbsp; ?% Completed - Bruno Farropo
+  </p>
   
 </pre>
