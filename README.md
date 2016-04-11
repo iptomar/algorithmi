@@ -4,8 +4,9 @@
 <pre>
   <lable><b>To Do:</b></lable>
   <p>
-    &nbsp;&nbsp;Editor
-    &nbsp;&nbsp;Undo/Redo: 70% Completes - Renato
+    &nbsp;&nbsp;Editor:
+    &nbsp;&nbsp;&nbsp;Undo/Redo: 70% Completed - Renato
+    &nbsp;&nbsp;&nbsp;Drag&Drop: ?% Completed - Florencio
   </p>
   <p></p>
   
