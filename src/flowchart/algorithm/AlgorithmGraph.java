@@ -127,13 +127,12 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             public void onChangeGUI(Fshape shape, String type, Boolean action) {
                 
                 if(acceptChanges){
-                    /*
+                    
                     //Remove From Foward
                     if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
                         changesList = new ArrayList<>(changesList.subList(0, changeIndex));
                     }
-                    */
-                        
+                                            
                     String arrowType = "";
                     if(shape.parent instanceof ArrowNext){
                         arrowType = "Next";
@@ -406,84 +405,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         return getBegin().getZoom();
     }
 
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    //------------------      REMOVE NODES                    --------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    /**
-     * removes a single node in the graph
-     *
-     * @param node
-     */
-    private void removeSimpleNode(Fshape node) {
-        
-        //REMOVE next-next
-        Arrow arrowTop = (Arrow) node.parent;
-        Arrow arrowBottom = (Arrow) node.next;
-
-        //delete simple arrow in TOP
-        if (arrowTop instanceof ArrowNext) {
-            arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
-            remove(node);
-            remove(arrowTop);
-        } //delete simple arrow in bottom
-        else if (arrowBottom instanceof ArrowNext) {
-            arrowTop.setLink(arrowTop.parent, arrowBottom.next);
-            remove(node);
-            remove(arrowBottom);
-        } //build empty if-ele
-        else if (arrowTop.parent instanceof IfThenElse && arrowBottom.next instanceof IF_Connector) {
-            //is the left
-            if (arrowTop.parent.left == arrowTop) {
-                add(new ArrowLL_IF(arrowTop.parent, arrowBottom.next));
-            } //is the right
-            else {
-                add(new Arrow_RR_IF(arrowTop.parent, arrowBottom.next));
-            }
-            remove(node);
-            remove(arrowTop);
-            remove(arrowBottom);
-        } else if (arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While) {
-            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
-            remove(node);
-            remove(arrowTop);
-            remove(arrowBottom);
-        } else if (arrowTop.parent == arrowBottom.next) { //while and for        
-            remove(node);
-            remove(arrowTop);
-            remove(arrowBottom);
-            add(new ArrowRB_While(arrowTop.parent));
-        }
-        
-
-    }
-
-//    //----------------------------------------------------------------------------------------------------
-//    //----------------------------------------------------------------------------------------------------
-//    private static int DELETED_ID = -99999; //---------------------------------- mark of deleted node
-//
-//    /**
-//     * remove all the nodes between the nodes node->end
-//     *
-//     * @param start start node
-//     * @param stop end node
-//     */
-//    private void removeAllNodesBetween(Fshape start, Fshape stop) {
-//        //stop recursivity
-////        if (start == null || start == stop || start.POSITION_LEVEL == DELETED_ID) {
-////            return;
-////        }
-////        //remove
-////        graph.remove(start);
-////        //mark has removed
-////        start.POSITION_LEVEL = DELETED_ID;
-////        //remove childrens
-////        removeAllNodesBetween(start.next, stop);
-////        removeAllNodesBetween(start.left, stop);
-////        removeAllNodesBetween(start.right, stop);
-//
-//    }
     /**
      * calculate the direction TYPE between begin -> end
      *
@@ -528,9 +449,109 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
     //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //------------------      REMOVE NODES                    --------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * removes a single node in the graph
+     *
+     * @param node
+     */
+    private void removeSimpleNode(Fshape node) {
+        
+        //REMOVE next-next
+        Arrow arrowTop = (Arrow) node.parent;
+        Arrow arrowBottom = (Arrow) node.next;
+
+        //delete simple arrow in TOP
+        if (arrowTop instanceof ArrowNext) {
+            arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
+            remove(node);
+            remove(arrowTop);
+        } //delete simple arrow in bottom
+        else if (arrowBottom instanceof ArrowNext) {
+            arrowTop.setLink(arrowTop.parent, arrowBottom.next);
+            remove(node);
+            remove(arrowBottom);
+        } //build empty if-ele
+        else if (arrowTop.parent instanceof IfThenElse && arrowBottom.next instanceof IF_Connector) {
+            //is the left
+            if (arrowTop.parent.left == arrowTop) {
+                add(new ArrowLL_IF(arrowTop.parent, arrowBottom.next));
+            } //is the right
+            else {
+                add(new Arrow_RR_IF(arrowTop.parent, arrowBottom.next));
+            }
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+        } 
+        else if (arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While) {
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+        } 
+        else if (arrowTop.parent == arrowBottom.next) { //while and for        
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        
+
+    }
+    
+    //----------------------------------------------------------------------------------------------------
     //------------------      REMOVE IF                      --------------------------------------------
     //----------------------------------------------------------------------------------------------------
     private void removeIf(Fshape ifElse) {
+        
+        Fshape node = ifElse;
+        
+        //REMOVE next-next
+        Arrow arrowTop = (Arrow) node.parent;
+        Arrow arrowBottom = (Arrow) node.next.next;
+
+        //delete simple arrow in TOP
+        if (arrowTop instanceof ArrowNext) {
+            arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
+            remove(node);
+            remove(arrowTop);
+        } //delete simple arrow in bottom
+        else if (arrowBottom instanceof ArrowNext) {
+            arrowTop.setLink(arrowTop.parent, arrowBottom.next);
+            remove(node);
+            remove(arrowBottom);
+        } //build empty if-ele
+        else if (arrowTop.parent instanceof IfThenElse && arrowBottom.next instanceof IF_Connector) {
+            //is the left
+            if (arrowTop.parent.left == arrowTop) {
+                add(new ArrowLL_IF(arrowTop.parent, arrowBottom.next));
+            } //is the right
+            else {
+                add(new Arrow_RR_IF(arrowTop.parent, arrowBottom.next));
+            }
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+        } 
+        else if (arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While) {
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+        } 
+        else if (arrowTop.parent == arrowBottom.next) { //while and for        
+            remove(node);
+            remove(arrowTop);
+            remove(arrowBottom);
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        
+        /*
+        
         
 //        removeAllNodesBetween(ifElse.left, ifElse.next);
 //        removeAllNodesBetween(ifElse.right, ifElse.next);
@@ -542,8 +563,10 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         removeSimpleNode(ifElse);
         remove(conector);
 
-        //Fshape previous = ifElse.parent.parent; // shape -> arrow -> ifElse
-        //Fshape next = ifElse.next.next.next; // conector-> arrow -> shape
+        Fshape previous = ifElse.parent.parent; // shape -> arrow -> ifElse
+        Fshape next = ifElse.next.next.next; // conector-> arrow -> shape
+        
+        */
                 
     }
 
@@ -951,12 +974,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
     public static void doSave(String file) {
         JPanel pn = new JPanel(true);
         JFrame window = new JFrame(file);
@@ -1269,3 +1287,31 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     ///////////////////////////////////////////////////////////////////////////
 
 }
+
+
+
+//    //----------------------------------------------------------------------------------------------------
+//    //----------------------------------------------------------------------------------------------------
+//    private static int DELETED_ID = -99999; //---------------------------------- mark of deleted node
+//
+//    /**
+//     * remove all the nodes between the nodes node->end
+//     *
+//     * @param start start node
+//     * @param stop end node
+//     */
+//    private void removeAllNodesBetween(Fshape start, Fshape stop) {
+//        //stop recursivity
+////        if (start == null || start == stop || start.POSITION_LEVEL == DELETED_ID) {
+////            return;
+////        }
+////        //remove
+////        graph.remove(start);
+////        //mark has removed
+////        start.POSITION_LEVEL = DELETED_ID;
+////        //remove childrens
+////        removeAllNodesBetween(start.next, stop);
+////        removeAllNodesBetween(start.left, stop);
+////        removeAllNodesBetween(start.right, stop);
+//
+//    }
