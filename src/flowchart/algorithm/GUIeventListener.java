@@ -35,7 +35,6 @@ public interface GUIeventListener extends EventListener {
      * when GUI changes
      * @param shape
      * @param action
-     * @param type
      */
-    void onChangeGUI(Fshape shape, String type, Boolean action);
+    void onChangeGUI(Fshape shape, Boolean action);
 }

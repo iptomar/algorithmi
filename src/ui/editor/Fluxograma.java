@@ -58,8 +58,6 @@ import java.awt.event.KeyEvent;
 import ui.FProperties;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +69,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import ui.FLog;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
@@ -160,6 +157,9 @@ public class Fluxograma extends javax.swing.JFrame {
             EditorI18N.loadResource(mnOpenFunction, btOpenFunction, "FILE.open.function");
 
             EditorI18N.loadResource(mnGlobalMemory, btGlobalMemory, "PROGRAM.globalMemory");
+            
+            EditorI18N.loadResource(mnUndo, btUndo, "PROGRAM.undo");
+            EditorI18N.loadResource(mnRedo, btRedo, "PROGRAM.redo");
 
             setTitle(Fi18N.get("FLOWCHART.application.title"));
         } catch (Exception e) {
@@ -233,8 +233,8 @@ public class Fluxograma extends javax.swing.JFrame {
         btZoomOut = new javax.swing.JButton();
         btZoomIn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btUndo = new javax.swing.JButton();
+        btRedo = new javax.swing.JButton();
         tbProgram = new javax.swing.JTabbedPane();
         mainMenu = new javax.swing.JMenuBar();
         mnFile = new javax.swing.JMenu();
@@ -257,6 +257,9 @@ public class Fluxograma extends javax.swing.JFrame {
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
         mnCopyToClipboard = new javax.swing.JMenuItem();
         mnSave_Image = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        mnUndo = new javax.swing.JMenuItem();
+        mnRedo = new javax.swing.JMenuItem();
         mnProgram = new javax.swing.JMenu();
         mnCompile = new javax.swing.JMenuItem();
         mnRun = new javax.swing.JMenuItem();
@@ -524,27 +527,27 @@ public class Fluxograma extends javax.swing.JFrame {
         jLabel4.setText("        ");
         jToolBar1.add(jLabel4);
 
-        jButton1.setText("Undo");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btUndo.setText("Undo");
+        btUndo.setFocusable(false);
+        btUndo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btUndo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btUndoActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton1);
+        jToolBar1.add(btUndo);
 
-        jButton2.setText("Redo");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btRedo.setText("Redo");
+        btRedo.setFocusable(false);
+        btRedo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btRedo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btRedoActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton2);
+        jToolBar1.add(btRedo);
 
         jPanel5.add(jToolBar1, java.awt.BorderLayout.NORTH);
         jPanel5.add(tbProgram, java.awt.BorderLayout.CENTER);
@@ -669,6 +672,25 @@ public class Fluxograma extends javax.swing.JFrame {
             }
         });
         mnView.add(mnSave_Image);
+        mnView.add(jSeparator10);
+
+        mnUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        mnUndo.setText("undo");
+        mnUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnUndoActionPerformed(evt);
+            }
+        });
+        mnView.add(mnUndo);
+
+        mnRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        mnRedo.setText("redo");
+        mnRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnRedoActionPerformed(evt);
+            }
+        });
+        mnView.add(mnRedo);
 
         mainMenu.add(mnView);
 
@@ -1201,17 +1223,27 @@ public class Fluxograma extends javax.swing.JFrame {
         mnPropertiesActionPerformed(null);
     }//GEN-LAST:event_lblUserMouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRedoActionPerformed
         //myProgram.getMain().redoChanges();
         FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
         panel.getFluxogramGraph().redoChanges();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btRedoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUndoActionPerformed
         //myProgram.getMain().undoChanges();
         FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
         panel.getFluxogramGraph().undoChanges();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btUndoActionPerformed
+
+    private void mnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnUndoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().undoChanges();
+    }//GEN-LAST:event_mnUndoActionPerformed
+
+    private void mnRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnRedoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().redoChanges();
+    }//GEN-LAST:event_mnRedoActionPerformed
 
     public void updateGUI() {
         setTitle(EditorI18N.get("APPLICATION.title")
@@ -1267,12 +1299,12 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JButton btNewFlux;
     private javax.swing.JButton btOpenFile;
     private javax.swing.JButton btOpenFunction;
+    private javax.swing.JButton btRedo;
     private javax.swing.JButton btRunFlux;
     private javax.swing.JButton btSaveFileAs;
+    private javax.swing.JButton btUndo;
     private javax.swing.JButton btZoomIn;
     private javax.swing.JButton btZoomOut;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1285,6 +1317,7 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
@@ -1314,10 +1347,12 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnOpenFunction;
     private javax.swing.JMenu mnProgram;
     private javax.swing.JMenuItem mnProperties;
+    private javax.swing.JMenuItem mnRedo;
     private javax.swing.JMenuItem mnRun;
     private javax.swing.JMenuItem mnSaveAs;
     private javax.swing.JMenuItem mnSaveFile;
     private javax.swing.JMenuItem mnSave_Image;
+    private javax.swing.JMenuItem mnUndo;
     private javax.swing.JMenu mnView;
     private javax.swing.JMenuItem mnZoomIn;
     private javax.swing.JMenuItem mnZoomOut;

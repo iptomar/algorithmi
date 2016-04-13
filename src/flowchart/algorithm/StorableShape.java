@@ -15,9 +15,7 @@ import java.io.Serializable;
 public class StorableShape implements Cloneable, Serializable{
 
     private final Fshape parent;
-
     private final Fshape shape;
-    private final String type;
     private final String arrow;
     private Boolean toRemove;
 
@@ -26,13 +24,11 @@ public class StorableShape implements Cloneable, Serializable{
      * @param arrow
      * @param parent
      * @param shape
-     * @param type
      * @param toRemove
      */
-    public StorableShape(Fshape parent, Fshape shape, String type, String arrow, Boolean toRemove) {
+    public StorableShape(Fshape parent, Fshape shape, String arrow, Boolean toRemove) {
         this.parent = parent;
         this.shape = shape;
-        this.type = type;
         this.arrow = arrow;
         this.toRemove = toRemove;
     }
@@ -40,10 +36,6 @@ public class StorableShape implements Cloneable, Serializable{
 
     public Fshape getShape() {
         return shape;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public Fshape getParent() {
