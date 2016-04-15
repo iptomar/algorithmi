@@ -49,6 +49,7 @@ import flowchart.shape.Fshape;
 import flowchart.terminator.End;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -245,8 +246,18 @@ public class Return extends Fshape {
         }
         return txt.toString();
     }
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        if (returnExpression != null) {
+            txt.append(AbstractLang.lang.getReturn(this));
+        }
+        return txt.toString();
+    }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

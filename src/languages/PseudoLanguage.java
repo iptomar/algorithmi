@@ -65,14 +65,13 @@ public class PseudoLanguage {
         if ((s instanceof Begin) || (s instanceof End) ) {
             level--;
         }
-        StringBuilder txt = new StringBuilder(IDENTATATION_SPACE * s.level);
-        for (int i = 0; i < level; i++) {
+        StringBuilder txt = new StringBuilder(IDENTATATION_SPACE * (s.level+1));
+        for (int i = 0; i < level+1; i++) {
             txt.append(SPACE);
 
         }
         return txt.toString();
     }
-
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

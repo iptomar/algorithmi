@@ -122,61 +122,6 @@ public class ProgramFile {
      * @param tokProgram string of the program
      * @return Program
      */
-    public static Program rebuildFromTokens(String tokProgram, AlgorithmGraph graph) throws FlowchartException {
-        try {
-            Program prog = new Program(); // program to load
-            AlgorithmGraph currentAlgorithm = null;  // algorithm of instructions
-            LinkedList<Instruction> instructions = new LinkedList<>();
-            IteratorLines it = new IteratorLines(tokProgram);
-            prog.digitalSignature = it.next(); // creator of code
-            
-            while (it.hasNext()) {
-//                String comment = getComents(it);
-//                String line = it.next();
-//                Fshape shape = createShape(getType(line), comment, null);
-                Instruction newShape = new Instruction(it, currentAlgorithm);
-                instructions.add(newShape);
-                //-------------------------------------------------------------DEFINED FUNCTION
-                if (newShape.shape instanceof Function) {
-                    FunctionGraph func = new FunctionGraph(new JPanel(), prog);
-                    func.getBegin().setComments(newShape.shape.comments);
-                    newShape.shape.algorithm = func;
-                    newShape.buildShape();
-                    func.updateDefinition((Function) newShape.shape);
-                    currentAlgorithm = func;
-
-                    // loadAlgoritmhFunction(it, func);
-                } else//----------------------------------------------------------LOAD GLOBAL MEMORY
-                if (newShape.shape instanceof BeginGlobalMemory) {
-                    GlobalMemoryGraph mem = new GlobalMemoryGraph(new JPanel(), prog);
-                    mem.getBegin().setComments(newShape.shape.comments);
-                    prog.setGlobalMemory(mem);
-                    currentAlgorithm = mem;
-                    //loadAlgoritmhFunction(it, mem);
-                } //----------------------------------------------------------- LOAD MAIN
-                else if (newShape.shape instanceof Begin) {
-                    AlgorithmGraph main = graph;
-                    main.getBegin().setComments(newShape.shape.comments);
-                    prog.setMain(main);
-                    currentAlgorithm = main;
-                    // loadAlgoritmhFunction(it, main);
-                }
-            }
-                        
-            createProgram(prog, instructions);
-            return prog;
-        } catch (Exception e) {
-            throw new FlowchartException(e);
-        }
-
-    }
-    
-    /**
-     * build a program from a string
-     *
-     * @param tokProgram string of the program
-     * @return Program
-     */
     protected static void createProgram(Program prog, LinkedList<Instruction> instructions) throws FlowchartException {
         try {
 
@@ -218,6 +163,7 @@ public class ProgramFile {
             }
            
                 cursor = addShape(cursor, newShape, instructions, alg);
+           
             
         }
     }

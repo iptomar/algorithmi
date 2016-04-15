@@ -130,6 +130,11 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
 
     public abstract String getPseudoCode() throws FlowchartException; //------ build Portugol code
 
+      public String getLanguage() throws FlowchartException //------ build High level programming languae code
+      {
+          return "Not_implemented";
+      }
+    
     /**
      * build a shape components based in the text instruction
      *
@@ -306,10 +311,6 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         if (e.getButton() == MouseEvent.BUTTON1) {
             editMenu(x, y);
             //algorithm.parse();
-            
-            //Fire Event
-            algorithm.FireEvent(algorithm.myProgram.getTokens());
-            
             algorithm.refresh();
 
         } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -335,9 +336,6 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
             public void actionPerformed(ActionEvent e) {
                 algorithm.removePattern(obj);
                 algorithm.parse();
-                
-                //Fire Event For Shape Removal
-                algorithm.FireEvent(algorithm.myProgram.getTokens());
             }
         });
         rightMenu.add(mnDelete);

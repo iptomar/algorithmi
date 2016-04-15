@@ -50,6 +50,7 @@ import flowchart.shape.Fshape;
 import flowchart.terminator.End;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -211,7 +212,33 @@ public class While_Do extends Fshape {
         txt.append(PseudoLanguage.ident(this) + FkeyWord.get("KEYWORD.end") + " " + Fi18N.get("WHILE.while"));
         return txt.toString();
     }
-
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        txt.append(AbstractLang.lang.getWhile(this) + "\n");
+        String inst = getWhileHighLangInstructions();
+        if (inst.isEmpty()) {
+            txt.append("\n");
+        } else {
+            txt.append(inst);
+        }
+        txt.append(AbstractLang.lang.ident(this) + AbstractLang.lang.getEnd(this));
+        return txt.toString();
+    }
+    
+    private String getWhileHighLangInstructions() throws FlowchartException {
+        StringBuilder txt = new StringBuilder();
+        Fshape node = right;
+        while (node != this) {
+            if (!(node instanceof Arrow)) {
+                txt.append(node.getLanguage() + "\n");
+            }
+            node = node.next;
+        }
+        return txt.toString();
+    }
+    
     private String getWhileInstructions() throws FlowchartException {
         StringBuilder txt = new StringBuilder();
         Fshape node = right;

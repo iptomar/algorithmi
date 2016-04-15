@@ -64,7 +64,6 @@ import flowchart.read.Read;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
 import flowchart.terminator.End;
-import flowchart.utils.ProgramFile;
 import i18n.FkeyWord;
 import ui.FLog;
 import java.awt.BorderLayout;
@@ -87,7 +86,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.event.EventListenerList;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -106,45 +104,10 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     // NOTE : clone of this object does not contain this atribute
     // NOTE : to serialize object - Not work without transient
     transient public Program myProgram; // program where the algorithm belongs  ( definition of global memory , other functions, and main )
-    
-    ArrayList<String> changesList = new ArrayList<>();  //Stors program changes for Undo/Redo
-
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
 
-    //Event Data
-    protected EventListenerList ListenerList = new EventListenerList();
-    protected boolean acceptChanges = true;
-    protected int changeIndex = -1;
-    
-    public AlgorithmGraph(JPanel container, Program prog)  {
-        
-        //Event Dispacher
-        GUIeventListener evt = new GUIeventListener() {
-            @Override
-            public void onChangeGUI(String tokens) {
-                
-                if(acceptChanges){
-                    //Remove From Foward
-                    if(changeIndex >= 0 && changeIndex != (changesList.size()-1)){
-                            changesList = new ArrayList<>(changesList.subList(0, changeIndex));
-                    }
-
-                    //Add current program to pile
-                    changesList.add(tokens);
-
-                    //Update Index
-                    changeIndex = changesList.size()-1;
-                }
-
-            }
-        };
-        
-        //Add event to Event Listener
-        ListenerList.add(GUIeventListener.class, evt);
-        
-        
-        
+    public AlgorithmGraph(JPanel container, Program prog) {
 //        name = FkeyWord.get("KEYWORD.defaultFunctionName");
         setProgram(prog);    // set main program to the algorithm     
         positionCalc = new ShapePositions(this);
@@ -155,7 +118,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         alignPatterns();
         graph.revalidate();
         graph.repaint();
-
     }
 
     /**
@@ -641,7 +603,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param shape new pattern
      */
     public void addSimpleShape(Arrow arrow, Fshape shape) {
-        
         shape.level = arrow.level;
         //remove this arrow
         remove(arrow);
@@ -652,8 +613,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //next arrow
         add(createBottomArrow(arrow, shape));
         alignPatterns();
-
-
     }
 
     /**
@@ -663,7 +622,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param shape new pattern
      */
     public void addParameterShape(Fshape begin, Fshape shape) {
-
         shape.level = begin.level;
         shape.parent = begin;
         shape.next = begin.next;
@@ -682,7 +640,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param ifElse new shape
      */
     public void addShapeIfElse(Arrow arrow, IfThenElse ifElse) {
-        
         IF_Connector connector = new IF_Connector(this);
         connector.level = arrow.level;
         ifElse.level = arrow.level;
@@ -714,7 +671,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      * @param doWhile new shape
      */
     public void addShapeDoWhile(Arrow arrow, Fshape doWhile) {
-
         //shape do 
         Do_Connector _do = new Do_Connector(this);
         _do.level = arrow.level;
@@ -1036,96 +992,26 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         return code.toString();
     }
-
     
-    /**
-     * Fire the event, tell everyone that something has happened.
-     * @param program program to store
-     */
-    public void FireEvent(String tokens) {
-        Object[] Listeners = ListenerList.getListenerList();
-        // Process each of the event listeners in turn.
-        for (int i = 0; i < Listeners.length; i++) {
-            if (Listeners[i] == GUIeventListener.class) {
-                ((GUIeventListener) Listeners[i + 1]).onChangeGUI(tokens);
+     public String getLanguage() {
+        StringBuilder code = new StringBuilder();
+
+        Fshape current = getBegin();
+        do {
+            //ignore arrows
+            if (!(current instanceof Arrow) && !(current instanceof End)) {
+                try {
+                    code.append(current.getLanguage()).append("\n");
+                } catch (FlowchartException ex) {
+                    Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
+            current = current.next;
+        } while (current != null);
+
+        return code.toString();
     }
-    
-    /**
-     * UNDO ACTION
-     */
-    public void undoChanges(){
-        try {
-            
-            if(changeIndex >= 0){
-                
-                //Remove changs acceptable to pevent repaint modifications to count
-                acceptChanges = false;
-                
-                //Remove Graphic Shapes
-                graph.removeAll();
 
-                //Inic Algorithm Components
-                initProgram();
-                alignPatterns();
-
-                //Rebuild Program Based on Tokens
-                changeIndex--;
-                setProgram(ProgramFile.rebuildFromTokens(changesList.get(changeIndex), this));
-                
-                //Revalidate and repaint Shapes
-                graph.revalidate();
-                graph.repaint();
-                
-                acceptChanges = true;
-            }
-            
-            
-        } catch (FlowchartException ex) {
-            Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-    
-    /**
-     * REDO ACTION
-     */
-    public void redoChanges(){
-        try {
-            
-            if(changeIndex+1 <= changesList.size()-1){
-                
-                //Remove changs acceptable to pevent repaint modifications to count
-                acceptChanges = false;
-                
-                //Remove Graphic Shapes
-                graph.removeAll();
-
-                //Inic Algorithm Components
-                initProgram();
-                alignPatterns();
-
-                //Rebuild Program Based on Tokens
-                changeIndex++;
-                setProgram(ProgramFile.rebuildFromTokens(changesList.get(changeIndex), this));
-                
-
-                //Revalidate and repaint Shapes
-                graph.revalidate();
-                graph.repaint();
-                
-                acceptChanges = true;
-            }
-            
-            
-        } catch (FlowchartException ex) {
-            Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

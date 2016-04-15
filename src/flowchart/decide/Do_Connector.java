@@ -47,6 +47,7 @@ import i18n.FkeywordToken;
 import languages.PseudoLanguage;
 import java.awt.Dimension;
 import java.awt.Insets;
+import languages.AbstractLang;
 
 /**
  *
@@ -163,6 +164,32 @@ public class Do_Connector extends Fshape {
         while (node != this.next.next) { // While
             if (!(node instanceof Arrow)) {
                 txt.append("\n" + node.getPseudoCodeWithComments());
+            }
+            node = node.next;
+        }
+        return txt.toString();
+    }
+    
+     @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        txt.append(AbstractLang.lang.getDo(this) + "\n");
+        String inst = getWhileHighLangInstructions();
+        if (inst.isEmpty()) {
+            txt.append("\n");
+        } else {
+            txt.append(inst);
+        }
+        txt.append(AbstractLang.lang.ident(this) + AbstractLang.lang.getEnd(this));
+        return txt.toString();
+    }
+    
+    private String getWhileHighLangInstructions() throws FlowchartException {
+        StringBuilder txt = new StringBuilder();
+        Fshape node = right;
+       while (node != this.next.next) {
+            if (!(node instanceof Arrow)) {
+                txt.append(node.getLanguage() + "\n");
             }
             node = node.next;
         }

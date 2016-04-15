@@ -34,24 +34,32 @@
 //////////////////////////////////////////////////////////////////////////////
 package flowchart.algorithm;
 
-import flowchart.utils.FileUtils;
 import core.Memory;
 import core.data.exception.FlowchartException;
-import flowchart.utils.ProgramFile;
-import i18n.Fi18N;
 import flowchart.shape.Fshape;
+import flowchart.utils.FileUtils;
+import flowchart.utils.ProgramFile;
 import flowchart.utils.UserName;
+import i18n.Fi18N;
 import i18n.FkeyWord;
+import static i18n.FkeyWord.containsKey;
 import i18n.FkeywordToken;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import languages.AbstractLang;
+import languages.JavaLang;
+import languages.PythonLang;
 import ui.FLog;
 import ui.FProperties;
 import ui.utils.Crypt;
@@ -168,12 +176,11 @@ public class Program implements Cloneable, Serializable {
      * @throws FlowchartException
      */
     public static Program loadProgram(String filename) throws Exception {
-        Program prog =  ProgramFile.loadFromFile(filename);
+        Program prog = ProgramFile.loadFromFile(filename);
         prog.fileName = filename;
         return prog;
     }
 
-   
     /**
      * NOTE : myProgram is transient in Algorithm graph update the Myprogram
      * property of all the algorithms in the program
@@ -376,6 +383,35 @@ public class Program implements Cloneable, Serializable {
             code.append(function.getPseudoTokens());
         }
         return code.toString().trim();
+    }
+
+    public String getHigLevelLang(String lang) {
+        lang = lang.toLowerCase();
+        // fazer uma selecao da linguagem
+        switch (lang) {
+            case "java":
+                AbstractLang.lang = new JavaLang();
+                break;
+            case "python":
+                AbstractLang.lang = new PythonLang();
+                break;
+        }
+        StringBuilder code = new StringBuilder();
+        code.append(AbstractLang.lang.getStartOfProgram(main.getBegin()) + "\n");
+        if (globalMem != null) {
+            code.append(globalMem.getLanguage());
+            code.append("\n");
+        }
+        code.append(main.getLanguage());
+        code.append(AbstractLang.lang.ident(main.getEnd())+AbstractLang.lang.getEnd(main.getEnd())+ "\n");
+        for (FunctionGraph function : getFunctions()) {
+            code.append("\n");
+            code.append(function.getLanguage());
+            code.append(AbstractLang.lang.ident(function.getBegin())+AbstractLang.lang.getEnd(main.getEnd())+ "\n");
+        }
+
+        code.append(AbstractLang.lang.getEndOfProgram(main.getEnd()));
+        return code.toString() + "\n";
     }
 
     public String txtLog() {

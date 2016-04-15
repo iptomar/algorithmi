@@ -42,6 +42,8 @@ import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.run.GraphExecutor;
 import flowchart.shape.Fshape;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
+import languages.PseudoLanguage;
 
 /**
  *
@@ -121,6 +123,12 @@ public class BeginGlobalMemory extends Begin {
     public String getPseudoTokens() {
             return  KEY + " " + KEY_MEMORY_NAME + "\n";
     }
+    
+     @Override
+    public String getLanguage() throws FlowchartException {
+        return "";
+    }
+    
     public static String KEY = FkeywordToken.get("KEYWORD.memory.key");
     static String KEY_MEMORY_NAME = FkeywordToken.get("KEYWORD.globalMemoryName.key");    
     

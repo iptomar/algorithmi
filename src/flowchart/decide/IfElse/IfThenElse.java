@@ -52,6 +52,7 @@ import flowchart.shape.Fshape;
 import flowchart.terminator.End;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -242,6 +243,54 @@ public class IfThenElse extends Fshape {
             txt.append("\n");
         }
         txt.append(PseudoLanguage.ident(this) + FkeyWord.get("KEYWORD.end") + " " + Fi18N.get("IF.if"));
+        return txt.toString();
+    }
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        String ifThen = getThenLang();
+        String ifElse = getElseLang();
+        txt.append(AbstractLang.lang.getIf(this) + "\n");
+        if (!ifThen.isEmpty()) {
+            txt.append(ifThen);
+            //txt.append(AbstractLang.lang.ident(this) + AbstractLang.lang.getEnd(this));
+        }
+        if (!ifElse.isEmpty()) {
+            txt.append("\n"+AbstractLang.lang.ident(this)+AbstractLang.lang.getElse(this) + "\n");
+            txt.append(ifElse);
+        }
+        //txt.append(AbstractLang.lang.ident(this) + AbstractLang.lang.getEnd(this));
+        return txt.toString();
+    }
+    
+    private String getThenLang() throws FlowchartException {
+        StringBuilder txt = new StringBuilder();
+        Fshape node = right;
+        while (node != next) {
+            if (!(node instanceof Arrow)) {
+                if (txt.length() > 0) { // append \n to previous line
+                    txt.append("\n");
+                }
+                txt.append(node.getLanguage());
+            }
+            node = node.next;
+        }
+        return txt.toString();
+    }
+
+    private String getElseLang() throws FlowchartException {
+        StringBuilder txt = new StringBuilder();
+        Fshape node = left;
+        while (node != next) {
+            if (!(node instanceof Arrow)) {
+                if (txt.length() > 0) { // append \n to previous line
+                    txt.append("\n");
+                }
+                txt.append(node.getLanguage());
+            }
+            node = node.next;
+        }
         return txt.toString();
     }
 

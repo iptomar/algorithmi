@@ -44,6 +44,8 @@ import flowchart.shape.Fshape;
 import static flowchart.shape.Fshape.myFONT;
 import java.awt.Dimension;
 import java.awt.Insets;
+import languages.AbstractLang;
+import languages.PseudoLanguage;
 
 /**
  *
@@ -128,6 +130,11 @@ public class IF_Connector extends Fshape {
      public  String getPseudoTokens(){
          return "";
      }
+     
+     @Override
+    public String getLanguage() throws FlowchartException {
+        return PseudoLanguage.ident(this) + AbstractLang.lang.getEnd(this);
+    }
    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

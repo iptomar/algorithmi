@@ -44,10 +44,12 @@ import i18n.Fi18N;
 import i18n.FkeyWord;
 import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.run.GraphExecutor;
+import flowchart.arrow.Arrow;
 import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -174,6 +176,15 @@ public class Do_While extends Fshape {
      public  String getPseudoTokens(){         
          return PseudoLanguage.ident(this) + KEY + " " + ExpressionUtils.getExpressionTokens(logicExpression);
      }
+     
+     @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        txt.append(AbstractLang.lang.getDoWhile(this));
+        return txt.toString();
+    }
+    
+    
    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

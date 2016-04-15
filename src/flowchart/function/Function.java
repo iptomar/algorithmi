@@ -52,6 +52,7 @@ import i18n.FkeywordToken;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -431,6 +432,12 @@ public class Function extends Begin {
         txt.append(Mark.ROUND_CLOSE_TOKEN);
         return txt.toString();
     }
+    
+     @Override
+    public String getLanguage() throws FlowchartException {
+        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getFunction(this);
+    }
+       
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201518071215L;

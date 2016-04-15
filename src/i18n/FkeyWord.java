@@ -143,6 +143,10 @@ public class FkeyWord {
                 || Memory.constants.isDefined(word)
                 || CoreCalculator.getBySymbol(word) != null;
     }
+    
+    public static boolean containsKey(String key){
+        return messages.containsKey(key);
+    }
 
     public static String getSetOperator() {
         return OPERATOR_SET;
@@ -173,11 +177,17 @@ public class FkeyWord {
     }
     //----------------------------------------------------------------------------------
 
+    
+    
     public static void main(String[] args) {
         String key = "KEYWORD.begin";
         System.out.println(key + "  = " + FkeyWord.get(key));
-        load("en", "US");
+        load("JAVA", "");
+        System.out.println(containsKey(key));
         System.out.println(key + "  = " + FkeyWord.get(key));
+        String teste=FkeyWord.get(key);
+        teste=teste.replaceFirst("&", "teste");
+        System.out.println(teste);
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

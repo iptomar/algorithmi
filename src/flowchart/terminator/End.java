@@ -46,6 +46,7 @@ import flowchart.shape.Fshape;
 import i18n.FkeywordToken;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -146,6 +147,23 @@ public class End extends Fshape {
      @Override
     public String getPseudoCode() throws FlowchartException {
         return PseudoLanguage.ident(this)  + KEYWORD + " " + getIntructionPlainText();
+    }
+    
+     @Override
+    public String getLanguage() throws FlowchartException {
+        String code = "SOMETHING ERROR ";
+         if (algorithm instanceof GlobalMemoryGraph) {
+            //execute main
+           code = "";
+        }
+        if (algorithm instanceof FunctionGraph) {
+            code = AbstractLang.lang.getEnd(this);
+
+        } else {
+           code = AbstractLang.lang.getEndOfProgram(this);
+        }
+        return AbstractLang.lang.ident(this) + code;
+        
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

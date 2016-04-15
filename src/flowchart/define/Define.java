@@ -49,6 +49,7 @@ import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import ui.FLog;
 import languages.PseudoLanguage;
 
@@ -380,6 +381,11 @@ public class Define extends Fshape {
     @Override
     public String getPseudoCode() throws FlowchartException {
         return PseudoLanguage.ident(this) + KEYWORD + " " + getIntructionPlainText();
+    }
+    
+     @Override
+    public String getLanguage() throws FlowchartException {
+        return AbstractLang.lang.ident(this) + AbstractLang.lang.getDefine(this);
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

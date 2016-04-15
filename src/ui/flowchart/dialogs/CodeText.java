@@ -251,8 +251,11 @@ public class CodeText extends javax.swing.JFrame {
             case 1:
                 txtCode.setText(myProg.getTokens());
                 break;
-            default:
-                txtCode.setText("NOT IMPLEMENTED");
+            case 3:
+                txtCode.setText(myProg.getHigLevelLang("JAVA"));
+                break;
+            case 4:
+                txtCode.setText(myProg.getHigLevelLang("PYTHON"));
                 break;
         }
         txtCode.setCaretPosition(0);

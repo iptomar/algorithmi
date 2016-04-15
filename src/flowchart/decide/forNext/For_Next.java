@@ -54,6 +54,7 @@ import flowchart.shape.Fshape;
 import flowchart.terminator.End;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -347,6 +348,34 @@ public class For_Next extends Fshape {
             txt.append("\n");
         }
         txt.append(PseudoLanguage.ident(this) + FkeyWord.get("KEYWORD.end") + " " + FkeyWord.get("KEYWORD.for"));
+        return txt.toString();
+    }
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        txt.append(AbstractLang.lang.getFor(this) + "\n");
+        String instructions = getForLangInstructions();
+        txt.append(instructions);
+        if (instructions.isEmpty()) {
+            txt.append("\n");
+        }
+        txt.append(AbstractLang.lang.ident(this) + AbstractLang.lang.getEnd(this));
+        return txt.toString();
+    }
+    
+    private String getForLangInstructions() throws FlowchartException {
+        StringBuilder txt = new StringBuilder();
+        Fshape node = right;
+        while (node != this) {
+            if (!(node instanceof Arrow)) {
+                String txtNode = node.getLanguage();
+                if (!txtNode.isEmpty()) {
+                    txt.append(txtNode + "\n");
+                }
+            }
+            node = node.next;
+        }
         return txt.toString();
     }
 

@@ -46,6 +46,7 @@ import flowchart.shape.Fshape;
 import i18n.FkeywordToken;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -140,6 +141,11 @@ public class Begin extends Fshape {
     @Override
     public String getPseudoCode() throws FlowchartException {
         return PseudoLanguage.ident(this) + KEYWORD + " " + algorithm.getFunctionName();
+    }
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this)+ AbstractLang.lang.getBeginProgram(this);
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

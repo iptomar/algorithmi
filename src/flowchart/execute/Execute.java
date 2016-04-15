@@ -58,6 +58,7 @@ import i18n.FkeywordToken;
 import languages.PseudoLanguage;
 import java.util.ArrayList;
 import java.util.List;
+import languages.AbstractLang;
 
 /**
  *
@@ -427,6 +428,12 @@ public class Execute extends Fshape {
     public String getPseudoCode() throws FlowchartException {
         return PseudoLanguage.ident(this) + KEYWORD + " " + getIntructionPlainText();
     }
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getExecute(this);
+    }
+
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

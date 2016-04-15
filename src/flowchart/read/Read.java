@@ -50,6 +50,7 @@ import ui.FProperties;
 
 import i18n.FkeyWord;
 import i18n.FkeywordToken;
+import languages.AbstractLang;
 import languages.PseudoLanguage;
 
 /**
@@ -278,6 +279,12 @@ public class Read extends Fshape {
     @Override
     public String getPseudoCode() throws FlowchartException {
         return  PseudoLanguage.ident(this) + KEYWORD + " " + getIntructionPlainText();
+    }
+    
+    
+    @Override
+    public String getLanguage() throws FlowchartException {
+        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getRead(this);
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

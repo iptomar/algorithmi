@@ -112,7 +112,7 @@ public class TextExpression extends JTextPane {
                 }
 //                if (e.getKeyChar() == ' ') {
 //                    int pos = getCaretPosition();
-//                    String CURSOR = "\u1234"; // exquisite char to represent caret cursor
+//                    String CURSOR = "€\u1234§"; // exquisite char to represent caret cursor
 //                    StringBuffer txt = new StringBuffer(getText());
 //                    txt.insert(pos, e.getKeyChar() + " " + CURSOR);
 //                    txt = new StringBuffer(Identation.ident(txt.toString(), memory, program));
