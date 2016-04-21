@@ -22,20 +22,20 @@ public class PlaggieSubmissionsTest {
     public static void main(String[] args) throws FileNotFoundException, IOException, NullPointerException {
         
         try {
-            Stats.newCounter("submissions");
-            Stats.newCounter("parsed_files");
+//            Stats.newCounter("submissions");
+//            Stats.newCounter("parsed_files");
             Stats.newCounter("files_to_parse");
-            Stats.newCounter("parse_failures");
-            Stats.newCounter("failed_file_comparisons");
+//            Stats.newCounter("parse_failures");
+//            Stats.newCounter("failed_file_comparisons");
             Stats.newCounter("file_comparisons");
-            Stats.newCounter("similarity_over_threshold");
-            Stats.newCounter("similarity_comparisons");
-            Stats.newCounter("blacklisted_detection_results");
-            Stats.newDistribution("files_in_submission");
-            Stats.newDistribution("submission_similarities");
-            Stats.newDistribution("submission_similarities_a");
-            Stats.newDistribution("submission_similarities_b");
-            Stats.newDistribution("maximum_file_similarities");
+//            Stats.newCounter("similarity_over_threshold");
+//            Stats.newCounter("similarity_comparisons");
+//            Stats.newCounter("blacklisted_detection_results");
+//            Stats.newDistribution("files_in_submission");
+//            Stats.newDistribution("submission_similarities");
+//            Stats.newDistribution("submission_similarities_a");
+//            Stats.newDistribution("submission_similarities_b");
+//            Stats.newDistribution("maximum_file_similarities");
         } catch (StatsException ex) {
             Logger.getLogger(PlaggieSubmissionsTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,10 +53,17 @@ public class PlaggieSubmissionsTest {
             "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel7/Factorial.java.teste",
             "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel8/Factorial.java.teste"};         
         try{
-            //compare2( alunos, ficheiros);
-            //System.out.println("Similarities: "+Stats.getPercentage(compare2( "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel0/Factorial.java.teste", "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel1/Factorial.java.teste")));
-            System.out.println("Similarities: "+Stats.getPercentage(compare2( "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel0/Factorial.java.teste", "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel1/Factorial.java.teste")));
-
+            System.out.println("\n\t\t= Níveis de Detecçao de Plágio =\n");
+            System.out.println("\n\t Nível 0 - SEM alteraçao de código:              "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[0])));
+            System.out.println("\n\t Nível 1 - Alteraçao do NOME das variáveis:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[1])));
+            System.out.println("\n\t Nível 2 - Alteraçao da POSIÇAO das Variáveis:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[2])));
+            System.out.println("\n\t Nível 3 - Alteraçao da POSIÇAO de Cálculo:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[3])));
+            System.out.println("\n\t Nível 4 - Alteraçao de EXPRESSOES de cálculo:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[4])));
+            System.out.println("\n\t Nível 5 - Alteraçao de IF por ELSE:             "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[5])));
+            System.out.println("\n\t Nível 6 - Alteraçao de CICLO:                   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[6])));
+            System.out.println("\n\t Nível 7 - Alteraçao para RECURSIVIDADE:         "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[7])));
+            System.out.println("\n\t Nível 8 - Incorporaçao de FUNÇAO no MAIN:       "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[8])));
+            System.out.println("\n");
         }catch (NullPointerException ex) {
             Logger.getLogger(core.plaggie.plaggieTesteDrive.PlaggieSubmissionsTest.class.getName()).log(Level.SEVERE, null, ex);
         } 
