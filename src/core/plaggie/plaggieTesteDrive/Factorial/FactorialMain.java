@@ -10,16 +10,6 @@ package factorial;
  * @author Luis 
  */
 public class FactorialMain {
-    
-    // calcula o factorial de um numero inteiro
-    // de forma iterativa
-    public static int fact(int n){
-        int nfact=1;
-        for(int i = n; i>1; i--){
-            nfact=nfact*i;	
-        }
-        return nfact;
-    }
 
     /**
      * @param args the command line arguments
