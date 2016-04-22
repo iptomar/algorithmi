@@ -12,6 +12,7 @@ import core.data.Flogic;
 import core.data.Freal;
 import core.data.Fsymbol;
 import core.data.Ftext;
+import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
 import flowchart.decide.Do_Connector;
@@ -120,12 +121,35 @@ public class PythonLang extends AbstractLang {
         return "";
     }
 
+    private String getType(Fsymbol symbol){
+        String code="";
+        if(symbol instanceof Freal){
+            code += "long";
+        } else if (symbol instanceof Finteger) {
+            code += "int";
+        } else if (symbol instanceof Ftext) {
+            code += "String";
+        } else if (symbol instanceof Flogic) {
+            code += "boolean";
+        }
+        return code;
+    }
+    
     @Override
     public String getDefine(Fshape shape) {
         Define def = (Define) shape;
         String code = "";
+        boolean isArray=false;
+        if (def.varSymbol instanceof Farray){
+            isArray=true;
+        }
         code += def.varSymbol.getName() + " = ";
-        code += AbstractLang.lang.getExpression(def.getVarExpression());
+        if(!isArray){
+            code += AbstractLang.lang.getExpression(def.getVarExpression());
+        }
+        else{
+            code+="[]";
+        }
         return code;
     }
 
@@ -133,7 +157,7 @@ public class PythonLang extends AbstractLang {
     public String getExecute(Fshape shape) {
         Execute ex = (Execute) shape;
         String code = "";
-        code += ex.var.getName() + " = " + AbstractLang.lang.getExpression(ex.expressionToCalculate);
+        code += ex.var.getFullName() + " = " + AbstractLang.lang.getExpression(ex.expressionToCalculate);
         return code;
     }
 

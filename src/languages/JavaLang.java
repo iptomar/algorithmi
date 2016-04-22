@@ -11,6 +11,7 @@ import core.data.Flogic;
 import core.data.Freal;
 import core.data.Fsymbol;
 import core.data.Ftext;
+import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
 import flowchart.arrow.Arrow;
@@ -124,24 +125,40 @@ public class JavaLang extends AbstractLang {
         return " }\n}";
     }
 
+    private String getType(Fsymbol symbol){
+        String code="";
+        if(symbol instanceof Freal){
+            code += "long";
+        } else if (symbol instanceof Finteger) {
+            code += "int";
+        } else if (symbol instanceof Ftext) {
+            code += "String";
+        } else if (symbol instanceof Flogic) {
+            code += "boolean";
+        }
+        return code;
+    }
+    
     @Override
     public String getDefine(Fshape shape) {
         Define def = (Define) shape;
         String code = "";
-
-        if (def.varSymbol instanceof Freal) {
-            code += "long ";
-        } else if (def.varSymbol instanceof Finteger) {
-            code += "int ";
-        } else if (def.varSymbol instanceof Ftext) {
-            code += "String ";
-        } else if (def.varSymbol instanceof Flogic) {
-            code += "boolean ";
+        boolean isArray=false;
+        String tempArray="";
+        if (def.varSymbol instanceof Farray){
+            isArray=true;
+            tempArray=getType(((Farray)def.varSymbol).getTemplateElement());
+            code+=tempArray+"[] ";
         } else {
-            code = " ERRROR IN READ";
+            code+=getType(def.varSymbol)+" ";
         }
         code += def.varSymbol.getName() + " = ";
-        code += AbstractLang.lang.getExpression(def.getVarExpression()) + ";";
+        if(!isArray){
+            code += AbstractLang.lang.getExpression(def.getVarExpression()) + ";";
+        }
+        else{
+            code+="new "+tempArray+((Farray)def.varSymbol).getDimensions()+";";
+        }
         return code;
     }
 
@@ -149,7 +166,7 @@ public class JavaLang extends AbstractLang {
     public String getExecute(Fshape shape) {
         Execute ex = (Execute) shape;
         String code = "";
-        code += ex.var.getName() + " = " + AbstractLang.lang.getExpression(ex.expressionToCalculate) + ";";
+        code += ex.var.getFullName() + " = " + AbstractLang.lang.getExpression(ex.expressionToCalculate) + ";";
         return code;
     }
 
