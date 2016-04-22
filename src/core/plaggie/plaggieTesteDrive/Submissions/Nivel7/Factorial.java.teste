@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package factorial;
+package core.plaggie.plaggieTesteDrive.Factorial;
 
 /**
  *
  * @author Luis 
  */
-public class Factorial {
+public class FactorialN7 {
     
     // calcula o factorial de um numero inteiro
-		// de forma recursiva
+    // de forma recursiva   
     public static int fact(int n){
         if(n<3)
             return n;
@@ -29,9 +29,9 @@ public class Factorial {
         long f;
         
         // Calcula componentes
-        i1=2+3*2;   
-        i2=i1/3+1;  
-        
+        i1=2+3*2; 
+        i2=i1/3+1; 
+         
         // Se primeira componente for menor
         if(i1<i2)
             f=fact(i1);
@@ -43,6 +43,6 @@ public class Factorial {
             System.out.println("\t" + fact(i));	
         }
         
-    }  
+    } 
     
 }
