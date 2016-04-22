@@ -44,6 +44,9 @@ public class FactorialTesteDrive {
         else
             f=fact(i2);
         
+        // Apresenta valor de f
+        System.out.println("\tf=" + f+"\n");
+        
         // Apresenta resultado
         for(int i = (int) f; i>1; i--){
             System.out.println("\t" + fact(i));	
