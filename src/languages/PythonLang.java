@@ -285,29 +285,6 @@ public class PythonLang extends AbstractLang {
         return "return " + getExpression(rturn.returnExpression) + "";
     }
 
-    public static void main(String[] args) {
-//        Scanner keyb = new Scanner(System.in);
-//       // int var1 = keyb.nextInteger();
-//        //if (var1 % 2 == 0) {
-//            System.out.println("Par");
-//        } else {
-//            System.out.println("Impar");
-//            System.out.println(var1 + "+" + var1);
-//            if ((var1 + var1) % 2 == 0) {
-//                System.out.println("Agr já é par");
-//            } else {
-//                System.out.println("Ainda n?o é");
-//            }
-//        }
-//    }
-//         Program p = new Program();
-//         p.setMain(new AlgorithmGraph);
-//        try {
-//            Expression s = new Expression( "2+3*5+sin(34) < 23", p.getMain().myLocalMemory,p);
-//            
-//        } catch (FlowchartException ex) {
-//            Logger.getLogger(JavaLang.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    }
+  
 
 }

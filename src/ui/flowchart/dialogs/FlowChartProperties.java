@@ -146,6 +146,10 @@ public class FlowChartProperties extends MenuDialog {
         lblAvatar.setIcon(user.getAvatar());
         Fi18N.loadButton(btDelete, "LAUNCHER.deleteUser", 24);
 
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: TAB language
+        lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder(Fi18N.get("PROPERTIES.selectLang.title")));
+        lstLang.setToolTipText(Fi18N.get("PROPERTIES.selectLang.helo"));
+
     }
 
     public void loadSintaxHighlight(JLabel sintax, String guiKey, String propKey) {
@@ -878,7 +882,7 @@ public class FlowChartProperties extends MenuDialog {
         lblSize.setText("size");
         jPanel5.add(lblSize);
 
-        spSize.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(14), Integer.valueOf(5), null, Integer.valueOf(1)));
+        spSize.setModel(new javax.swing.SpinnerNumberModel(14, 5, null, 1));
         spSize.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spSizeStateChanged(evt);
@@ -892,7 +896,7 @@ public class FlowChartProperties extends MenuDialog {
 
         tpProperties.addTab("Fonte", pnFont);
 
-        lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder("Língua"));
+        lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder("Lingua"));
         lstLang.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "pt_PT", "en_US" };
             public int getSize() { return strings.length; }

@@ -110,22 +110,6 @@ public class TextExpression extends JTextPane {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     e.consume();
                 }
-//                if (e.getKeyChar() == ' ') {
-//                    int pos = getCaretPosition();
-//                    String CURSOR = "€\u1234§"; // exquisite char to represent caret cursor
-//                    StringBuffer txt = new StringBuffer(getText());
-//                    txt.insert(pos, e.getKeyChar() + " " + CURSOR);
-//                    txt = new StringBuffer(Identation.ident(txt.toString(), memory, program));
-//                    pos = txt.indexOf(CURSOR);
-//                    txt.replace(pos, pos + CURSOR.length(), ""); // delete exquisite char
-//                    setText(txt.toString());
-////                    if (pos < getText().length()) {
-////                        setCaretPosition(pos + 1);
-////                    } else {
-//                    setCaretPosition(pos);
-////                    }
-//                    e.consume();
-//                }
 
             }
 

@@ -102,7 +102,6 @@ public class Fluxograma extends javax.swing.JFrame {
     }
 
     public void initMyComponents() {
-
         updateUser();
         try {
             File file = new File(FProperties.get(FProperties.keyLastProgramOpened));
