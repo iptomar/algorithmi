@@ -26,7 +26,7 @@
   
   <p>
     &nbsp;&nbsp;Mooshak:
-    &nbsp;&nbsp;&nbsp; ?% Completed - Bruno Farropo
+    &nbsp;&nbsp;&nbsp; 100% Completed - Bruno Farropo
   </p>
   
 </pre>
