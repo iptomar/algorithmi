@@ -114,24 +114,6 @@ public class Sum extends CoreElement {
         throw new FlowchartException("OPERATOR.error.typeParams");
     }
 
-    public static void main(String[] args) {
-        Sum calc = new Sum();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            lst.add(new Freal(2));
-//            lst.add(new Finteger(3));
-//            lst.add(new Ftext("\"ola\""));
-//            lst.add(new Ftext("\" mundo\""));
-//            lst.add(new Flogic(true));
-            lst.add(new Flogic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -380,34 +380,6 @@ public class Evaluator {
         return result;
     }
 
-    public static void main(String[] args) {
-
-        Memory mem = new Memory("test Memory");
-        String exp[] = {
-            //            "2 + 3",
-            //            "3+4*5/6",
-            //            "(300+23)*(43-21)/(84+7)>5&&3+4*5/6!=-(4*7^(2^2))",
-            //            "(4+8)*(6-5)/((3-2)*(2+2))",
-            //            "abs( 2+ 3 * 5 ^2) - 3",
-            "-(-3--4)"
-        };
-        for (String calc : exp) {
-            try {
-                Expression ex = new Expression(calc, mem, new Program());
-                List infix = ex.getTokens();
-                List posfix = fromInfix(infix);
-                System.out.println("\n\nINFIX \t:" + ExpressionUtils.debug(infix));
-
-                System.out.println("\nPOSFIX \t:" + ExpressionUtils.debug(posfix));
-                System.out.println("\nRESULT \t:" + evaluate(ex.getTokens(), mem));
-//                System.out.println("\nTYPE \t:" + verify(ex.get(0)).getTypeName());
-            } catch (FlowchartException ex1) {
-                ex1.show("Posfix");
-            }
-
-        }
-    }
-
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 1509071119;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

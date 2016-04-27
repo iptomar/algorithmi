@@ -418,10 +418,5 @@ public class FileUtils {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
-        String f = "../c:/abc/abcst.r";
-        f = changeExtension(f, "txt");
-        System.out.println(" " + f);
-    }
 
 }

@@ -370,32 +370,4 @@ public class ImageUtils {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) throws FlowchartException {
-        try {
-            ImageIcon img = new ImageIcon(ImageIO.read(new File("test.png")));
-            img = ImageUtils.resizeProportional(img, 400, 200);
-            String jpgTxt = getJpegBase64(img);
-            FileUtils.writeGzipStringToFile("img.txt", jpgTxt);
-            FileUtils.writeImageToFile("img.jpg", img.getImage());
-
-            jpgTxt = FileUtils.readGZipStringFromFile("img.txt");
-            ImageIcon img2 = getBase64Jpeg(jpgTxt);
-            byte[] data = getJpegByteArray(img);
-            System.out.println("bytes " + data.length);
-            System.out.println("txt   " + jpgTxt.length());
-            System.out.println("jpg\n" + jpgTxt);
-            ImageIcon img3 = getByteArrayJpeg(data);
-
-            JFrame frame = new JFrame("jpeg demo");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getContentPane().add(new JLabel(img), BorderLayout.CENTER);
-            frame.getContentPane().add(new JLabel(img3), BorderLayout.NORTH);
-            frame.getContentPane().add(new JLabel(img2), BorderLayout.SOUTH);
-            frame.pack();
-            frame.setVisible(true);
-
-        } catch (IOException ex) {
-            Logger.getLogger(ImageUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 }

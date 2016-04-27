@@ -50,11 +50,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-package components;
+package zztests;
  
 /* A 1.4 class used by TextComponentDemo.java. */
  
-import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.Toolkit;
  

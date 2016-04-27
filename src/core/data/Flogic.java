@@ -105,27 +105,6 @@ public class Flogic extends Fsymbol {
         }
         return FALSE;
     }
-
-    public static void main(String[] args) {
-        String[] val = {
-            "verdadeiro",
-            "falso",
-            "0",
-            "1",
-            ""
-        };
-        for (String v : val) {
-            System.out.println(v + " = " + isValueValid(v) + " ");
-        }
-        for (String v : val) {
-            try {
-                Flogic i = new Flogic(v);
-                System.out.println(v + " \t " + i + "\t ->  [" + i.getTextValue() + "]");
-            } catch (FlowchartException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    }
     
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // token to type

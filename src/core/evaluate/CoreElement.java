@@ -21,6 +21,7 @@ import core.data.exception.FlowchartException;
 import java.io.Serializable;
 
 import java.util.List;
+import ui.FLog;
 
 /**
  *
@@ -112,7 +113,7 @@ public abstract class CoreElement extends CoreToken  {
         try { // call clone in Object.
             return super.clone();
         } catch (CloneNotSupportedException e) {
-            System.out.println(" Cloning not allowed. ");
+            FLog.printLn(" Cloning not allowed. ");
             return this;
         }
     }

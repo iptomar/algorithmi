@@ -57,7 +57,7 @@ public class Console extends javax.swing.JPanel {
             var = (String) JOptionPane.showInputDialog(
                     null,
                     var.trim(),
-                    Fi18N.get("READ.menu.title"),
+                    Fi18N.get("READ.instruction.title"),
                     JOptionPane.PLAIN_MESSAGE,
                     icon,
                     null,

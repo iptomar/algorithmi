@@ -74,12 +74,5 @@ public class IteratorLines implements Iterator<String> {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
-        String x = "COMMENTS   era\nBEGIN um   \nEND   vez";
-        IteratorLines it = new IteratorLines(x);
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-    }
 
 }

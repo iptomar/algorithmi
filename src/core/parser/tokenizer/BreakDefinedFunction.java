@@ -166,15 +166,5 @@ public class BreakDefinedFunction {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) throws FlowchartException {
-        String txt = "( 1(23*(3+4)), (a*b[12][func(1)])((a)*c))";
-        List<Object> tokens = new ArrayList<>();
-        tokens.add(txt);
-        tokens = BreakMarks.execute(tokens);
-        List< List<Object>> p = extractParams(tokens, 1);
-        for (List<Object> p1 : p) {
-            System.out.println(ExpressionUtils.identation(p1));
-        }
-    }
 
 }

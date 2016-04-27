@@ -71,9 +71,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
         Fi18N.loadLabel(lblLangDisplay, "LAUNCHER.language");
 
         pnInformationNewUser.setBorder(BorderFactory.createTitledBorder(Fi18N.get("LAUNCHER.users.info")));
-        txtUserNameNew.setText(Fi18N.get("LAUNCHER.newName"));
-        txtUserFullNameNew.setText(Fi18N.get("LAUNCHER.newFullName"));
-        txtUserNumberNew.setText(Fi18N.get("LAUNCHER.newNumber"));
+
 
     }
 

@@ -204,35 +204,5 @@ public class ExpressionUtils {
         return new Expression(FkeywordToken.translateTokensToWords(expression), mem, prog);
     }
 
-    public static void main(String[] args) {
-        try {
-            Memory mem = new Memory("test");
-            mem.add(new Finteger("x", "10"));
-            mem.add(new Freal("y", "1.0"));
-
-            String[] exp = {
-                "2*(y+x)",
-                "_pi*y*(3.5+-x)"
-            };
-
-            Program prog = null;
-
-            for (String txt : exp) {
-
-                Expression ex1 = new Expression(txt, mem, prog);
-                Fsymbol result = ex1.evaluate(mem);
-                System.out.print(ex1.getIdented() + " " + FkeyWord.OPERATOR_SET + " " + result.getValue());
-                String tokens = getExpressionTokens(ex1);
-                System.out.println("\t " + tokens);
-                ex1 = buidTokenExpression(tokens, mem, prog);
-                Fsymbol result2 = ex1.evaluate(mem);
-                System.out.print(ex1.getIdented() + " " + FkeyWord.OPERATOR_SET + " " + result2.getValue());
-                System.out.println(" ? " + result.equals(result2));
-
-            }
-        } catch (FlowchartException ex) {
-            Logger.getLogger(ExpressionUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+   
 }

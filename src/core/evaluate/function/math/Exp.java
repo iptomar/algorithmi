@@ -100,25 +100,6 @@ public class Exp extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Exp calc = new Exp();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            lst.add(new Freal(2));
-//            lst.add( new Int(3));
-//            lst.add(new Text("\"ola\""));
-//            lst.add(new Text("\" mundo\""));
-//            lst.add(new Logic(true));
-//            lst.add(new Logic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
-    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

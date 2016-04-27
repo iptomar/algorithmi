@@ -99,24 +99,7 @@ public class Int extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Int calc = new Int();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            lst.add(new Freal(232432423.876));
-//            lst.add( new Int(3));
-//            lst.add(new Text("\"ola\""));
-//            lst.add(new Text("\" mundo\""));
-//            lst.add(new Logic(true));
-//            lst.add(new Logic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
+ 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

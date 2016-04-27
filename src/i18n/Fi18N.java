@@ -388,7 +388,5 @@ public class Fi18N {
 
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
-    public static void main(String[] args) {
-        System.out.println(Fi18N.get("BUTTON.accept"));
-    }
+    
 }

@@ -125,25 +125,7 @@ public class Align extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Align calc = new Align();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-
-//            lst.add( new Finteger(3));
-//            lst.add(new Text("\"ola\""));
-            lst.add(new Ftext("\" mundo\""));
-            lst.add(new Finteger(-20));
-//            lst.add(new Flogic(true));
-//            lst.add(new Flogic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
+  
 
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR

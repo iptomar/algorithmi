@@ -129,7 +129,6 @@ public class CloseableTabbedPane extends JTabbedPane implements MouseListener {
         }
 
         public void close() {
-            System.out.println("Canard");
             pane.remove(this);
         }
     }

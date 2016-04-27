@@ -432,13 +432,13 @@ public class ShapePositions implements Serializable {
     }
 
     public void printDebug() {
-        System.out.println("\n\nID CENTER");
+        FLog.printLn("\n\nID CENTER");
         for (Map.Entry<Double, Integer> entry : IDCenter.entrySet()) {
-            System.out.println("ID " + entry.getKey() + "\t SIZE  " + entry.getValue());
+            FLog.printLn("ID " + entry.getKey() + "\t SIZE  " + entry.getValue());
         }
-        System.out.println("\n\nPOSITIONS");
+        FLog.printLn("\n\nPOSITIONS");
         for (Map.Entry<Double, Integer> entry : IDSize.entrySet()) {
-            System.out.println("ID " + entry.getKey() + "\t SIZE  " + entry.getValue() + " \t CENTER " + IDCenter.get(entry.getKey()));
+            FLog.printLn("ID " + entry.getKey() + "\t SIZE  " + entry.getValue() + " \t CENTER " + IDCenter.get(entry.getKey()));
         }
 //        System.out.println("\nShapes");
 //        for (Component c : flux.graph.getComponents()) {

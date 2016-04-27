@@ -148,7 +148,7 @@ public class FlowChartProperties extends MenuDialog {
 
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: TAB language
         lstLang.setBorder(javax.swing.BorderFactory.createTitledBorder(Fi18N.get("PROPERTIES.selectLang.title")));
-        lstLang.setToolTipText(Fi18N.get("PROPERTIES.selectLang.helo"));
+        lstLang.setToolTipText(Fi18N.get("PROPERTIES.selectLang.help"));
 
     }
 

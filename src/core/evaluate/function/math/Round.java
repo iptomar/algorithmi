@@ -93,25 +93,7 @@ public class Round extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Round calc = new Round();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            // lst.add(new Freal(-246122.1234567890));
-            lst.add(new Finteger(4));
-            lst.add(new Finteger(4));
-//            lst.add( new Finteger(3));
-//            lst.add(new Text("\"ola\""));
-//            lst.add(new Text("\" mundo\""));
-//            lst.add(new Flogic(true));            
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
+ 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

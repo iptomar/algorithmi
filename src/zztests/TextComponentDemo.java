@@ -65,6 +65,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 import javax.swing.undo.*;
+import zztests.DocumentSizeFilter;
  
 public class TextComponentDemo extends JFrame {
     JTextPane textPane;

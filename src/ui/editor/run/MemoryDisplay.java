@@ -82,7 +82,7 @@ public class MemoryDisplay extends JPanel {
         this.removeAll();
         //list of memorys
         List<Memory> lst = runningProgram.getProgramMemory();
-        System.out.println(lst);
+        //System.out.println(lst);
         //array of tree nodes
         Vector[] nodes = new Vector[lst.size()];
         //create variables nodes
@@ -104,7 +104,7 @@ public class MemoryDisplay extends JPanel {
         tree.expandRow(nodes.length - 1);
 //        updateListeners();
         revalidate();
-        repaint();
+//        repaint();
     }
 
     public final void updateMemory() {

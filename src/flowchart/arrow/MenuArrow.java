@@ -429,7 +429,7 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         setVisible(false);
-        System.out.println("Lost Focus");
+        //System.out.println("Lost Focus");
     }//GEN-LAST:event_formFocusLost
 
 

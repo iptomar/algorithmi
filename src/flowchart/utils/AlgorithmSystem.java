@@ -104,22 +104,5 @@ public class AlgorithmSystem {
             }
         }
     }
-    
-    
-    public static void main(String[] args) {
-        String str = "c:/dsfds/dfds/flowchart_pt_PT.properties";
-        String regex = "(.*)flowchart(.*).properties";
-        
-        System.out.println("" + str.matches(regex));
-        StringBuilder txt = new StringBuilder("<HTML>");
-        
-        List<File> lst = getResources(regex);
-        for (File file : lst) {
-            System.out.println(file.getAbsolutePath());
-            txt.append("<br>" + file.getAbsolutePath());
-        }
-         txt.append("</HTML>");
-         JOptionPane.showMessageDialog(null, txt.toString());
-    }
-
+ 
 }
