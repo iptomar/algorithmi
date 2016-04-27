@@ -364,7 +364,7 @@ public class Function extends Begin {
      * @param returnSymbol the returnSymbol to set
      */
     public void setReturnSymbolValue(Fsymbol newValue) throws FlowchartException {
-        returnSymbol.setValue(newValue.getValue());
+        returnSymbol.setValue(newValue);
     }
 
     /**

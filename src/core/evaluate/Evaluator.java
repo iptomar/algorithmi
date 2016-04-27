@@ -19,6 +19,7 @@ import core.CoreCalculator;
 import core.Memory;
 import core.CoreToken;
 import core.FunctionCall;
+import core.data.Finteger;
 import core.data.Fsymbol;
 import core.data.Ftext;
 import core.data.complexData.Farray;
@@ -279,7 +280,8 @@ public class Evaluator {
                         Ftext indexedText = (Ftext) symbol;
                         //get the indexed element of memory variable
                         if (trueValues) { // true values extract value
-                            memoryValue = indexedText.getElementValue(mem);
+                            Finteger pos = (Finteger)indexedText.indexExpression.evaluate(mem);
+                            memoryValue = ((Ftext)memoryValue).getText(pos);
                         }
                     }
                     //clone value 

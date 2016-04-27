@@ -79,7 +79,7 @@ public class DummyFunctionReturn extends Fshape {
     @Override
     public Fshape execute(GraphExecutor exe) throws FlowchartException {
         //update value of the function call
-        funcCall.myReturn.setValue( functionHead.getReturnSymbol().getValue());
+        funcCall.myReturn.setValue( functionHead.getReturnSymbol());
         exe.removeLastFunction();
         return next;
     }

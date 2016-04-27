@@ -375,38 +375,6 @@ public class Execute extends Fshape {
         } // funtions
         return next;
 
-//        List<FunctionCall> defs = expressionToCalculate.getDefinedFunctionToExecution();
-//
-//        if (defs.isEmpty()) {// not defined functions to execute
-//
-//            if (var != null) { // Expressions
-//                Fsymbol memVar = exe.getRuntimeMemory().getByName(var.getName());
-//                Fsymbol result = expressionToCalculate.evaluate(exe.getRuntimeMemory());
-//                //tooltip
-//                this.resultOfExpression = result.getTextValue();
-//                if (memVar != null) {
-//                    if (memVar instanceof Farray) {
-//                        //convert to array 
-//                        Farray myArray = (Farray) var;
-//                        //get array from memory
-//                        Farray memoryArray = (Farray) memVar;
-//                        //update using myvar indexes
-//                        memoryArray.setElementValue(result, myArray.getIndexes(), exe.getRuntimeMemory());
-//                    } else {
-//                        memVar.setValue(result);
-//                    }
-//                }               
-//            } // funtions
-//             return next;
-//        } else {
-//            //expand definitions
-//            Fshape firstNode = parent;// previous arrow
-//            for (int i = defs.size() - 1; i >= 0; i--) {                
-//                //firstNode = exe.addNewFunction(defs.get(i), firstNode, exe.getRuntimeMemory()); // introced in the parent                      
-//                firstNode = exe.addNewFunction(defs.get(i), this); // introced in the parent                      
-//            }
-//            return firstNode;
-//        }
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::  T O O L T I P :::::::::::::::::
