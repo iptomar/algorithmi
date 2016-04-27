@@ -99,7 +99,7 @@ public class ProgramFile {
             String code = h.substring(h.indexOf(" ")).trim();
             switch (tag) {
                 case userTagName:
-                    UserName user = FProperties.load(code);
+                    UserName user = UserName.loadUser(code);
                     prog.digitalSignature = user.digitalSignature();
                     break;
                 case problemID:

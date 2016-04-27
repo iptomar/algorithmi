@@ -53,9 +53,9 @@ public class FProperties {
     }
 
     //path to save properties file
-    static File PROPERTIES_PATH = new File(System.getProperty("user.dir") + File.separator + "users");
+    public static File PROPERTIES_PATH = new File(System.getProperty("user.dir") + File.separator + "users");
     //extension of properties file
-    static String PROPERTIES_USER_EXTENSION = "user";
+    public static String PROPERTIES_USER_EXTENSION = "user";
 
     private static Properties props = new Properties();
 
@@ -182,7 +182,7 @@ public class FProperties {
     }
 
     public static UserName loadFromFile(String fileName) {
-        try {
+        try {            
             props = new Properties();
             FileInputStream file = new FileInputStream(fileName);
             props.load(file); // load file                 

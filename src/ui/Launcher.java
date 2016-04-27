@@ -9,6 +9,7 @@ import core.data.exception.FlowchartException;
 import flowchart.utils.UserName;
 import flowchart.utils.image.ImageUtils;
 import i18n.Fi18N;
+import i18n.LanguageCode;
 import i18n.LanguagesOfSystem;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -67,6 +68,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
         Fi18N.loadLabel(lblUserFullNameNew, "LAUNCHER.fullName");
         Fi18N.loadLabel(lblUserNumberNew, "LAUNCHER.number");
         Fi18N.loadLabel(lblLanguage, "LAUNCHER.language");
+        Fi18N.loadLabel(lblLangDisplay, "LAUNCHER.language");
 
         pnInformationNewUser.setBorder(BorderFactory.createTitledBorder(Fi18N.get("LAUNCHER.users.info")));
         txtUserNameNew.setText(Fi18N.get("LAUNCHER.newName"));
@@ -106,7 +108,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
 
         DefaultListModel model = new DefaultListModel();
         for (File file : files) {
-            UserName user = FProperties.load(file.getAbsolutePath());
+            UserName user = UserName.loadUser(file.getAbsolutePath());
             if (user != null) {
                 model.addElement(user);
             }
@@ -151,6 +153,9 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
         txtUserFullName = new javax.swing.JTextField();
         txtUserName = new javax.swing.JTextField();
         btDeleteUser = new javax.swing.JButton();
+        lblLangDisplay = new javax.swing.JLabel();
+        txtUserLanguage = new javax.swing.JTextField();
+        txtUserCountry = new javax.swing.JTextField();
         pnUsers = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstUsers = new javax.swing.JList();
@@ -227,6 +232,14 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        lblLangDisplay.setText("language");
+
+        txtUserLanguage.setEditable(false);
+        txtUserLanguage.setText("jTextField2");
+
+        txtUserCountry.setEditable(false);
+        txtUserCountry.setText("jTextField2");
+
         javax.swing.GroupLayout pnInformationLayout = new javax.swing.GroupLayout(pnInformation);
         pnInformation.setLayout(pnInformationLayout);
         pnInformationLayout.setHorizontalGroup(
@@ -243,9 +256,16 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtUserFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnInformationLayout.createSequentialGroup()
-                        .addComponent(lblUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnInformationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnInformationLayout.createSequentialGroup()
+                                .addComponent(lblUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnInformationLayout.createSequentialGroup()
+                                .addComponent(lblLangDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUserLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtUserCountry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -263,12 +283,18 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnInformationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnInformationLayout.createSequentialGroup()
+                        .addComponent(btDeleteUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(pnInformationLayout.createSequentialGroup()
                         .addGroup(pnInformationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblUserNumber)
                             .addComponent(txtUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 32, Short.MAX_VALUE))
-                    .addComponent(btDeleteUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnInformationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblLangDisplay)
+                            .addComponent(txtUserLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtUserCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pnUsers.setBorder(javax.swing.BorderFactory.createTitledBorder("users"));
@@ -295,14 +321,17 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUserNumber1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnInformation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)
+                        .addComponent(pnInformation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(103, 103, 103)
+                        .addComponent(lblUserNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -311,13 +340,12 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnInformation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(pnUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblUserNumber1)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(49, Short.MAX_VALUE))
+                    .addComponent(pnUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUserNumber1)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         tabMain.addTab("tab1", jPanel1);
@@ -513,7 +541,14 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 user.setName(txtUserNameNew.getText());
                 user.setCode(txtUserNumberNew.getText());
                 user.setPassword(txtPassword1.getPassword());
+                LanguageCode lang = (LanguageCode)cbSelectLang.getSelectedItem();
+                user.setLanguage(lang.getLanguage());
+                user.setCountry(lang.getCountry());
+                //default properties
+                FProperties.loadDefaults();
+                //update user properties
                 FProperties.setUser(user);
+                //save properties
                 FProperties.save();
             } else {
                 Fdialog.showMessage(Fi18N.get("PROPERTIES.passwordNotMatch"));
@@ -545,16 +580,20 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
     private void lstUsersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstUsersValueChanged
         if (lstUsers.getSelectedIndex() >= 0) {
             user = (UserName) lstUsers.getSelectedValue();
-            FProperties.load(user.getName());
+//            FProperties.load(user.getName());
             txtUserName.setText(user.getName());
             txtUserFullName.setText(user.getFullName());
             txtUserNumber.setText(user.getCode());
+            txtUserCountry.setText(user.getCountry());
+            txtUserLanguage.setText(user.getLanguage());
             btOk.setIcon(user.getAvatar());
         } else {
             txtUserName.setText("");
             txtUserFullName.setText("");
             txtUserNumber.setText("");
             txtPassword.setText("");
+            txtUserCountry.setText("");
+            txtUserLanguage.setText("");
         }
     }//GEN-LAST:event_lstUsersValueChanged
 
@@ -658,6 +697,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAvatar;
     private javax.swing.JLabel lblFlowcharCopyright;
+    private javax.swing.JLabel lblLangDisplay;
     private javax.swing.JLabel lblLanguage;
     private javax.swing.JLabel lblUserFullName;
     private javax.swing.JLabel lblUserFullNameNew;
@@ -679,8 +719,10 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JPasswordField txtPassword1;
     private javax.swing.JPasswordField txtPassword2;
+    private javax.swing.JTextField txtUserCountry;
     private javax.swing.JTextField txtUserFullName;
     private javax.swing.JTextField txtUserFullNameNew;
+    private javax.swing.JTextField txtUserLanguage;
     private javax.swing.JTextField txtUserName;
     private javax.swing.JTextField txtUserNameNew;
     private javax.swing.JTextField txtUserNumber;

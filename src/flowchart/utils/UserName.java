@@ -22,10 +22,14 @@ package flowchart.utils;
 
 import flowchart.utils.image.ImageUtils;
 import i18n.Fi18N;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Properties;
 import javax.swing.ImageIcon;
 import ui.FLog;
+import ui.FProperties;
 import ui.utils.Crypt;
 
 /**
@@ -78,7 +82,6 @@ public class UserName implements Serializable {
         } catch (Exception ex) {
             FLog.printLn("UserName createUser" + ex.getMessage());
             UserName user = new UserName();
-            user.avatar = ImageUtils.getJpegByteArray(Fi18N.loadKeyIcon("PROPERTIES.userAvatar.default", AVATAR_SIZE));
             return user;
         }
     }
@@ -144,11 +147,12 @@ public class UserName implements Serializable {
     public ImageIcon getAvatar() {
         return ImageUtils.getByteArrayJpeg(avatar);
     }
-     /**
+
+    /**
      * @return the avatar
      */
     public ImageIcon getAvatar(int size) {
-        return ImageUtils.getByteArrayJpeg(avatar,size);
+        return ImageUtils.getByteArrayJpeg(avatar, size);
     }
 
     /**
@@ -184,7 +188,8 @@ public class UserName implements Serializable {
     }
 
     public String getLanguage() {
-        return language;
+        Locale l = new Locale(language, country);
+        return l.getDisplayLanguage(l);
     }
 
     public void setLanguage(String language) {
@@ -192,11 +197,27 @@ public class UserName implements Serializable {
     }
 
     public String getCountry() {
-        return country;
+        Locale l = new Locale(language, country);
+        return l.getDisplayCountry(l);
     }
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public static UserName loadUser(String fileName) {
+        try {
+            if (!fileName.endsWith("." + FProperties.PROPERTIES_USER_EXTENSION)) {
+                fileName += "." + FProperties.PROPERTIES_USER_EXTENSION;
+            }
+            Properties props = new Properties();
+            FileInputStream file = new FileInputStream(fileName);
+            props.load(file); // load file                 
+            file.close();
+            return createUser(props.getProperty("keyDigitalSignature"));
+        } catch (Exception e) {
+        }
+        return new UserName();
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
