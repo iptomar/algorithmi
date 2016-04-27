@@ -1,0 +1,24 @@
+COMMENTS ID        0
+COMMENTS CODE      0
+COMMENTS USER      Algorithmi
+COMMENTS NAME      Utilizador anónimo
+COMMENTS DATE      1461762329271
+COMMENTS VERSION   Algorithmi 4.22 (PSI) 2016/04/27 14:05:29:271
+
+
+    BEGIN MAIN_PROGRAM_NAME
+        READ TEXT nome 
+        EXECUTE nome SET inverte(nome)
+        ITERATE INTEGER i1 FROM 0 TO ELEMENTS_OF ROUND_OPEN nome ROUND_CLOSE SUB 1 STEP 1
+            WRITE nome[i1]
+        END ITERATE
+    END MAIN_PROGRAM_NAME
+
+FUNCTION TEXT inverte ROUND_OPEN TEXT txt ROUND_CLOSE
+        ITERATE INTEGER i1 FROM 0 TO ELEMENTS_OF ROUND_OPEN txt ROUND_CLOSE DIV 2 STEP 1
+            DEFINE TEXT aux SET txt[i1]
+            EXECUTE txt SQUARE_OPEN i1  SQUARE_CLOSE SET txt[elementsOf(txt) - i1 - 1]
+            EXECUTE txt SQUARE_OPEN elementsOf(txt) - i1 - 1  SQUARE_CLOSE SET aux
+        END ITERATE
+RETURN txt
+    END inverte
