@@ -41,16 +41,16 @@ public class PlaggieSubmissionsTest {
             "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel7/Factorial.java.teste",
             "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel8/Factorial.java.teste"};         
         try{
-            System.out.println("\n\t\t==[ Níveis de Detecçao de Plágio ]==\n");
-            System.out.println("\n\t Nível 0 - SEM alteraçao de código:              "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[0])));
-            System.out.println("\n\t Nível 1 - Alteraçao do NOME das variáveis:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[1])));
-            System.out.println("\n\t Nível 2 - Alteraçao da POSIÇAO das Variáveis:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[2])));
-            System.out.println("\n\t Nível 3 - Alteraçao da POSIÇAO de Cálculo:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[3])));
-            System.out.println("\n\t Nível 4 - Alteraçao de EXPRESSOES de cálculo:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[4])));
-            System.out.println("\n\t Nível 5 - Alteraçao de IF por ELSE:             "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[5])));
-            System.out.println("\n\t Nível 6 - Alteraçao de CICLO:                   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[6])));
-            System.out.println("\n\t Nível 7 - Alteraçao para RECURSIVIDADE:         "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[7])));
-            System.out.println("\n\t Nível 8 - Incorporaçao de FUNÇAO no MAIN:       "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[8])));
+            System.out.println("\n\t\t==[ Nveis de Detecao de Plgio ]==\n");
+            System.out.println("\n\t Nvel 0 - SEM alteraao de cdigo:              "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[0])));
+            System.out.println("\n\t Nvel 1 - Alteraao do NOME das variveis:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[1])));
+            System.out.println("\n\t Nvel 2 - Alteraao da POSIAO das Variveis:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[2])));
+            System.out.println("\n\t Nvel 3 - Alteraao da POSIAO de Clculo:      "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[3])));
+            System.out.println("\n\t Nvel 4 - Alteraao de EXPRESSOES de clculo:   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[4])));
+            System.out.println("\n\t Nvel 5 - Alteraao de IF por ELSE:             "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[5])));
+            System.out.println("\n\t Nvel 6 - Alteraao de CICLO:                   "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[6])));
+            System.out.println("\n\t Nvel 7 - Alterao para RECURSIVIDADE:         "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[7])));
+            System.out.println("\n\t Nvel 8 - Incorporaï¿½ao de FUNAO no MAIN:       "+Stats.getPercentage(compare2( ficheiros[0], ficheiros[8])));
             System.out.println("\n");
         }catch (NullPointerException ex) {
             Logger.getLogger(core.plaggie.plaggieTesteDrive.PlaggieSubmissionsTest.class.getName()).log(Level.SEVERE, null, ex);

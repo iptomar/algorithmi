@@ -22,6 +22,9 @@ import plag.parser.SubmissionSimilarityChecker;
 import plag.parser.TokenSimilarityChecker;
 import plag.parser.plaggie.Configuration;
 
+
+
+
 /**
  *
  * @author Luis
@@ -66,7 +69,7 @@ public class Plaggie {
             
             TokenSimilarityChecker tokenChecker = new SimpleTokenSimilarityChecker(3);
             
-            // -- Criar o objecto de código tokenizer para parsing dos ficheiros de código fonte
+            // -- Criar o objecto de cdigo tokenizer para parsing dos ficheiros de cdigo fonte
             Configuration config = new PlaggieConfiguration();
                        
 	    CodeTokenizer codeTokenizer = (CodeTokenizer)Class.forName(config.codeTokenizer).newInstance();
