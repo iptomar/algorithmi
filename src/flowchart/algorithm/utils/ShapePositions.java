@@ -314,7 +314,7 @@ public class ShapePositions implements Serializable {
             //add center
             IDCenter.put(key, center);
             //addhalf
-            center += 20 + value / 4;
+            center +=  value / 3; // to make flowchart more compact
         }
     }
 
