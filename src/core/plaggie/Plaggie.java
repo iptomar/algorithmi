@@ -112,15 +112,15 @@ public class Plaggie {
         String alunos[]={"N0","N1","N2","N3","N4","N5","N6","N7","N8"};
 
         String ficheiros[]={
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel0/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel1/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel2/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel3/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel4/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel5/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel6/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel7/Factorial.java.teste",
-            "/myGitHub/LEI2016PSI/Algorithmi-Core-Plaggie-Git/algorithmi-code/src/core/plaggie/plaggieTesteDrive/Submissions/Nivel8/Factorial.java.teste"};         
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel0/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel1/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel2/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel3/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel4/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel5/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel6/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel7/Factorial.java.teste",
+            "src/core/plaggie/plaggieTesteDrive/Submissions/Nivel8/Factorial.java.teste"};         
         try{
             compare2( alunos, ficheiros);
         }catch (IOException | NullPointerException ex) {
