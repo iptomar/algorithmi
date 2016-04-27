@@ -131,16 +131,4 @@ public class Crypt {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) throws Exception {
-        String originalPassword = "isto e um teste";
-        System.out.println("Original password: " + originalPassword);
-        String encryptedPassword = encrypt(originalPassword);
-        System.out.println("Encrypted password: " + encryptedPassword);
-        String decryptedPassword = decrypt(encryptedPassword);
-        System.out.println("Decrypted password: " + decryptedPassword);
-        String hash = getHashString(originalPassword);
-        System.out.println("Hash " + hash);
-        System.out.println("OK   " + isValidHashString(originalPassword, hash));
-        
-    }
 }

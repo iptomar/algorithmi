@@ -136,7 +136,6 @@ public class BreakArrays {
                     var.setDescriptor(var.getFullName());
                     //because de definition of the array consumes the current position
                     indexInExpression--;
-                    System.out.println(var + " ? " + var.isIndexed());
 
                 } //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
                 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::  ARRAY Index

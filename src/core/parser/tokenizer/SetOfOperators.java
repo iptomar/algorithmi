@@ -36,9 +36,9 @@ package core.parser.tokenizer;
 
 import core.evaluate.CoreElement;
 import core.CoreCalculator;
-import core.data.exception.FlowchartException;
 import java.util.ArrayList;
 import java.util.List;
+import ui.FLog;
 
 /**
  *
@@ -102,21 +102,15 @@ public class SetOfOperators {
 
     public void print() {
         for (List<CoreElement> operators : listOfOperators) {
-            System.out.print("\n ");
+            FLog.print("\n ");
             for (CoreElement op : operators) {
-                System.out.print(" [" + op.getHelp() + "]");
+                FLog.print(" [" + op.getHelp() + "]");
             }
         }
     }
 
     public String toString() {
        return oper;
-    }
-
-    public static void main(String[] args) {
-        SetOfOperators s = new SetOfOperators("!>=-");
-        s.print();
-        System.out.println(s);
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

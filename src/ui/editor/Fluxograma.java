@@ -1142,7 +1142,6 @@ public class Fluxograma extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             askToDeleteFile();
         }
-        System.out.println("KEY " + evt.getKeyCode());
     }//GEN-LAST:event_lstProgramFilesKeyPressed
 
     private void lblUserAvatarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUserAvatarMouseClicked

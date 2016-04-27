@@ -94,16 +94,6 @@ public class BreakSpaces {
 
     
 
-    public static void main(String[] args) throws FlowchartException {
-        String s = "' '";
-        List<Object> exp = new ArrayList<>();
-        exp.add(s);
-        exp = BreakSpaces.execute(exp);
-        for (Object elem : exp) {
-            System.out.println(elem.getClass().getSimpleName() + " \t " + elem.toString());
-        }
-
-    }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

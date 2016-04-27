@@ -127,7 +127,7 @@ public class Do_While extends Fshape {
      * @throws FlowchartException Runtime error of instruction
      */
     public Fshape execute(GraphExecutor exe) throws FlowchartException {
-        System.out.println("DO WHILE MEMORY " + exe.getRuntimeMemory());
+        //System.out.println("DO WHILE MEMORY " + exe.getRuntimeMemory());
         exe.clearMemoryLevel(level + 1);
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::        
         //:::::::::::::::::::::::::::::::: FUNCTION CALL :::::::::::::::::::::::FUNCTION CALL :::::::::::::::::::::::

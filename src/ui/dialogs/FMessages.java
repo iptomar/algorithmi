@@ -175,9 +175,7 @@ public class FMessages {
     //--------------------------------------------------------------------------- NEW PROGRAM
     //---------------------------------------------------------------------------
 
-    public static void main(String[] args) {
-        System.out.println("" + Fi18N.get("BUTTON.reject.title"));
-    }
+   
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

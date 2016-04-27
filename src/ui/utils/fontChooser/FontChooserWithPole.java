@@ -525,7 +525,7 @@ class InputList extends JPanel implements ListSelectionListener, ActionListener 
   protected class AccessibleOpenList extends AccessibleJComponent {
 
     public String getAccessibleName() {
-      System.out.println("getAccessibleName: " + accessibleName);
+//      System.out.println("getAccessibleName: " + accessibleName);
       if (accessibleName != null)
         return accessibleName;
       return label.getText();

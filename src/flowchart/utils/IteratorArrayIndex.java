@@ -102,12 +102,5 @@ public class IteratorArrayIndex implements Iterator<String> {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
-        String x = "x[1 * y[4]] [2] + Y [3*k[5][7]]";
-        IteratorArrayIndex it = new IteratorArrayIndex(x);
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-    }
 
 }

@@ -126,13 +126,4 @@ public class FkeywordToken {
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
-        for (String key : token_word.keySet()) {
-            String word = token_word.get(key);
-            String token = word_Token.get(word);
-
-            System.out.println(key + " \t \t " + word + " \t \t " + token);
-        }
-
-    }
 }

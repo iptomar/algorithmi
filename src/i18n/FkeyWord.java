@@ -185,17 +185,7 @@ public class FkeyWord {
     }
     //----------------------------------------------------------------------------------
 
-    public static void main(String[] args) {
-        String key = "KEYWORD.begin";
-        System.out.println(" " + FkeyWord.OPERATOR_SET);
-        System.out.println(key + "  = " + FkeyWord.get(key));
-        load("JAVA", "");
-        System.out.println(containsKey(key));
-        System.out.println(key + "  = " + FkeyWord.get(key));
-        String teste = FkeyWord.get(key);
-        teste = teste.replaceFirst("&", "teste");
-        System.out.println(teste);
-    }
+   
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

@@ -121,25 +121,7 @@ public class Equal extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Equal calc = new Equal();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            lst.add(new Freal(2));
-//            lst.add( new Int(3));
-//            lst.add(new Ftext("\"ola\""));
-//            lst.add(new Ftext("\" mundo\""));
-            lst.add(new Flogic(true));
-//            lst.add(new Flogic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
-        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+       //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public static String TOKEN = FkeywordToken.get("OPERATOR.equal.key");
@@ -148,10 +130,8 @@ public class Equal extends CoreElement {
     public String getTokenID() {
         return TOKEN;
     }
-   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071200L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

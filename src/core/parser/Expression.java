@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ui.FLog;
 
 /**
  * Created on 7/set/2015
@@ -397,11 +398,11 @@ public class Expression implements Serializable {
 
     private void debug(String title, List l) {
         if (debug) {
-            System.out.print(title + "\nSize = " + l.size() + " =>");
+            FLog.print(title + "\nSize = " + l.size() + " =>");
             for (Object l1 : l) {
-                System.out.print("[" + l1.getClass().getSimpleName() + " - " + l1.toString() + "] ");
+                FLog.print("[" + l1.getClass().getSimpleName() + " - " + l1.toString() + "] ");
             }
-            System.out.println("");
+            FLog.printLn("");
         }
     }
 

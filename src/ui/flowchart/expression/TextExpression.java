@@ -73,7 +73,7 @@ public class TextExpression extends JTextPane {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                System.out.println(evt.getButton());
+               // System.out.println(evt.getButton());
                 if (evt.getButton() == 3) {
                     Point point = getCaret().getMagicCaretPosition();
                     popup.show(me, point.x, point.y);

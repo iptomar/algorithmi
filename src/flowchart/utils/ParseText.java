@@ -219,18 +219,5 @@ public class ParseText {
         return result;
     }
 
-    public static void main(String[] args) {
-        String[] intructions = {
-            "\"(2+3)\"*/// -p\"in//teli\" *+ (45)"
-        };
-
-        for (String test1 : intructions) {
-            String[] elems = splitBySpecialChars(test1);
-            System.out.print("\n\n" + test1 + " = \n");
-            for (String elem : elems) {
-                System.out.print("[" + elem + "]");
-            }
-
-        }
-    }
+   
 }

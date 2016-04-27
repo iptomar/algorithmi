@@ -130,24 +130,7 @@ public class Less extends CoreElement {
         );
     }
 
-    public static void main(String[] args) {
-        Less calc = new Less();
-        try {
-            ArrayList<Fsymbol> lst = new ArrayList<>();
-            lst.add(new Freal(3.0));
-            lst.add(new Finteger(3));
-//            lst.add(new Ftext("\"ola\""));
-//            lst.add(new Ftext("\" mundo\""));
-//            lst.add(new Flogic(true));
-//            lst.add(new Flogic(false));
-
-            Fsymbol res = calc.evaluate(lst);
-            System.out.println(res);
-
-        } catch (FlowchartException ex) {
-            ex.show("Test " + calc.getClass());
-        }
-    }
+  
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //TOKEN OF CALCULATOR
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
