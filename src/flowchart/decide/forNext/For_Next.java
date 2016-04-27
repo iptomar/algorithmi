@@ -143,7 +143,7 @@ public class For_Next extends Fshape {
         txt.append(_FROM);
         txt.append(_from.getIdented() + " \n");
         txt.append(_TO);
-        txt.append(_to.getIdented() + " ");
+        txt.append(_to.getIdented() + " \n");
         txt.append(_STEP);
         txt.append(_step.getIdented());
 
@@ -189,7 +189,7 @@ public class For_Next extends Fshape {
             start = new Expression(expStart, mem, algorithm.getMyProgram());
             instr.append(_FROM + " " + start.getIdented() + "\n");
             stop = new Expression(expStop, mem, algorithm.getMyProgram());
-            instr.append(_TO + " " + stop.getIdented() + " ");
+            instr.append(_TO + " " + stop.getIdented() + " \n");
             step = new Expression(expStep, mem, algorithm.getMyProgram());
             instr.append(_STEP + " " + step.getIdented());
 
