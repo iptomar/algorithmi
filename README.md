@@ -20,8 +20,8 @@
   </p>
   
   <p>
-    &nbsp;&nbsp;Algoritmi:
-    &nbsp;&nbsp;&nbsp; ?% Completed - Luis Marques
+    &nbsp;&nbsp;Plaggie:
+    &nbsp;&nbsp;&nbsp; 50% Completed - Luis Marques
   </p>
   
   <p>
