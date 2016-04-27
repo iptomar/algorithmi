@@ -60,6 +60,7 @@ import flowchart.decide.IfElse.IfThenElse;
 import flowchart.decide.While_Do;
 import flowchart.define.Define;
 import flowchart.function.Function;
+import flowchart.function.FunctionParameter;
 import flowchart.read.Read;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
@@ -86,6 +87,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import ui.FProperties;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -94,7 +96,7 @@ import ui.flowchart.dialogs.Fdialog;
  * @author Antonio M@nso <manso@ipt.pt>
  */
 public class AlgorithmGraph implements Cloneable, Serializable {
-
+     
     public ShapePositions positionCalc;// to reorganize patterns
     public JPanel graph;//to display and support to graph objects
     protected String name; // name of the algorithm
@@ -180,7 +182,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      */
     protected void addShape(Fshape shape, String instruction, String comments, Fshape arrow) throws FlowchartException {
         addSimpleShape((Arrow) arrow, shape); // replace arrow
-        shape.buildInstruction(instruction, comments); // updateStaticVars comments
+        shape.buildInstruction(instruction, comments); // updateSystemProperties comments
 
     }
 
@@ -230,7 +232,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
     /**
-     * Align patterns in the draw area and updateStaticVars draw area size
+     * Align patterns in the draw area and updateSystemProperties draw area size
      */
     public void alignPatterns() {
         if (getBegin() != null) {
@@ -240,8 +242,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
     /**
-     * Align patterns in the draw area and updateStaticVars draw area size the
-     * graph is translated to StartX , StartY
+     * Align patterns in the draw area and updateSystemProperties draw area size the
+ graph is translated to StartX , StartY
      *
      * @param startX position X of graph
      * @param startY position Y of graph
@@ -742,7 +744,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             //------------------------------------------------------------------ For
             if (pattern.parent instanceof For_Next) {
                 For_Next _for = (For_Next) pattern.parent;
-                if (_for.defineVariableToMemory && // defined in the for
+                if (_for.defineVariableToMemory
+                        && // defined in the for
                         _for.right == pattern) { // is inside the cicle
                     Define def = new Define(_for.algorithm);
                     def.buildDefine(_for.var);
@@ -766,6 +769,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 Function f = (Function) pattern;
                 for (Define def : f.getParameters()) {
                     defs.addFirst(def);
+
                 }
             }
             //stop memory builder
@@ -777,8 +781,12 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //build memory
         for (Define def : defs) {
             try {
-                Fsymbol s = patternMemory.define(def.getFullInstruction(), myProgram);
-                s.setComments(pattern.comments);
+                if (def instanceof FunctionParameter) {
+                    patternMemory.add(((FunctionParameter) def).varSymbol);
+                } else {
+                    Fsymbol s = patternMemory.define(def.getFullInstruction(), myProgram);
+                    s.setComments(pattern.comments);
+                }
             } catch (Exception e) {
                 FLog.runError("Memory getMemory(Fshape pattern)" + e.getMessage());
             }
@@ -958,7 +966,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         return name;
     }
 
-    private static String INIT_COMMENTS = Fshape.COMMENT_STR
+    public static String INIT_COMMENTS = FkeyWord.get("KEYWORD.comments")
             + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::";
 //    private static String FIN_COMMENTS = Fshape.COMMENT_STR
 //            + "......................................................";
@@ -992,8 +1000,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         return code.toString();
     }
-    
-     public String getLanguage() {
+
+    public String getLanguage() {
         StringBuilder code = new StringBuilder();
 
         Fshape current = getBegin();
@@ -1016,5 +1024,10 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
+    
+    public static void main(String[] args) {
+        FProperties.init();
+        AlgorithmGraph alg = new AlgorithmGraph(new JPanel(), new Program());
+    }
 
 }

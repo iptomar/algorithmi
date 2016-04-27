@@ -35,7 +35,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import ui.FLog;
 import ui.FProperties;
-import ui.utils.Crypt;
 
 /**
  * Created on 13/dez/2015, 17:58:43

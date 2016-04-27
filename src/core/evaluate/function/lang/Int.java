@@ -13,7 +13,7 @@
 //::                                                               (c)2015   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package core.evaluate.function;
+package core.evaluate.function.lang;
 
 import core.data.FabstractNumber;
 import core.data.Finteger;

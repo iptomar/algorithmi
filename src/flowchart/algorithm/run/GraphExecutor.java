@@ -71,7 +71,7 @@ import javax.swing.JScrollPane;
  *
  * @author zulu
  */
-public class GraphExecutor  {
+public class GraphExecutor {
 
     JPopupMenu rightMenu; // left button menu
 
@@ -174,7 +174,7 @@ public class GraphExecutor  {
         //align patterns
         newFunc.alignPatterns();
         //add new function to graph
-        addNewFunction(newFunc);
+        addNewFunction(newFunc, caller.yLocation);
         // create dummy to cleanup graph in the end
         DummyFunctionReturn dummy = new DummyFunctionReturn(func, begin);
         end.next = dummy;
@@ -193,7 +193,7 @@ public class GraphExecutor  {
         //get begin of functions
         Fshape begin = newFunc.getBegin();
         //add new function to graph
-        addNewFunction(newFunc);
+        addNewFunction(newFunc, POSITION_Y);
         return begin;
     }
 
@@ -202,11 +202,11 @@ public class GraphExecutor  {
      *
      * @param module new funtions or memory or main program
      */
-    public void addNewFunction(AlgorithmGraph module) {
+    public void addNewFunction(AlgorithmGraph module, int y) {
         List<Fshape> newFunctionShapes = new ArrayList<>(); // shapes of the new function
         Rectangle r = ShapePositions.getDrawBounds(graph);  // limits of the new function
         // move shapes in the graph
-        module.moveToXY(FProperties.SPACE_BETWEEN_LEVELS + r.x + r.width, POSITION_Y); // move function shapes
+        module.moveToXY(FProperties.SPACE_BETWEEN_LEVELS + r.x + r.width, POSITION_Y + y); // move function shapes
         //insert graph
         for (Component c : module.graph.getComponents()) { //------------------- add shapes and arrows
             if (c instanceof Fshape) {
@@ -227,7 +227,8 @@ public class GraphExecutor  {
 
     /**
      * Execute Instruction
-     * @throws FlowchartException 
+     *
+     * @throws FlowchartException
      */
     public void executeNext() throws FlowchartException {
 
@@ -253,7 +254,6 @@ public class GraphExecutor  {
 //            executeNext();
 //        }
     }
-
 
     /**
      * @return the template
@@ -296,9 +296,16 @@ public class GraphExecutor  {
      */
     public List<Memory> getProgramMemory() {
         List<Memory> mem = new ArrayList<>();
-        for (AlgorithmGraph alg : functionsInExecution) {
-            mem.add(alg.myLocalMemory);
+        for (int i = 0; i < functionsInExecution.size() - 1; i++) {
+            mem.add(functionsInExecution.get(i).myLocalMemory);
+
         }
+        if (!functionsInExecution.isEmpty()) {
+            runtimeMemory.setMemoryName(functionsInExecution.get(functionsInExecution.size() - 1).myLocalMemory.getMemoryName());
+        }
+//        for (AlgorithmGraph alg : functionsInExecution) {
+//            mem.add(alg.myLocalMemory);
+//        }
         mem.add(runtimeMemory);
         return mem;
     }
@@ -444,7 +451,7 @@ public class GraphExecutor  {
         Fi18N.loadMenuItem(clipboardImg, "BUTTON.clipboardImg", 24);
         clipboardImg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.copyToClipBoard(graph,UserName.createUser(template.digitalSignature));
+                FluxImage.copyToClipBoard(graph, UserName.createUser(template.digitalSignature));
             }
         });
 
@@ -452,7 +459,7 @@ public class GraphExecutor  {
         Fi18N.loadMenuItem(savePNG, "BUTTON.saveImage", 24);
         savePNG.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.saveTofile(graph,UserName.createUser(template.digitalSignature));
+                FluxImage.saveTofile(graph, UserName.createUser(template.digitalSignature));
             }
         });
 

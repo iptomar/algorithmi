@@ -58,8 +58,6 @@ import java.awt.event.KeyEvent;
 import ui.FProperties;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +69,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import ui.FLog;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
@@ -88,12 +86,11 @@ public class Fluxograma extends javax.swing.JFrame {
 //    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
 
     /**
-     * Creates new form Fluxograma
+     * Creates new form Fluxograma to the user
      */
-    public Fluxograma() {
-
+    public Fluxograma(UserName user) {
         initComponents();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.user = user;
         I18N();
         initMyComponents();
         if (showAboutBox) {
@@ -102,26 +99,36 @@ public class Fluxograma extends javax.swing.JFrame {
     }
 
     public void initMyComponents() {
-        updateUser();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        myProgram = new Program();
+
+        user = FProperties.load(user.getName());
+        showUser(user);
+
+        myProgram.setFileName(FProperties.get(FProperties.keyLastProgram));
         try {
-            File file = new File(FProperties.get(FProperties.keyLastProgramOpened));
+            File file = new File(FProperties.get(FProperties.keyLastProgram));
             if (file.exists()) {
                 myProgram = Program.loadProgram(file.getAbsolutePath());
-                createDisplaytoProgram();
                 FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.opened", myProgram.getFileName());
+                // createDisplayToProgram(FileUtils.chooseProgramFromFile(myProgram.getFileName()));
+                createDisplaytoProgram();
+            } else {
             }
         } catch (Exception e) {
-//            newProgram();
-            showAbout();
+            newProgram(false);
+//            showAbout();
         }
-        updateFileList("");
+        updateFileList(myProgram.getFileName());
     }
 
-    public void updateUser() {
-//        lblUserAvatar.setIcon(FProperties.getUserAvatar());
-//        lblUserAvatar.setText(FProperties.getCrypt(FProperties.keyUserName));
-//        lblUserAvatar.setHorizontalTextPosition(JLabel.CENTER);
-//        lblUserAvatar.setVerticalTextPosition(JLabel.BOTTOM);
+    public void showUser(UserName thUser) {
+        lblUserAvatar.setIcon(thUser.getAvatar());
+        lblUserAvatar.setText("");
+        lblUserAvatar.setToolTipText("[" + thUser.getCode() + "] " + thUser.getFullName());
+        lblUserFullName.setText(FileUtils.getFileFromPath(myProgram.getFileName()));
+        pnProgramInfo.setBorder(new TitledBorder(thUser.getName()));
+
     }
 
     public final void I18N() {
@@ -206,18 +213,21 @@ public class Fluxograma extends javax.swing.JFrame {
         lbblStatus = new javax.swing.JLabel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lstProgramFiles = new javax.swing.JList();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtPath = new javax.swing.JTextArea();
+        pnProgramInfo = new javax.swing.JPanel();
+        lblUserAvatar = new javax.swing.JLabel();
+        lblUserFullName = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel6 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btNewFlux = new javax.swing.JButton();
         btOpenFile = new javax.swing.JButton();
         btSaveFileAs = new javax.swing.JButton();
-        pnProgramInfo = new javax.swing.JPanel();
-        lblUserAvatar = new javax.swing.JLabel();
-        lblUserFullName = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtPath = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstProgramFiles = new javax.swing.JList();
+        jPanel7 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         btGlobalMemory = new javax.swing.JButton();
@@ -297,34 +307,42 @@ public class Fluxograma extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
-        lstProgramFiles.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lstProgramFilesMouseClicked(evt);
-            }
-        });
-        lstProgramFiles.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                lstProgramFilesKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                lstProgramFilesKeyTyped(evt);
-            }
-        });
-        lstProgramFiles.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstProgramFilesValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(lstProgramFiles);
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
-        txtPath.setEditable(false);
-        txtPath.setBackground(new java.awt.Color(204, 204, 204));
-        txtPath.setColumns(20);
-        txtPath.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        txtPath.setForeground(new java.awt.Color(0, 0, 0));
-        txtPath.setLineWrap(true);
-        txtPath.setRows(5);
-        jScrollPane3.setViewportView(txtPath);
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
+        pnProgramInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("UserName"));
+
+        lblUserAvatar.setBackground(new java.awt.Color(204, 255, 255));
+        lblUserAvatar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblUserAvatar.setText("user");
+        lblUserAvatar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        lblUserAvatar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblUserAvatarMouseClicked(evt);
+            }
+        });
+
+        lblUserFullName.setText("jButton1");
+
+        javax.swing.GroupLayout pnProgramInfoLayout = new javax.swing.GroupLayout(pnProgramInfo);
+        pnProgramInfo.setLayout(pnProgramInfoLayout);
+        pnProgramInfoLayout.setHorizontalGroup(
+            pnProgramInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblUserAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblUserFullName, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+        );
+        pnProgramInfoLayout.setVerticalGroup(
+            pnProgramInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnProgramInfoLayout.createSequentialGroup()
+                .addComponent(lblUserAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addComponent(lblUserFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel3.add(pnProgramInfo, java.awt.BorderLayout.NORTH);
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
 
         jPanel4.setLayout(new java.awt.GridLayout(1, 3, 5, 0));
 
@@ -361,70 +379,58 @@ public class Fluxograma extends javax.swing.JFrame {
         });
         jPanel4.add(btSaveFileAs);
 
-        pnProgramInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("UserName"));
+        jPanel6.add(jPanel4, java.awt.BorderLayout.NORTH);
 
-        lblUserAvatar.setBackground(new java.awt.Color(204, 255, 255));
-        lblUserAvatar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUserAvatar.setText("user");
-        lblUserAvatar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        lblUserAvatar.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtPath.setEditable(false);
+        txtPath.setBackground(new java.awt.Color(204, 204, 204));
+        txtPath.setColumns(20);
+        txtPath.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        txtPath.setLineWrap(true);
+        txtPath.setRows(5);
+        jScrollPane3.setViewportView(txtPath);
+
+        jPanel6.add(jScrollPane3, java.awt.BorderLayout.SOUTH);
+
+        lstProgramFiles.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblUserAvatarMouseClicked(evt);
+                lstProgramFilesMouseClicked(evt);
             }
         });
+        lstProgramFiles.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lstProgramFilesKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lstProgramFilesKeyTyped(evt);
+            }
+        });
+        lstProgramFiles.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstProgramFilesValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(lstProgramFiles);
 
-        lblUserFullName.setText("jButton1");
+        jPanel6.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout pnProgramInfoLayout = new javax.swing.GroupLayout(pnProgramInfo);
-        pnProgramInfo.setLayout(pnProgramInfoLayout);
-        pnProgramInfoLayout.setHorizontalGroup(
-            pnProgramInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblUserAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblUserFullName, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-        );
-        pnProgramInfoLayout.setVerticalGroup(
-            pnProgramInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnProgramInfoLayout.createSequentialGroup()
-                .addComponent(lblUserAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addComponent(lblUserFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jTabbedPane1.addTab("tab1", jPanel6);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addComponent(pnProgramInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 228, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(pnProgramInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3))
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 477, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
-        );
+        jTabbedPane1.addTab("tab2", jPanel7);
+
+        jPanel3.add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(jPanel3, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setLeftComponent(jPanel2);
 
@@ -705,7 +711,7 @@ public class Fluxograma extends javax.swing.JFrame {
     }//GEN-LAST:event_mnNewFluxActionPerformed
 
     private void newProgram(boolean askForName) {
-        FProperties.setUser(user);
+        //  FProperties.setUser(user);
         boolean firstTime = myProgram == null;
         //currentPath
         String currentPath = FileUtils.PROGRAMS_PATH;
@@ -725,9 +731,8 @@ public class Fluxograma extends javax.swing.JFrame {
             myProgram = new Program();
             //create file in the current path
             myProgram.setFileName(NewProgram.fileName);
-            myProgram.txtProblem = NewProgram.problemDescription;
             myProgram.setMain(new AlgorithmGraph(new JPanel(), myProgram));
-//            createMainEditor(myProgram.getMain());
+            myProgram.digitalSignature = user.digitalSignature();
             createDisplayToProgram(myProgram);
             FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName());
             if (!firstTime) {//save the program if is not the first time
@@ -856,9 +861,9 @@ public class Fluxograma extends javax.swing.JFrame {
         }
         lstProgramFiles.setModel(model);
 //
-//        if (myProgram != null) {
-//            lstProgramFiles.setSelectedValue(FileUtils.getFileFromPath(myProgram.getFileName()), true);
-//        }
+        if (myProgram != null) {
+            lstProgramFiles.setSelectedValue(FileUtils.getFileFromPath(myProgram.getFileName()), true);
+        }
 
     }
 
@@ -874,7 +879,7 @@ public class Fluxograma extends javax.swing.JFrame {
         myProgram.tryToSave();
         //-------------------------------------------------------------------------NEW FUNC
         FunctionGraph fg = new FunctionGraph(new JPanel(), myProgram);
-        Function newFunc = (Function)fg.getBegin();
+        Function newFunc = (Function) fg.getBegin();
         //newFunc.setLocation(btAddFunction.getLocation());
         //menu to create function
         MenuFunction m = new MenuFunction();
@@ -1024,7 +1029,7 @@ public class Fluxograma extends javax.swing.JFrame {
         //save current program to load in the next execution
         try {
             myProgram.tryToSave();
-            FProperties.set(FProperties.keyLastProgramOpened, myProgram.getFileName());
+            FProperties.set(FProperties.keyLastProgram, myProgram.getFileName());
             FLog.printLn(":::::::::::::: END ::::::::::: " + myProgram.getFileName());
             FProperties.save();
             FLog.close();
@@ -1047,7 +1052,7 @@ public class Fluxograma extends javax.swing.JFrame {
 
     private void mnPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnPropertiesActionPerformed
         myProgram.tryToSave();
-        FlowChartProperties props = new FlowChartProperties(this.myProgram);
+        FlowChartProperties props = new FlowChartProperties();
         props.setVisible(true);
         if (!props.isCanceled) {
             setUser(FProperties.getUser());
@@ -1108,7 +1113,7 @@ public class Fluxograma extends javax.swing.JFrame {
             if (lstProgramFiles.getModel().getSize() > 1) {
                 String fileName = myProgram.getFileName();
                 myProgram = null; // delete file
-                int index = lstProgramFiles.getSelectedIndex() ; // selected index
+                int index = lstProgramFiles.getSelectedIndex(); // selected index
                 updateFileList(fileName);
                 lstProgramFiles.setSelectedIndex(index >= 0 ? index : 0);
             } else {
@@ -1120,18 +1125,6 @@ public class Fluxograma extends javax.swing.JFrame {
 
     private void lstProgramFilesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstProgramFilesMouseClicked
 
-//        if (!lstProgramFiles.isSelectionEmpty() // and list selection is not empty
-//                && lstProgramFiles.locationToIndex(evt.getPoint()) // and clicked point is
-//                == lstProgramFiles.getSelectedIndex()) {       //   inside selected item bounds
-//
-//            if (SwingUtilities.isRightMouseButton(evt)) { //right
-//                askToDeleteFile();
-//            }//right
-//            else {
-//                displayFile(FileUtils.getPath(myProgram.getFileName()) + lstProgramFiles.getSelectedValue().toString());
-//            }
-//
-//        }
     }//GEN-LAST:event_lstProgramFilesMouseClicked
 
     private void lstProgramFilesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lstProgramFilesKeyTyped
@@ -1153,13 +1146,13 @@ public class Fluxograma extends javax.swing.JFrame {
     }//GEN-LAST:event_lstProgramFilesKeyPressed
 
     private void lblUserAvatarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUserAvatarMouseClicked
-        myProgram.tryToSave();
-        FlowChartProperties props = new FlowChartProperties(this.myProgram);
-        props.setVisible(true);
-        if (!props.isCanceled) {
-            setUser(FProperties.getUser());
-            newProgram(true);
-        }
+//        myProgram.tryToSave();
+//        FlowChartProperties props = new FlowChartProperties(this.myProgram);
+//        props.setVisible(true);
+//        if (!props.isCanceled) {
+//            setUser(FProperties.getUser());
+//            //newProgram(true);
+//        }
     }//GEN-LAST:event_lblUserAvatarMouseClicked
 
     private void lblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUserMouseClicked
@@ -1172,46 +1165,6 @@ public class Fluxograma extends javax.swing.JFrame {
 
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Fluxograma().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddFunction;
@@ -1233,6 +1186,8 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -1245,6 +1200,7 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lbblStatus;
     private javax.swing.JLabel lblUser;
@@ -1293,10 +1249,12 @@ public class Fluxograma extends javax.swing.JFrame {
      */
     public void setUser(UserName user) {
         try {
+
             this.user = user;
+            this.setIconImage(user.getAvatar(32).getImage());
             lblUser.setText(user.getName() + " [" + user.getCode() + "]" + user.getFullName());
             lblUser.setIcon(ImageUtils.resize(user.getAvatar(), 24, 24));
-            File file = new File(FProperties.get(FProperties.keyLastProgramOpened));
+            File file = new File(FProperties.get(FProperties.keyLastProgram));
             if (file.exists()) {
                 myProgram = Program.loadProgram(file.getAbsolutePath());
             } else {
@@ -1317,13 +1275,52 @@ public class Fluxograma extends javax.swing.JFrame {
         if (myProgram == null) {
             return;
         }
-        UserName user1 = UserName.createUser(myProgram.digitalSignature);
-        pnProgramInfo.setBorder(BorderFactory.createTitledBorder(
-                user1.getFullName()));
-        lblUserAvatar.setIcon(user1.getAvatar());
-        lblUserAvatar.setText("");
-        lblUserFullName.setText(FileUtils.getFileFromPath(myProgram.getFileName()));
-        lblUserAvatar.setToolTipText("[" + user1.getCode() + "] " + user1.getFullName());
+//        UserName user1 = UserName.createUser(myProgram.digitalSignature);
+//        pnProgramInfo.setBorder(BorderFactory.createTitledBorder(user1.getFullName()));
+//        lblUserAvatar.setIcon(user1.getAvatar());
+//        lblUserAvatar.setText("");
+//        lblUserFullName.setText(FileUtils.getFileFromPath(myProgram.getFileName()));
+//        lblUserAvatar.setToolTipText("[" + user1.getCode() + "] " + user1.getFullName());
+    }
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Fluxograma.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Fluxograma.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Fluxograma.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Fluxograma.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Fluxograma(new UserName()).setVisible(true);
+            }
+        });
     }
 }

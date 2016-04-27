@@ -67,13 +67,15 @@ public class ReplaceSymbols {
                 //tentar fazer uma variavel com o nome
                 if (mem != null) {
                     //verificar o nome
-                    symbol = mem.getByName(txt);
-                    if (symbol != null) {
+                    symbol = (Fsymbol) mem.getByName(txt);
+                    if (symbol != null) { // Full array ( not elements)
+                        symbol = (Fsymbol) symbol.clone();  //clone symbol                              
                         if (symbol instanceof Farray) {
-                            throw new FlowchartException("EXECUTE.array.notIndexes", txt);
+                            Farray a = (Farray) symbol;
+                            a.indexExpression.clear();
                         }
                         symbol.setDescriptor(txt); //name of var
-                        result.add(symbol.clone());
+                        result.add(symbol);
                         continue;
                     }
                 }

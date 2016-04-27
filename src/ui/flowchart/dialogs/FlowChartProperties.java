@@ -36,13 +36,13 @@ public class FlowChartProperties extends MenuDialog {
     /**
      * Creates new form FColors
      */
-    public FlowChartProperties(Program myProgram) {
+    public FlowChartProperties() {
+        this.user = user;
         setTitle(Fi18N.get("PROPERTIES.menu.title"));
         initComponents();
         setLocationRelativeTo(null);
         I18N();
         loadProperties();
-        // this.myProgram = myProgram;
     }
 
     public void I18N() {
@@ -1011,7 +1011,7 @@ public class FlowChartProperties extends MenuDialog {
         user.setAvatar((ImageIcon) lblAvatar.getIcon());
         FProperties.setUser(user);
         FProperties.save();
-        FProperties.updateStaticVars();
+        FProperties.updateSystemProperties();
         isCanceled = false;
         setVisible(false);
     }//GEN-LAST:event_btOkActionPerformed

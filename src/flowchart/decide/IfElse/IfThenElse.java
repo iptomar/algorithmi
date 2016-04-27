@@ -169,7 +169,7 @@ public class IfThenElse extends Fshape {
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static String KEY_IF = FkeywordToken.get("KEYWORD.if.key");
+    public static String KEY = FkeywordToken.get("KEYWORD.if.key");
     public static String KEY_ELSE = FkeywordToken.get("KEYWORD.else.key");
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -182,7 +182,7 @@ public class IfThenElse extends Fshape {
         StringBuilder txt = new StringBuilder(PseudoLanguage.ident(this));
         String ifThen = getThenToken();
         String ifElse = getElseToken();
-        txt.append(KEY_IF + " " + ExpressionUtils.getExpressionTokens(logicExpression) + "\n");
+        txt.append(KEY + " " + ExpressionUtils.getExpressionTokens(logicExpression) + "\n");
         if (!ifThen.isEmpty()) {
             txt.append(ifThen);
             txt.append("\n");
@@ -192,7 +192,7 @@ public class IfThenElse extends Fshape {
             txt.append(ifElse);
             txt.append("\n");
         }
-        txt.append(PseudoLanguage.ident(this) + End.KEY + " " + KEY_IF);
+        txt.append(PseudoLanguage.ident(this) + End.KEY + " " + KEY);
         return txt.toString();
     }
 

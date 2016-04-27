@@ -277,8 +277,8 @@ public class MenuReturn extends ShapeMenuDialog implements MenuPattern {
             returnFunc.setSelected(false);
             setVisible(false);
         } catch (FlowchartException e) {
-            e.setInstruction(txtExpressionShape.getText());
             Fdialog.compileException(e);
+           // e.setInstruction(txtExpressionShape.getText());            
             returnFunc.returnExpression = null;
         }
 

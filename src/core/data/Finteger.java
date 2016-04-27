@@ -81,11 +81,11 @@ public class Finteger extends FabstractNumber {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // token to type
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.integer.key");
+    //public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.integer.key");
 
     @Override
     public String getTypeToken() {
-        return TYPE_TOKEN;
+        return FkeywordToken.get("TYPE.integer.key");
     }
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

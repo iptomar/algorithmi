@@ -334,6 +334,25 @@ public class ImageUtils {
         return null;
     }
 
+    /**
+     * Load a icon in the path
+     *
+     * @param imageFile name of the file
+     * @param height height of the icon [ 0 ] = not scalling
+     * @return icon with size
+     */
+    public static ImageIcon getByteArrayJpeg(byte[] data, int size) {
+        try {
+            ByteArrayInputStream in = new ByteArrayInputStream(data);
+            BufferedImage img = ImageIO.read(in);
+            Image newimg = img.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH);
+            return new ImageIcon(newimg);
+        } catch (IOException ex) {
+            Logger.getLogger(ImageUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public static BufferedImage convertToBufferedImage(ImageIcon icon) {
         BufferedImage bi = new BufferedImage(
                 icon.getIconWidth(),
@@ -366,7 +385,6 @@ public class ImageUtils {
             System.out.println("txt   " + jpgTxt.length());
             System.out.println("jpg\n" + jpgTxt);
             ImageIcon img3 = getByteArrayJpeg(data);
-            
 
             JFrame frame = new JFrame("jpeg demo");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

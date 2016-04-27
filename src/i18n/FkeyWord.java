@@ -37,7 +37,6 @@ package i18n;
 import ui.FLog;
 import core.CoreCalculator;
 import core.Memory;
-import ui.FProperties;
 import flowchart.utils.TextUtils;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -51,6 +50,7 @@ import java.util.ResourceBundle;
  * @author Antonio M@nso <manso@ipt.pt>
  */
 public class FkeyWord {
+    
 
     private static String LANG_FILE = "i18n.lang";
     //--------------------------------------------------------------------------
@@ -59,24 +59,32 @@ public class FkeyWord {
     static ArrayList<String> dataType;
     static ArrayList<String> words;
 
-    static ResourceBundle messages;
+    static ResourceBundle messages = null;
+    static String language = "pt";
+    static String country = "PT";
 
     static {
-        Locale local = FProperties.getLocale();
-        load(local.getLanguage(), local.getCountry());
+        init();
     }
 
-//    public static void load(String myFile) {
-//        LANG_FILE = myFile;
-//        messages = ResourceBundle.getBundle(myFile, Locale.getDefault());
-//        reloadLanguage();
-////        printLog();
-//    }
-    public static void load(String language, String country) {
-        messages = ResourceBundle.getBundle(LANG_FILE, new Locale(language, country));
+    public static void init() {
+        if (messages == null) {
+            messages = ResourceBundle.getBundle(LANG_FILE, new Locale(language, country));
+            reloadLanguage();
+        }
 
+    }
+
+    public static void load(String lang, String land) {
+        //do not reload properties
+        if (!country.equals(land) || !language.equals(lang)) {
+            language = lang;
+            country = land;
+            messages = ResourceBundle.getBundle(LANG_FILE, new Locale(language, country));
+            reloadLanguage();
+        }
 //        printLog();
-        reloadLanguage();
+
     }
 
     public static final String get(String key) {
@@ -143,8 +151,8 @@ public class FkeyWord {
                 || Memory.constants.isDefined(word)
                 || CoreCalculator.getBySymbol(word) != null;
     }
-    
-    public static boolean containsKey(String key){
+
+    public static boolean containsKey(String key) {
         return messages.containsKey(key);
     }
 
@@ -177,16 +185,15 @@ public class FkeyWord {
     }
     //----------------------------------------------------------------------------------
 
-    
-    
     public static void main(String[] args) {
         String key = "KEYWORD.begin";
+        System.out.println(" " + FkeyWord.OPERATOR_SET);
         System.out.println(key + "  = " + FkeyWord.get(key));
         load("JAVA", "");
         System.out.println(containsKey(key));
         System.out.println(key + "  = " + FkeyWord.get(key));
-        String teste=FkeyWord.get(key);
-        teste=teste.replaceFirst("&", "teste");
+        String teste = FkeyWord.get(key);
+        teste = teste.replaceFirst("&", "teste");
         System.out.println(teste);
     }
 

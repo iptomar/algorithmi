@@ -19,6 +19,7 @@ import ui.FProperties;
 import i18n.Fi18N;
 import flowchart.utils.TextUtils;
 import flowchart.utils.Theme;
+import static i18n.Fi18N.country;
 import java.awt.Image;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -37,15 +38,20 @@ public class EditorI18N {
 
     private static String MESSAGE_FILE = "i18n.Editor";
     static ResourceBundle resourcesI18n;
+    static String language = "pt";
+    static String country = "PT";
 
     static {
-        Locale local = FProperties.getLocale();
-        load(local.getLanguage(), local.getCountry());
-//        load(MESSAGE_FILE);
+        resourcesI18n = ResourceBundle.getBundle(MESSAGE_FILE, new Locale(language, country));
     }
 
-    public static void load(String language, String country) {
-        resourcesI18n = ResourceBundle.getBundle(MESSAGE_FILE, new Locale(language, country));
+    public static void load(String lang, String land) {
+        //do not reload properties
+        if (!country.equals(land) || !language.equals(lang)) {
+            language = lang;
+            country = land;
+            resourcesI18n = ResourceBundle.getBundle(MESSAGE_FILE, new Locale(language, country));
+        }
     }
 
     public static final String get(String key) {
@@ -118,7 +124,8 @@ public class EditorI18N {
         } catch (Exception ex) {
         }
     }
-    public static void loadLabel(JLabel item, String key,int size) {
+
+    public static void loadLabel(JLabel item, String key, int size) {
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: LOG
         // FLog.printLn(EditorI18N.class.getName() + " loadResource " + key);
         key = key.trim();
@@ -132,12 +139,13 @@ public class EditorI18N {
         } catch (Exception ex) {
         }
         try {
-           item.setIcon(loadIcon(key + ".icon", size));
+            item.setIcon(loadIcon(key + ".icon", size));
         } catch (Exception ex) {
         }
     }
-     public static void loadLabel(JLabel item, String key) {
-         loadLabel(item, key,16);
+
+    public static void loadLabel(JLabel item, String key) {
+        loadLabel(item, key, 16);
     }
 
     public static void loadResource(AbstractButton menu, AbstractButton button, String key) {

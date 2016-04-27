@@ -37,6 +37,7 @@ package flowchart.function;
 import core.FunctionCall;
 import core.Memory;
 import core.data.Fsymbol;
+import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Mark;
 import i18n.FkeyWord;
@@ -46,14 +47,11 @@ import flowchart.algorithm.run.GraphExecutor;
 import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
-import flowchart.terminator.End;
-import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import languages.AbstractLang;
-import languages.PseudoLanguage;
 
 /**
  *
@@ -66,7 +64,7 @@ public class Function extends Begin {
 
     private String functionName = "";  //fuction name
     private Fsymbol returnSymbol = core.data.Fvoid.createVoid();// return symbol   
-    private boolean isReturnArray = false;
+    public boolean isReturnArray = false;
     public List<FunctionParameter> parameters = new ArrayList<>(); //list of parameters
 
     static MenuPattern menu = new MenuFunction();
@@ -130,12 +128,12 @@ public class Function extends Begin {
         String returnType = txtInstr.substring(0, index).trim(); // get Return Type
         txtInstr = txtInstr.substring(index).trim(); // cut returnType
         if (txtInstr.charAt(0) == Mark.SQUARE_OPEN) { //---------------------------ARRAY IN THE RETURN
-            txtInstr = txtInstr.substring(1).trim(); // cut [
-            if (txtInstr.charAt(0) != Mark.SQUARE_CLOSE) {
-                throw new FlowchartException("FUNCTION.invalidReturn.Array", returnType + Mark.SQUARE_OPEN);
-            }
-            isReturnArray = true; //------------------- RETURN IS ARRAY
-            txtInstr = txtInstr.substring(1).trim(); // cut ]
+//            txtInstr = txtInstr.substring(1).trim(); // cut [
+//            if (txtInstr.charAt(0) != Mark.SQUARE_CLOSE) {
+//                throw new FlowchartException("FUNCTION.invalidReturn.Array", returnType + Mark.SQUARE_OPEN);
+//            }
+//            isReturnArray = true; //------------------- RETURN IS ARRAY
+//            txtInstr = txtInstr.substring(1).trim(); // cut ]
         }
         this.setReturnSymbol(Fsymbol.createSymbolByType(returnType));
         if (this.getReturnSymbol() == null) {
@@ -216,14 +214,14 @@ public class Function extends Begin {
             txt.append("" + Mark.SQUARE_OPEN + Mark.SQUARE_CLOSE);
         }
         txt.append(" " + functionName);
-        txt.append(Mark.ROUND_OPEN + toTxtPrameters() + Mark.ROUND_CLOSE);
+        txt.append(Mark.ROUND_OPEN + toTxtParameters() + Mark.ROUND_CLOSE);
         return txt.toString();
     }
 
-    public String toTxtPrameters() {
+    public String toTxtParameters() {
         StringBuilder txt = new StringBuilder();
         for (int i = 0; i < getParameters().size(); i++) {
-            txt.append(" " + getParameters().get(i).toString());
+            txt.append(" " + getParameters().get(i).toStringParameter());
             if (i < getParameters().size() - 1) {
                 txt.append(" " + Mark.COMMA_CHAR + " ");
             }
@@ -259,7 +257,11 @@ public class Function extends Begin {
         StringBuilder params = new StringBuilder();
         params.append(getFunctionName() + Mark.ROUND_OPEN);
         for (int i = 0; i < getParameters().size(); i++) {
-            params.append(" " + getParameters().get(i).getVarSymbol().getDefinitionValue() + " ");
+            if (getParameters().get(i).getVarSymbol() instanceof Farray) {
+                params.append(" " +  getParameters().get(i).varExpression+ " ");
+            } else {
+                params.append(" " + getParameters().get(i).getVarSymbol().getDefinitionValue() + " ");
+            }
             if (i < getParameters().size() - 1) {
                 params.append(Mark.COMMA_CHAR + " ");
             }
@@ -304,6 +306,12 @@ public class Function extends Begin {
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+    /**
+     * build a graph to call definition of the parameters
+     *
+     * @param mem runtime memory
+     * @param call head of the function
+     */
     public void expandParameters(Memory mem, FunctionCall call) {
         StringBuilder txt = new StringBuilder();
         txt.append(functionName + Mark.ROUND_OPEN + " ");
@@ -428,16 +436,15 @@ public class Function extends Begin {
         }
         txt.append(" " + functionName + " ");
         txt.append(Mark.ROUND_OPEN_TOKEN + " ");
-        txt.append(FkeywordToken.translateWordsToTokens(toTxtPrameters()));
+        txt.append(FkeywordToken.translateWordsToTokens(toTxtParameters()));
         txt.append(Mark.ROUND_CLOSE_TOKEN);
         return txt.toString();
     }
-    
-     @Override
+
+    @Override
     public String getLanguage() throws FlowchartException {
-        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getFunction(this);
+        return AbstractLang.lang.getCommentedString(this.comments, this) + AbstractLang.lang.ident(this) + AbstractLang.lang.getFunction(this);
     }
-       
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201518071215L;

@@ -51,7 +51,8 @@ import core.evaluate.function.trigonometry.Abs;
 import core.evaluate.function.trigonometry.Cos;
 import core.evaluate.function.trigonometry.CosH;
 import core.evaluate.function.math.Exp;
-import core.evaluate.function.Int;
+import core.evaluate.function.lang.Int;
+import core.evaluate.function.lang.ElementsOf;
 import core.evaluate.function.math.Ln;
 import core.evaluate.function.math.Log;
 import core.evaluate.function.math.Max;
@@ -152,6 +153,12 @@ public class ExpressionPopup extends JPopupMenu {
 
         JMenu funcs = new JMenu(Fi18N.get("FUNCTION.popupMenu.functions"));
         add(funcs);
+         //-----------------------------------------------------------------------
+        JMenu lang = new JMenu(Fi18N.get("FUNCTION.popupMenu.functions.lang"));
+        lang.add(buildItem(new Int()));
+        lang.add(buildItem(new ElementsOf()));
+        funcs.add(lang);
+        //-----------------------------------------------------------------------
         //-----------------------------------------------------------------------
         JMenu trigonomery = new JMenu(Fi18N.get("FUNCTION.popupMenu.functions.trigonometry"));
         trigonomery.add(buildItem(new Sin()));

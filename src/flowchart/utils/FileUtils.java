@@ -231,6 +231,7 @@ public class FileUtils {
     public static String getPath(String fileName) {
         try {
             File f = new File(fileName);
+            f = new File(f.getAbsolutePath()); //full path
             if (f.isDirectory()) {
                 return f.getAbsolutePath() + File.separator;
             } else {
@@ -255,7 +256,9 @@ public class FileUtils {
     }
 
     public static String getFileFromPath(String fileName) {
-        File f = new File(fileName);
+        File f = new File(fileName); // current filename
+        fileName = f.getAbsolutePath(); // full path
+        f = new File(fileName); // file to full path
         if (f.isDirectory()) {
             return null;
         }
@@ -298,7 +301,8 @@ public class FileUtils {
         try {
             createPathOfFile(fileName);
             FileOutputStream output = new FileOutputStream(fileName);
-            Writer writer = new OutputStreamWriter(new GZIPOutputStream(output));
+            //Writer writer = new OutputStreamWriter(new GZIPOutputStream(output));
+            Writer writer = new OutputStreamWriter(output);
             writer.write(txt);
             writer.flush();
             writer.close();
@@ -313,7 +317,8 @@ public class FileUtils {
         try {
             //gziped input stream
             FileInputStream input = new FileInputStream(fileName);
-            InputStream reader = new GZIPInputStream(input);
+            //InputStream reader = new GZIPInputStream(input);
+            InputStream reader = input;
 
             //read bytes to memory
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -402,6 +407,7 @@ public class FileUtils {
 
     public static void createPathOfFile(String fileName) {
         File file = new File(fileName);
+        file = new File(file.getAbsolutePath()); // full path
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdir();
         }

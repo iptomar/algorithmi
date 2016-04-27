@@ -16,6 +16,7 @@
 package core;
 
 import core.data.Fsymbol;
+import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
 import core.parser.Mark;
@@ -68,7 +69,22 @@ public class FunctionCall extends CoreToken {
         }
         for (int i = 0; i < funcParams.size(); i++) {
             Fsymbol p = myParameters.get(i).getVarSymbol();
-            if (!p.acceptValue(funcParams.get(i).getReturnType().getDefinitionValue())) {
+            Fsymbol np = funcParams.get(i).getReturnType();
+            if( p instanceof Farray && np instanceof Farray){
+                Farray a1 = (Farray)p;
+                Farray a2 = (Farray)np;
+                if( ! a1.getTemplateElement().isCompatible(a2.getTemplateElement())){
+                    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                //::::::::::::::::::::: FLOWCHART EXCEPTION ERROR :::::::::::::::::
+                //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                throw new FlowchartException("FUNCTIONCALL.invalidTypeOfParameter",
+                        myFunctionName,
+                        myParameters.get(i).getVarSymbol().getTypeName() + " "
+                        + myParameters.get(i).getVarSymbol().getName() + "",
+                        funcParams.get(i).getIdented() + ""
+                );
+                }
+            }else  if (!p.acceptValue(funcParams.get(i).getReturnType().getDefinitionValue())) {
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                 //::::::::::::::::::::: FLOWCHART EXCEPTION ERROR :::::::::::::::::
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

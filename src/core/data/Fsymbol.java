@@ -46,6 +46,8 @@ import ui.FLog;
 import i18n.Fi18N;
 import i18n.FkeyWord;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -101,7 +103,7 @@ public abstract class Fsymbol extends CoreToken implements Cloneable, Serializab
     }
 
     public String toString() {
-        return getInstruction() + "\n" + getComments();
+        return getInstruction() ;
     }
 
     public static String defaultValue(String type) {
@@ -418,11 +420,6 @@ public abstract class Fsymbol extends CoreToken implements Cloneable, Serializab
         return true;
     }
 
-    public static Fsymbol defineSymbolByValue(String value) {
-
-        return null;
-    }
-
     /**
      * @return the comments
      */
@@ -477,6 +474,15 @@ public abstract class Fsymbol extends CoreToken implements Cloneable, Serializab
         if(!(other instanceof Fsymbol)) return false;
         Fsymbol var = (Fsymbol)other;
         return var.level == level && var.getName().equalsIgnoreCase(name);
+    }
+    
+  
+    public boolean equalsValue(Fsymbol var){
+        try {
+            return var.getValue().toString().equalsIgnoreCase(getValue().toString());
+        } catch (FlowchartException ex) {
+        }
+        return false;
     }
     
     

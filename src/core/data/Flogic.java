@@ -130,11 +130,11 @@ public class Flogic extends Fsymbol {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // token to type
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.boolean.key");
+    //public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.boolean.key");
 
     @Override
     public String getTypeToken() {
-        return TYPE_TOKEN;
+        return FkeywordToken.get("TYPE.boolean.key");
     }
    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

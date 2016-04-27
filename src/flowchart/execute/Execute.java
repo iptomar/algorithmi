@@ -39,6 +39,7 @@ import core.FunctionCall;
 import core.Memory;
 import core.data.Finteger;
 import core.data.Fsymbol;
+import core.data.Ftext;
 import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
@@ -120,9 +121,7 @@ public class Execute extends Fshape {
             if ((memoryVar instanceof Farray) && !(var instanceof Farray)) {
                 throw new FlowchartException("EXECUTE.array.notIndexes", var.getName());
             }
-            if (!(memoryVar instanceof Farray) && (var instanceof Farray)) {
-                throw new FlowchartException("EXECUTE.array.notArray", var.getName());
-            }
+          
 
             if (!memoryVar.acceptValue(ret.getDefaultValue())) {
                 {
@@ -142,18 +141,6 @@ public class Execute extends Fshape {
                 }
             }
         }
-//        if (ret != null && var == null) {
-//            //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//            //::::::::::::::::::: FLOWCHART ERROR :::::::::::::::::::::::::
-//            //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//            throw new FlowchartException(
-//                    "EXECUTE.returnNotCatch",
-//                    expression.getIdented(),
-//                    ret.getTypeName()
-//           );
-//            //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//            //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//        }
         return true;
     }
 
@@ -171,8 +158,15 @@ public class Execute extends Fshape {
             expression = fullExpression.trim();
         }
 
-        if (nameVar.contains(Mark.SQUARE_OPEN + "")) { //array
-            variable = buildArray(nameVar, mem, algorithm.getMyProgram());
+        if (nameVar.contains(Mark.SQUARE_OPEN + "")) { //array or Text
+            //get variable from memory
+            variable = mem.getByName(nameVar.substring(0, nameVar.indexOf(Mark.SQUARE_OPEN + "")).trim());
+            //Text
+            if (variable instanceof Ftext) {
+                variable = buildTextIndex(nameVar, mem, algorithm.getMyProgram());
+            } else {
+                variable = buildArray(nameVar, mem, algorithm.getMyProgram());
+            }
             //System.out.println("CREATE " + variable.getFullInfo());
         } else {
             variable = mem.getByName(nameVar);
@@ -208,7 +202,7 @@ public class Execute extends Fshape {
             Farray array = (Farray) definitionOfArray.clone();
 //            System.out.println("\n CURRENT " + array.getFullInfo()); //--------------------------DEBUG
             IteratorArrayIndex it = new IteratorArrayIndex(fullDefinition);
-            if (it.numElements() > array.getNumberOfIndexes()) {
+            if (it.numElements() > array.getNumberOfIndexes() && !array.isparameter()) {
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                 //::::::::::::::::::: FLOWCHART ERROR :::::::::::::::::::::::::
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -289,6 +283,37 @@ public class Execute extends Fshape {
         }
     }
 
+    public static Fsymbol buildTextIndex(String defVar, Memory memory, Program prog) throws FlowchartException {
+        try {
+            String txtDefinition = defVar.trim(); // to use in exceptions
+            //check parentesis
+            BreakMarks.checkParentesis(defVar);
+            if (!txtDefinition.contains(Mark.SQUARE_OPEN + "") || !txtDefinition.contains(Mark.SQUARE_CLOSE + "")) {
+                throw new FlowchartException("EXECUTE.array.indexInvalidNotChar",
+                        Mark.SQUARE_OPEN + "", Mark.SQUARE_OPEN + "");
+            }
+            String nameVar = defVar.substring(0, defVar.indexOf(Mark.SQUARE_OPEN)).trim();
+            defVar = defVar.substring(defVar.indexOf(Mark.SQUARE_OPEN)).trim(); // remove Name
+
+            if (!defVar.contains(Mark.SQUARE_OPEN + "")) {
+                throw new FlowchartException("EXECUTE.array.indexInvalidStart", Mark.SQUARE_OPEN + "");
+            }
+            defVar = defVar.substring(1); // remove first [
+            if (!defVar.endsWith(Mark.SQUARE_CLOSE + "")) {
+                throw new FlowchartException("EXECUTE.array.indexInvalidEnd", Mark.SQUARE_CLOSE + "");
+            }
+            defVar = defVar.substring(0, defVar.length()-1); // remove last ]
+            //definition of the array in memory
+            Ftext memSymb = (Ftext) memory.getByName(nameVar).clone();
+            memSymb.indexExpression = new Expression(defVar, memory, prog);
+
+            return memSymb;
+        } catch (FlowchartException e) {
+            e.setInstruction(defVar);
+            throw e;
+        }
+    }
+
     public void buildInstruction(Fsymbol variable, String txtExpr, String comments) throws FlowchartException {
         StringBuilder instr = new StringBuilder();
         if (variable != null) {
@@ -336,7 +361,12 @@ public class Execute extends Fshape {
                     Farray memoryArray = (Farray) memVar;
                     //update using myvar indexes
                     memoryArray.setElementValue(result, myArray.getIndexes(), exe.getRuntimeMemory());
-                } else {
+                } else if( (memVar instanceof Ftext) && ((Ftext) var).isIndexed()){
+                    //calculate postion
+                    Finteger pos = (Finteger) ((Ftext)var).indexExpression.evaluate( exe.getRuntimeMemory());
+                    //set indexed
+                    ((Ftext) memVar).setText((Ftext)result, pos);
+                }else{
                     memVar.setValue(result);
                 }
             } else {
@@ -423,15 +453,14 @@ public class Execute extends Fshape {
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
     @Override
     public String getPseudoCode() throws FlowchartException {
         return PseudoLanguage.ident(this) + KEYWORD + " " + getIntructionPlainText();
     }
-    
+
     @Override
     public String getLanguage() throws FlowchartException {
-        return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getExecute(this);
+        return AbstractLang.lang.getCommentedString(this.comments, this) + AbstractLang.lang.ident(this) + AbstractLang.lang.getExecute(this);
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  */
 public class Expression implements Serializable {
 
-    public static boolean debug = true;
+    public static boolean debug = false;
     public transient Program myProgram; // program of the expression to replace userdefined functions
     Memory memory; // memory of the expression
     String text;  // original text
@@ -156,7 +156,7 @@ public class Expression implements Serializable {
             }
         }
         isConstant = true;
-        return Evaluator.evaluate(getTokens(), mem);
+        return Evaluator.verify(getTokens(), mem);
     }
 
     public void parse(Memory mem) throws FlowchartException {

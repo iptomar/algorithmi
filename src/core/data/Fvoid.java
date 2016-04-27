@@ -66,11 +66,11 @@ public class Fvoid extends Fsymbol {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // token to type
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.void.key");
+//    public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.void.key");
 
     @Override
     public String getTypeToken() {
-        return TYPE_TOKEN;
+        return FkeywordToken.get("TYPE.void.key");
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

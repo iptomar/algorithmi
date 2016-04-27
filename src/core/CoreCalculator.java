@@ -33,7 +33,8 @@ import core.evaluate.function.trigonometry.Abs;
 import core.evaluate.function.trigonometry.Cos;
 import core.evaluate.function.trigonometry.CosH;
 import core.evaluate.function.math.Exp;
-import core.evaluate.function.Int;
+import core.evaluate.function.lang.Int;
+import core.evaluate.function.lang.ElementsOf;
 import core.evaluate.function.math.Ln;
 import core.evaluate.function.math.Log;
 import core.evaluate.function.math.Max;
@@ -97,7 +98,7 @@ public class CoreCalculator {
         functions.add(new Exp());
         functions.add(new Sqrt());
         functions.add(new Round());
-        functions.add(new Int());
+        
         functions.add(new Log());
         functions.add(new Ln());
 
@@ -115,6 +116,10 @@ public class CoreCalculator {
         functions.add(new TanH());
         
         functions.add(new Align());
+        
+        
+        functions.add(new Int());
+        functions.add(new ElementsOf());
 
     }
 

@@ -42,19 +42,11 @@ import flowchart.utils.ProgramFile;
 import flowchart.utils.UserName;
 import i18n.Fi18N;
 import i18n.FkeyWord;
-import static i18n.FkeyWord.containsKey;
 import i18n.FkeywordToken;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import languages.AbstractLang;
@@ -62,7 +54,6 @@ import languages.JavaLang;
 import languages.PythonLang;
 import ui.FLog;
 import ui.FProperties;
-import ui.utils.Crypt;
 
 /**
  *
@@ -77,7 +68,8 @@ public class Program implements Cloneable, Serializable {
 
     public String digitalSignature; // digital signature of programmer
     public long timeOfCreation; // time of creation
-    public String txtProblem; // description of the problem.
+    public long problemID = 0; // ID of the problem ( to use in the backOffice )
+//    public String txtProblem; // description of the problem.
     public String fileName;
     private AlgorithmGraph main;  // main program
     private GlobalMemoryGraph globalMem; // definition of global memory
@@ -97,6 +89,9 @@ public class Program implements Cloneable, Serializable {
     }
 
     public void setFileName(String fileName) {
+        if( fileName == null){
+            fileName = Fi18N.get("PROGRAM.file.defaultFileName");
+        }
         if (!fileName.endsWith(FileUtils.FILTER_PROG_EXT)) {
             fileName += "." + FileUtils.FILTER_PROG_EXT;
         }
@@ -155,7 +150,7 @@ public class Program implements Cloneable, Serializable {
         }
         try {
             FileUtils.saveProgram(this, fileName);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             FLog.printLn("ERROR tryToSave " + fileName + " " + ex.getMessage());
         }
     }
@@ -167,6 +162,7 @@ public class Program implements Cloneable, Serializable {
     public void saveAs() throws Exception {
         FileUtils.saveProgramAs(this);
     }
+    
 
     /**
      * Load a program from a file
@@ -371,8 +367,9 @@ public class Program implements Cloneable, Serializable {
     }
 
     public String getTokens() {
-        StringBuilder code = new StringBuilder();
-        code.append(digitalSignature + "\n");
+        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
+        StringBuilder code = new StringBuilder(ProgramFile.getProgramHeader(this));   
+        //code.append(digitalSignature + "\n");
         if (globalMem != null) {
             code.append(globalMem.getPseudoTokens());
             code.append("\n");

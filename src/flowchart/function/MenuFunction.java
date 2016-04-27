@@ -37,7 +37,6 @@ package flowchart.function;
 import core.Memory;
 import core.data.Fsymbol;
 import core.data.exception.FlowchartException;
-import flowchart.algorithm.FunctionGraph;
 import ui.flowchart.dialogs.Fdialog;
 import i18n.Fi18N;
 import ui.FProperties;
@@ -117,12 +116,15 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
         //------------------------------------------ DEFINICAO --------------------------
         Fi18N.loadLabel(lblReturnFunc, "FUNCTION.return");
         Fi18N.loadLabel(lblName, "FUNCTION.nameFunc");
+
         //combo box return type
         cbReturnType.setToolTipText(Theme.toHtml(Fi18N.get("FUNCTION.return.help")));
         loadDataTypes(cbReturnType, true);
         //------------------------------------------ PARAMETROS --------------------------
         Fi18N.loadButton(btAddParameter, "FUNCTION.buttonAdd", 16);
         Fi18N.loadButton(btRemoveParameter, "FUNCTION.buttonRemove", 16);
+        cbArrayParam.setText(Fi18N.get("DEFINE.array.title"));
+        cbArrayParam.setToolTipText(Theme.toHtml(Fi18N.get("DEFINE.array.help")));
 
         //combo box type parameter
         loadDataTypes(cbTypeParam, false);
@@ -165,6 +167,9 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
             model.addElement(p);
         }
         lstParams.setModel(model);
+        if (!model.isEmpty()) {
+            lstParams.setSelectedIndex(0);
+        }
         cbReturnType.setSelectedItem(function.getReturnSymbol().getTypeName());
         txtName.setText(function.getFunctionName());
         txtComments.setText(function.getComments());
@@ -178,16 +183,15 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
     }
 
     public void showDialog(Fshape shape, int x, int y) {
-         oldFunction = (Function)shape; 
-         //create clone of old function
+        oldFunction = (Function) shape;
+        //create clone of old function
         function = new Function(shape.algorithm);
         try {
             function.buildInstruction(shape.getInstruction(), shape.comments);
         } catch (FlowchartException ex) {
-          //nothing
+            //nothing
         }
-        
-       
+
         //---------------------------------------------------------------------- function not defined
         if (function.getFunctionName().isEmpty() || function.getReturnSymbol() == null) {
             String fname = function.algorithm.myProgram.getDefaultNewName();
@@ -235,6 +239,7 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
         jPanel2 = new javax.swing.JPanel();
         btAddParameter = new javax.swing.JButton();
         btRemoveParameter = new javax.swing.JButton();
+        cbArrayParam = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtComments = new javax.swing.JTextArea();
         lblHelp = new javax.swing.JLabel();
@@ -301,6 +306,11 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lstParams.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstParamsMouseClicked(evt);
+            }
+        });
         lstParams.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstParamsValueChanged(evt);
@@ -326,33 +336,45 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
         });
         jPanel2.add(btRemoveParameter);
 
+        cbArrayParam.setText("jCheckBox1");
+        cbArrayParam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbArrayParamActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnParametrsLayout = new javax.swing.GroupLayout(pnParametrs);
         pnParametrs.setLayout(pnParametrsLayout);
         pnParametrsLayout.setHorizontalGroup(
             pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnParametrsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbTypeParam, 0, 237, Short.MAX_VALUE)
-                    .addComponent(txtParameterName))
+                .addGroup(pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbTypeParam, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnParametrsLayout.createSequentialGroup()
+                        .addComponent(txtParameterName, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                        .addComponent(cbArrayParam)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnParametrsLayout.setVerticalGroup(
             pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnParametrsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cbTypeParam, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtParameterName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 45, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnParametrsLayout.createSequentialGroup()
-                .addGroup(pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnParametrsLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(cbTypeParam, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnParametrsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtParameterName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbArrayParam))
+                        .addGap(0, 35, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -369,11 +391,10 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
                         .addComponent(lblReturnFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)
                         .addComponent(cbReturnType, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtName)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -511,10 +532,11 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
             //-------------------------------------------------------------------------------------------build define instructions
             if (validadeParameterName(txtParameterName.getText())) {
                 Fsymbol paramVar = Fsymbol.create(cbTypeParam.getSelectedItem().toString(), txtParameterName.getText());
-                FunctionParameter param = new FunctionParameter(paramVar, false, function.algorithm);
+                FunctionParameter param = new FunctionParameter(paramVar, cbArrayParam.isSelected(), function.algorithm);
                 function.parameters.add(param);
                 txtParameterName.setBackground(Color.WHITE);
                 updateGUI();
+                loadParameters();
             } else {
                 txtParameterName.setBackground(Color.ORANGE);
                 txtParameterName.requestFocus();
@@ -531,6 +553,7 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
         if (lstParams.getSelectedIndex() >= 0) {
             function.parameters.remove(lstParams.getSelectedIndex());
             updateGUI();
+            loadParameters();
         }
     }//GEN-LAST:event_btRemoveParameterActionPerformed
 
@@ -566,12 +589,15 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
 
     private void lstParamsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstParamsValueChanged
         if (lstParams.getSelectedIndex() >= 0) {
+            FunctionParameter fp = (FunctionParameter) lstParams.getSelectedValue();
             String sel = lstParams.getSelectedValue().toString();
             cbTypeParam.setSelectedItem(sel.substring(0, sel.indexOf(" ")));
             txtParameterName.setText(sel.substring(sel.indexOf(" ")).trim());
+            cbArrayParam.setSelected(fp.isArray());
         } else {
             cbTypeParam.setSelectedIndex(-1);
             txtParameterName.setText("");
+            cbArrayParam.setSelected(false);
         }
     }//GEN-LAST:event_lstParamsValueChanged
 
@@ -597,6 +623,19 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
 
     }//GEN-LAST:event_txtNameKeyTyped
 
+    private void cbArrayParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbArrayParamActionPerformed
+
+        if (lstParams.getSelectedIndex() >= 0) {
+            function.parameters.get(lstParams.getSelectedIndex()).setisArray(cbArrayParam.isSelected());
+            updateGUI();
+        }
+
+    }//GEN-LAST:event_cbArrayParamActionPerformed
+
+    private void lstParamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstParamsMouseClicked
+        lstParamsValueChanged(null);
+    }//GEN-LAST:event_lstParamsMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddParameter;
@@ -604,6 +643,7 @@ public class MenuFunction extends ShapeMenuDialog implements MenuPattern {
     private javax.swing.JButton btHelp;
     private javax.swing.JButton btOk;
     private javax.swing.JButton btRemoveParameter;
+    private javax.swing.JCheckBox cbArrayParam;
     private javax.swing.JComboBox cbReturnType;
     private javax.swing.JComboBox cbTypeParam;
     private javax.swing.JPanel jPanel1;

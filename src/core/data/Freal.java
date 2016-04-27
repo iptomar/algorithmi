@@ -25,7 +25,10 @@ import i18n.FkeywordToken;
  */
 public class Freal extends FabstractNumber {
 
-    public static final String TYPE_REAL_NAME =FkeyWord.get("TYPE.real");
+    /**
+     * string name of the real type
+     */
+    public static final String TYPE_REAL_NAME = FkeyWord.get("TYPE.real");
     public static String defaultValue = "0.0";
 
     public Freal(String name, String value, int level) throws FlowchartException {
@@ -84,14 +87,14 @@ public class Freal extends FabstractNumber {
         }
         return false;
     }
-   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // token to type
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.real.key");
+ //   public static final String TYPE_TOKEN = FkeywordToken.get("TYPE.real.key");
 
     @Override
     public String getTypeToken() {
-        return TYPE_TOKEN;
+        return FkeywordToken.get("TYPE.real.key");
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

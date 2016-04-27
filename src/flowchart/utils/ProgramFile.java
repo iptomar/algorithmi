@@ -42,11 +42,12 @@ import flowchart.terminator.Begin;
 import flowchart.terminator.BeginGlobalMemory;
 import flowchart.terminator.End;
 import flowchart.write.Write;
+import i18n.Fi18N;
 import i18n.FkeywordToken;
+import java.util.Date;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
+import ui.FProperties;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -56,11 +57,61 @@ import ui.flowchart.dialogs.Fdialog;
  */
 public class ProgramFile {
 
+    public static final String userTagName = "USER";
+    public static final String userTagCode = "CODE";
+    public static final String userTagFullName = "NAME";
+    public static final String fileCreationTime = "DATE";
+    public static final String coreVersion = "VERSION ";
+    public static final String problemID = "ID";
+
+    public static String getProgramHeader(Program prog) {
+        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
+        StringBuilder code = new StringBuilder();
+        UserName user = UserName.createUser(prog.digitalSignature);
+        code.append(COMMENT + MyString.setSize(" " + problemID, 10) + " " + prog.problemID + "\n");
+        code.append(COMMENT + MyString.setSize(" " + userTagCode, 10) + " " + user.getCode() + "\n");
+        code.append(COMMENT + MyString.setSize(" " + userTagName, 10) + " " + user.getName() + "\n");
+        code.append(COMMENT + MyString.setSize(" " + userTagFullName, 10) + " " + user.getFullName() + "\n");
+        code.append(COMMENT + MyString.setSize(" " + fileCreationTime, 10) + " " + prog.timeOfCreation + "\n");
+        code.append(COMMENT + MyString.setSize(" " + coreVersion, 10) + " " + Fi18N.get("FLOWCHART.application.title")
+                + " " + MyString.toString(new Date(prog.timeOfCreation)) + "\n");
+        code.append("\n\n");
+        return code.toString();
+    }
+
     public static Program loadFromFile(String tokProgram) throws FlowchartException {
         String txt = FileUtils.readGZipStringFromFile(FileUtils.changeExtension(tokProgram, FileUtils.FILTER_PROG_EXT));
         Program prog = buildFromTokens(txt);
         return prog;//createProgram(txt);
-    }    
+    }
+    /**
+     * remove the program information of the program and sets it to program
+     * @param tokProgram tokens of program
+     * @return iterator to the code
+     */
+    private static IteratorLines getHeaderOfProgram(String tokProgram, Program prog) {
+        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
+        IteratorLines it = new IteratorLines(tokProgram);
+        while (it.hasNext() && it.peek().trim().startsWith(COMMENT)) {
+            //remove Comment
+            String h = it.next().substring(COMMENT.length()).trim()+ " "; // insert space to prevent error
+            String tag = h.substring(0,h.indexOf(" ")).trim();
+            String code = h.substring(h.indexOf(" ")).trim();
+            switch (tag) {
+                case userTagName:
+                    UserName user = FProperties.load(code);
+                    prog.digitalSignature = user.digitalSignature();
+                    break;
+                case problemID:
+                    prog.problemID = Long.parseLong(code);
+                    break;
+                case fileCreationTime:
+                    prog.timeOfCreation = Long.parseLong(code);
+                    break;
+            }
+        }
+        return it;
+    }
 
     /**
      * build a program from a string
@@ -73,9 +124,10 @@ public class ProgramFile {
             Program prog = new Program(); // program to load
             AlgorithmGraph currentAlgorithm = null;  // algorithm of instructions
             LinkedList<Instruction> instructions = new LinkedList<>();
-            IteratorLines it = new IteratorLines(tokProgram);
-            prog.digitalSignature = it.next(); // creator of code
-            
+            //information of program  
+            IteratorLines it = getHeaderOfProgram(tokProgram, prog);
+
+
             while (it.hasNext()) {
 //                String comment = getComents(it);
 //                String line = it.next();
@@ -93,20 +145,20 @@ public class ProgramFile {
 
                     // loadAlgoritmhFunction(it, func);
                 } else//----------------------------------------------------------LOAD GLOBAL MEMORY
-                if (newShape.shape instanceof BeginGlobalMemory) {
-                    GlobalMemoryGraph mem = new GlobalMemoryGraph(new JPanel(), prog);
-                    mem.getBegin().setComments(newShape.shape.comments);
-                    prog.setGlobalMemory(mem);
-                    currentAlgorithm = mem;
-                    //loadAlgoritmhFunction(it, mem);
-                } //----------------------------------------------------------- LOAD MAIN
-                else if (newShape.shape instanceof Begin) {
-                    AlgorithmGraph main = new AlgorithmGraph(new JPanel(), prog);
-                    main.getBegin().setComments(newShape.shape.comments);
-                    prog.setMain(main);
-                    currentAlgorithm = main;
-                    // loadAlgoritmhFunction(it, main);
-                }
+                 if (newShape.shape instanceof BeginGlobalMemory) {
+                        GlobalMemoryGraph mem = new GlobalMemoryGraph(new JPanel(), prog);
+                        mem.getBegin().setComments(newShape.shape.comments);
+                        prog.setGlobalMemory(mem);
+                        currentAlgorithm = mem;
+                        //loadAlgoritmhFunction(it, mem);
+                    } //----------------------------------------------------------- LOAD MAIN
+                    else if (newShape.shape instanceof Begin) {
+                        AlgorithmGraph main = new AlgorithmGraph(new JPanel(), prog);
+                        main.getBegin().setComments(newShape.shape.comments);
+                        prog.setMain(main);
+                        currentAlgorithm = main;
+                        // loadAlgoritmhFunction(it, main);
+                    }
             }
             createProgram(prog, instructions);
             return prog;
@@ -133,17 +185,17 @@ public class ProgramFile {
                     FunctionGraph func = prog.getFunctionByName(((Function) newShape.shape).getFunctionName());
                     loadAlgoritmhFunction(func, instructions);
                 } else//----------------------------------------------------------LOAD GLOBAL MEMORY
-                if (newShape.shape instanceof BeginGlobalMemory) {
-                    GlobalMemoryGraph mem = prog.getGlobalMem();
-                    loadAlgoritmhFunction(mem, instructions);
-                } //----------------------------------------------------------- LOAD MAIN
-                else if (newShape.shape instanceof Begin) {
-                    AlgorithmGraph main = prog.getMain();
-                    loadAlgoritmhFunction(main, instructions);
-                } //----------------ERROR
-                else {
-                    throw new FlowchartException(new RuntimeException("Prograaming ERROR public static Program createProgram(String tokProgram"));
-                }
+                 if (newShape.shape instanceof BeginGlobalMemory) {
+                        GlobalMemoryGraph mem = prog.getGlobalMem();
+                        loadAlgoritmhFunction(mem, instructions);
+                    } //----------------------------------------------------------- LOAD MAIN
+                    else if (newShape.shape instanceof Begin) {
+                        AlgorithmGraph main = prog.getMain();
+                        loadAlgoritmhFunction(main, instructions);
+                    } //----------------ERROR
+                    else {
+                        throw new FlowchartException(new RuntimeException("Prograaming ERROR public static Program createProgram(String tokProgram"));
+                    }
             }
         } catch (Exception e) {
             throw new FlowchartException(e);
@@ -161,14 +213,13 @@ public class ProgramFile {
                 alg.alignPatterns();
                 return;
             }
-           
-                cursor = addShape(cursor, newShape, instructions, alg);
-           
-            
+
+            cursor = addShape(cursor, newShape, instructions, alg);
+
         }
     }
 
-    private static Arrow addShape(Arrow cursor, Instruction newShape, LinkedList<Instruction> instructions, AlgorithmGraph alg) throws FlowchartException {       
+    private static Arrow addShape(Arrow cursor, Instruction newShape, LinkedList<Instruction> instructions, AlgorithmGraph alg) throws FlowchartException {
 //::::::::: IF ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: IF
         if (newShape.shape instanceof IfThenElse) {
             //convert to If Else
@@ -186,66 +237,66 @@ public class ProgramFile {
             //return next
             return (Arrow) ifElse.next.next;
         } else //::::::::: WHILE :::::::::::::::::::::::::::::::::::::::::::::::WHILE
-        if (newShape.shape instanceof While_Do) {
-            //convert to If Else
-            While_Do whileDo = (While_Do) newShape.shape;
-            //Add shape to algorithm
-            alg.addShapeWhileDo(cursor, whileDo);
-            //build shape            
-            try {
-                newShape.buildShape();
-            } catch (FlowchartException ex) {
-                Fdialog.compileException(ex);
-            }
-            //add instructions
-            addWhile(whileDo, instructions, alg);
-            //return next
-            return (Arrow) whileDo.next;
-        } else //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::FOR
-        if (newShape.shape instanceof For_Next) {
-            //convert to If Else
-            For_Next forNext = (For_Next) newShape.shape;
-            //Add shape to algorithm
-            alg.addShapeWhileDo(cursor, forNext);
-            //build shape            
-            try {
-                newShape.buildShape();
-            } catch (FlowchartException ex) {
-                Fdialog.compileException(ex);
-            }
-            //add instructions
-            addFor(forNext, instructions, alg);
-            //return next 
-            return (Arrow) forNext.next;
-        } else //::::::::: DO . . .WHILE :::::::::::::::::::::::::::::::::::::::DO WHILE
-        if (newShape.shape instanceof Do_Connector) {
-            //convert to If Else
-            Do_While doWhile = new Do_While(alg);
-            //Add shape to algorithm
-            alg.addShapeDoWhile(cursor, doWhile);
-            //build shape            
-            try {
-                newShape.buildShape();
-            } catch (FlowchartException ex) {
-                Fdialog.compileException(ex);
-            }
-            //add instructions
-            addDoWhile(doWhile, instructions, alg);
-            //return next
-            return (Arrow) doWhile.next;
-        }//::::::::::::::::::::: SIMPLE SHAPE :::::::::::::::::::::::::::::
-        else {
-            //add shape to the algorithm
-            alg.addSimpleShape(cursor, newShape.shape);
-            //build shape            
-            try {
-                newShape.buildShape();
-            } catch (FlowchartException ex) {
-                Fdialog.compileException(ex);
-            }
-            //update cursor
-            return (Arrow) newShape.shape.next;
-        }
+         if (newShape.shape instanceof While_Do) {
+                //convert to If Else
+                While_Do whileDo = (While_Do) newShape.shape;
+                //Add shape to algorithm
+                alg.addShapeWhileDo(cursor, whileDo);
+                //build shape            
+                try {
+                    newShape.buildShape();
+                } catch (FlowchartException ex) {
+                    Fdialog.compileException(ex);
+                }
+                //add instructions
+                addWhile(whileDo, instructions, alg);
+                //return next
+                return (Arrow) whileDo.next;
+            } else //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::FOR
+             if (newShape.shape instanceof For_Next) {
+                    //convert to If Else
+                    For_Next forNext = (For_Next) newShape.shape;
+                    //Add shape to algorithm
+                    alg.addShapeWhileDo(cursor, forNext);
+                    //build shape            
+                    try {
+                        newShape.buildShape();
+                    } catch (FlowchartException ex) {
+                        Fdialog.compileException(ex);
+                    }
+                    //add instructions
+                    addFor(forNext, instructions, alg);
+                    //return next 
+                    return (Arrow) forNext.next;
+                } else //::::::::: DO . . .WHILE :::::::::::::::::::::::::::::::::::::::DO WHILE
+                 if (newShape.shape instanceof Do_Connector) {
+                        //convert to If Else
+                        Do_While doWhile = new Do_While(alg);
+                        //Add shape to algorithm
+                        alg.addShapeDoWhile(cursor, doWhile);
+                        //build shape            
+                        try {
+                            newShape.buildShape();
+                        } catch (FlowchartException ex) {
+                            Fdialog.compileException(ex);
+                        }
+                        //add instructions
+                        addDoWhile(doWhile, instructions, alg);
+                        //return next
+                        return (Arrow) doWhile.next;
+                    }//::::::::::::::::::::: SIMPLE SHAPE :::::::::::::::::::::::::::::
+                    else {
+                        //add shape to the algorithm
+                        alg.addSimpleShape(cursor, newShape.shape);
+                        //build shape            
+                        try {
+                            newShape.buildShape();
+                        } catch (FlowchartException ex) {
+                            Fdialog.compileException(ex);
+                        }
+                        //update cursor
+                        return (Arrow) newShape.shape.next;
+                    }
     }
 
     private static void addIf(IfThenElse shapeIf, LinkedList<Instruction> instructions, AlgorithmGraph alg) throws FlowchartException {
@@ -383,7 +434,7 @@ public class ProgramFile {
                     shape = new Read(alg);
                 } else if (type.equalsIgnoreCase(Execute.KEY)) {//------------------------EXECUTE
                     shape = new Execute(alg);
-                } else if (type.equalsIgnoreCase(IfThenElse.KEY_IF)) {//------------------IF ELSE
+                } else if (type.equalsIgnoreCase(IfThenElse.KEY)) {//------------------IF ELSE
                     shape = new IfThenElse(alg);
                 } else if (type.equalsIgnoreCase(While_Do.KEY)) {//------------------While DO
                     shape = new While_Do(alg);

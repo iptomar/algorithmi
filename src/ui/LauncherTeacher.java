@@ -92,7 +92,7 @@ public class LauncherTeacher extends javax.swing.JFrame {
 
         DefaultListModel model = new DefaultListModel();
         for (File file : files) {
-            UserName user = FProperties.loadUserName(file.getAbsolutePath());
+            UserName user = FProperties.load(file.getAbsolutePath());
             if (user != null) {
                 model.addElement(user);
             }

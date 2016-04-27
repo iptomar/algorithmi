@@ -203,7 +203,6 @@ public class MenuDefineVar extends ShapeMenuDialog implements MenuPattern {
 
     @Override
     public void showDialog(Fshape shape, int x, int y) {
-
         oldText = shape.getInstruction();
         getContentPane().setBackground(shape.getBackground());
         //----------------------------------------------------

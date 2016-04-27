@@ -62,7 +62,7 @@ public class Define extends Fshape {
     //----------------TYPE OF INSTRUCTION -------------------------
     static String KEYWORD = FkeyWord.get("KEYWORD.define");
     //----------------TYPE OF INSTRUCTION -------------------------
-    protected Expression varExpression; // expressions to the initial value
+    public Expression varExpression; // expressions to the initial value
     public Fsymbol varSymbol;
 
     static MenuPattern menu = new MenuDefineVar();

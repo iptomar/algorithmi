@@ -37,6 +37,7 @@ package flowchart.returnFunc;
 import core.Memory;
 import core.data.Fsymbol;
 import core.data.Fvoid;
+import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
 import ui.FProperties;
@@ -117,7 +118,7 @@ public class Return extends Fshape {
         //rebuild expression
         returnExpression = new Expression(returnExpression.getIdented(), mem, algorithm.myProgram);
         Fsymbol exp = returnExpression.getReturnType();
-        if (!ret.acceptValue(exp.getDefaultValue())) {
+        if ((exp instanceof Farray) || !ret.acceptValue(exp.getDefaultValue())) {
             //::::::::::::::::::: FLOWCHART ERROR :::::::::::::::::::::::::
             //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
             throw new FlowchartException(
@@ -240,16 +241,16 @@ public class Return extends Fshape {
 
     @Override
     public String getPseudoCode() throws FlowchartException {
-        StringBuilder txt = new StringBuilder(PseudoLanguage.ident(this) + KEYWORD );
+        StringBuilder txt = new StringBuilder(PseudoLanguage.ident(this) + KEYWORD);
         if (returnExpression != null) {
             txt.append(" " + returnExpression.getIdented());
         }
         return txt.toString();
     }
-    
+
     @Override
     public String getLanguage() throws FlowchartException {
-        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this));
+        StringBuilder txt = new StringBuilder(AbstractLang.lang.getCommentedString(this.comments, this) + AbstractLang.lang.ident(this));
         if (returnExpression != null) {
             txt.append(AbstractLang.lang.getReturn(this));
         }
@@ -257,7 +258,6 @@ public class Return extends Fshape {
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

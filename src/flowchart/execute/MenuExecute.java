@@ -36,6 +36,7 @@ package flowchart.execute;
 
 import core.Memory;
 import core.data.Fsymbol;
+import core.data.Ftext;
 import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Mark;
@@ -50,9 +51,7 @@ import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.utils.Theme;
 import ui.flowchart.expression.Identation;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
@@ -75,7 +74,7 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
 //        setUndecorated(true);
         initComponents();
         I18N();
-        
+
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         //------------------------------------------------------------
         //Add key Listener to Text Fields
@@ -121,7 +120,7 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
         if (myvar == null) {
             txtExpressionShape.setInstruction(exp);
             return;
-        } else if (myvar != null && (myvar instanceof Farray)) {
+        } else if (myvar != null && (myvar instanceof Farray || myvar instanceof Ftext)) {
             txtIndexes.setVisible(true);
         } else {
             txtIndexes.setVisible(false);
@@ -130,12 +129,15 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
         if (myvar instanceof Farray) {
             txt.append(Identation.ident(txtIndexes.getText(), memory, execute.algorithm.myProgram));
         }
+        if (myvar instanceof Ftext) {
+            txt.append(Identation.ident(txtIndexes.getText(), memory, execute.algorithm.myProgram));
+        }
         txt.append(" " + FkeyWord.OPERATOR_SET + " " + exp);
         txtExpressionShape.setInstruction(txt.toString());
     }
-    
-    public void setShape(Fshape shape){
-        
+
+    public void setShape(Fshape shape) {
+
         memory = shape.algorithm.getMemory(shape.parent);
 
         txtExpressionShape.updateMenu(memory, shape.algorithm.getMyProgram());
@@ -159,7 +161,7 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
         if (myvar == null) {
             //select the first one
             cbVariable.setSelectedIndex(0);
-            spTxtIndex.setVisible(false);            
+            spTxtIndex.setVisible(false);
         } else {
             cbVariable.setSelectedItem(myvar.getName());
             if (myvar instanceof Farray) {
@@ -170,6 +172,19 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
                 } else {
                     //default definiton of indexes    
                     txtIndexes.setText(getDefaultIndexes((Farray) myvar));
+                }
+            } else if (myvar instanceof Ftext) {
+                spTxtIndex.setVisible(true);
+                //definition of indexes
+                if (execute.var instanceof Ftext && ((Ftext) execute.var).isIndexed()) {
+                    txtIndexes.setText(
+                            Mark.SQUARE_OPEN
+                            + ((Ftext) execute.var).indexExpression.toString()
+                            + Mark.SQUARE_CLOSE
+                    );
+                } else {
+                    //default definiton of indexes    
+                    txtIndexes.setText("");
                 }
             } else {
                 spTxtIndex.setVisible(false);
@@ -182,7 +197,7 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
     public void showDialog(Fshape shape, int x, int y) {
 
         oldText = shape.getInstruction();
-        setShape(shape);
+  setShape(shape);
         //update indexed var
         //cbVariableActionPerformed(null);
         //-----------------------------------------
@@ -192,12 +207,11 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
         //:::::::::::::::::::::::::::::::::::::::::
         updateFont();
         setLocationRelativeTo(null);
-         txtExpressionShape.requestFocus();
-         tabMain.setSelectedIndex(1);
+        txtExpressionShape.requestFocus();
+        tabMain.setSelectedIndex(1);
         this.setVisible(true);
-       
-        //:::::::::::::::::::::::::::::::::::::::::
 
+        //:::::::::::::::::::::::::::::::::::::::::
     }
 
     /**
@@ -421,6 +435,20 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
                 spTxtIndex.setVisible(true);
                 txtIndexes.setText(getDefaultIndexes(array));
                 txtIndexes.setToolTipText(array.getInstruction());
+            } else if (myvar instanceof Ftext) {//-----------------------------ARRAY
+                // make a clone of the variable              
+                // indexes of the variable is strored in the array expression
+                //of the indexes
+                myvar = (Fsymbol) myvar.clone();
+                //--------------------------------------------------------------
+                Ftext txt = (Ftext) myvar;
+                spTxtIndex.setVisible(true);
+                if (txt.isIndexed()) {
+                    txtIndexes.setText(txt.indexExpression.toString());
+                } else {
+                    txtIndexes.setText("");
+                }
+                txtIndexes.setToolTipText(txt.getInstruction());
             } else {
                 spTxtIndex.setVisible(false);
             }
@@ -428,7 +456,6 @@ public class MenuExecute extends ShapeMenuDialog implements MenuPattern {
             cbVariable.setToolTipText(null);
             txtIndexes.setVisible(false);
         }
-
         updateGUI();
     }//GEN-LAST:event_cbVariableActionPerformed
 

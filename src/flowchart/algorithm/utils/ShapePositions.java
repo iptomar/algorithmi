@@ -50,7 +50,6 @@ import flowchart.terminator.End;
 import ui.FLog;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -274,10 +273,11 @@ public class ShapePositions implements Serializable {
         if (IDSize.get(node.POSITION_LEVEL) == null) {
             //IDSize.put(node.POSITION_LEVEL, FProperties.LINE_LENGHT * BorderFlowChart.getThickness());
             IDSize.put(node.POSITION_LEVEL, node.getWidth());
-        }
-        //update size of the ID
-        if (IDSize.get(node.POSITION_LEVEL) < node.getWidth()) {
-            IDSize.put(node.POSITION_LEVEL, node.getWidth());
+        } else //update size of the ID
+        {
+            if (IDSize.get(node.POSITION_LEVEL) < node.getWidth()) {
+                IDSize.put(node.POSITION_LEVEL, node.getWidth());
+            }
         }
         //stop recursivity
         if (node == end) {
@@ -314,7 +314,7 @@ public class ShapePositions implements Serializable {
             //add center
             IDCenter.put(key, center);
             //addhalf
-            center += value / 2 + FProperties.SPACE_BETWEEN_LEVELS;
+            center += 20 + value / 4;
         }
     }
 
@@ -332,7 +332,7 @@ public class ShapePositions implements Serializable {
                     calculateXY(node.next, end, y);
                 } else if ((node instanceof ArrowNext) || (node instanceof Arrow_Wile_Do)) {
                     //double the space in the next arrow
-                    calculateXY(node.next, end, y + 10);//+ (int) (node.getZoom() * FProperties.ARROW_LENGHT_RATIO) );
+                    calculateXY(node.next, end, y + 5 + (int) (node.getZoom() * FProperties.ARROW_LENGHT_RATIO));
                 } else {
                     calculateXY(node.next, end, y);
                 }

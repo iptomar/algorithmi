@@ -72,7 +72,7 @@ public class Memory implements Serializable, Cloneable {
     }
 
     public Fsymbol define(String var, Program prog) {
-        try {
+        try {            
             Fsymbol s = Fsymbol.defineSymbol(var, this, prog);
             memoryArray.add(s);
             return s;
@@ -113,6 +113,7 @@ public class Memory implements Serializable, Cloneable {
     }
 
     public Fsymbol getByName(String name) {
+        name = name.trim();
         for (int i = memoryArray.size() - 1; i >= 0; i--) {
             if (memoryArray.get(i).getName().equalsIgnoreCase(name)) {
                 return memoryArray.get(i);

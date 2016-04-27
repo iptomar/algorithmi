@@ -16,7 +16,6 @@
 package i18n;
 
 import ui.FLog;
-import ui.FProperties;
 import flowchart.utils.TextUtils;
 import flowchart.utils.Theme;
 import java.awt.Dialog;
@@ -42,21 +41,30 @@ import javax.swing.SwingConstants;
 public class Fi18N {
 
     public static String IMG_LOCATION = "/ui/images/";
-    private static String GUI_FILE = "i18n.flowchart";
-    static ResourceBundle messages;
+    private static String LANG_FILE = "i18n.flowchart";
+    static ResourceBundle messages = null;
+    static String language = "pt";
+    static String country = "PT";
 
     static {
-        Locale local = FProperties.getLocale();
-        load(local.getLanguage(), local.getCountry());
+        init();
     }
 
-//    public static void load(String myFile) {
-//        GUI_FILE = myFile;
-//        messages = ResourceBundle.getBundle(myFile, Locale.getDefault());
-////        printLog();
-//    }
-    public static void load(String language, String country) {
-        messages = ResourceBundle.getBundle(GUI_FILE, new Locale("pt", "PT"));
+    public static void init() {
+        if (messages == null) {
+            messages = ResourceBundle.getBundle(LANG_FILE, new Locale(language, country));
+        }
+    }
+
+    public static void load(String lang, String land) {
+        //do not reload properties
+        if (!country.equals(land) || !language.equals(lang)) {
+            language = lang;
+            country = land;
+            messages = ResourceBundle.getBundle(LANG_FILE, new Locale(language, country));
+            //Load Language
+            FkeyWord.load(lang, land);
+        }
     }
 
     public static final String get(String key) {
@@ -67,10 +75,11 @@ public class Fi18N {
         }
         return null;
     }
+
     public static final String silentGet(String key) {
         try {
             return messages.getString(key.trim()).trim();
-        } catch (Exception e) {            
+        } catch (Exception e) {
         }
         return null;
     }
@@ -301,7 +310,7 @@ public class Fi18N {
      * Load a icon int he path /flowchart/GUI/images/
      *
      * @param icon name of the file
-     * @param height height of the icon  [ 0 ] = not scalling
+     * @param height height of the icon [ 0 ] = not scalling
      * @return icon with size
      */
     public static ImageIcon loadIcon(String icon, int height) {

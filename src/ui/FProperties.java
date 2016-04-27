@@ -32,7 +32,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Locale;
 import java.util.Properties;
 
 import java.util.logging.Level;
@@ -47,12 +46,16 @@ import ui.utils.Crypt;
  * @author zulu - computer
  */
 public class FProperties {
+    public static void init(){
+        FkeyWord.init();
+        Fi18N.init();
+        FkeyWord.init();
+    }
 
-   
     //path to save properties file
     static File PROPERTIES_PATH = new File(System.getProperty("user.dir") + File.separator + "users");
     //extension of properties file
-    static String PROPERTIES_EXTENSION = "user";
+    static String PROPERTIES_USER_EXTENSION = "user";
 
     private static Properties props = new Properties();
 
@@ -153,10 +156,10 @@ public class FProperties {
     //:::::::::::::::::::: USERNAME ::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public static String keyDigitalSignature = "keyDigitalSignature";
-    public static String digitalSignature = "NOT SIGNED";
+    private static String digitalSignature = "NOT SIGNED";
 
-    public static String keyLastProgramOpened = "keyLastProgramOpened";
-    public static String LastProgramOpened = "";
+    public static String keyLastProgram = "keyLastProgramOpened";
+    public static String lastProgram = "noName";
 //
 
     static {
@@ -171,14 +174,14 @@ public class FProperties {
     /**
      * open file of properties
      */
-    public static void load(String fileName) {
-        if (!fileName.endsWith("." + PROPERTIES_EXTENSION)) {
-            fileName += "." + PROPERTIES_EXTENSION;
+    public static UserName load(String fileName) {
+        if (!fileName.endsWith("." + PROPERTIES_USER_EXTENSION)) {
+            fileName += "." + PROPERTIES_USER_EXTENSION;
         }
-        loadFromFile(PROPERTIES_PATH.getAbsolutePath() + File.separator + fileName);
+        return loadFromFile(PROPERTIES_PATH.getAbsolutePath() + File.separator + fileName);
     }
 
-    public static void loadFromFile(String fileName) {
+    public static UserName loadFromFile(String fileName) {
         try {
             props = new Properties();
             FileInputStream file = new FileInputStream(fileName);
@@ -188,7 +191,8 @@ public class FProperties {
             FLog.printLn("FPROPERTIES LOAD FILE ERROR : " + fileName);
             loadDefaults(); // load defaults
         }
-        updateStaticVars();
+        updateSystemProperties();
+        return UserName.createUser(digitalSignature);
     }
 
     /**
@@ -196,10 +200,10 @@ public class FProperties {
      */
     public static void loadCrypt(String fileUser) {
         fileUser = fileUser.trim();
-        String fileName = fileUser + "." + PROPERTIES_EXTENSION;
+        String fileName = fileUser + "." + PROPERTIES_USER_EXTENSION;
         File f = new File(fileName);
         if (!f.exists() || f.isDirectory()) {
-            fileName = Crypt.getCryptFileName(fileUser) + "." + PROPERTIES_EXTENSION;
+            fileName = Crypt.getCryptFileName(fileUser) + "." + PROPERTIES_USER_EXTENSION;
         }
         load(fileName);
     }
@@ -258,13 +262,13 @@ public class FProperties {
     }
 
     /**
-     * open file of properties
+     * save file of properties
      */
     public static void save() {
         try {
             FileOutputStream file = new FileOutputStream(
                     PROPERTIES_PATH.getAbsolutePath() + File.separator
-                    + UserName.createUser(digitalSignature).getName() + "." + PROPERTIES_EXTENSION);
+                    + UserName.createUser(digitalSignature).getName() + "." + PROPERTIES_USER_EXTENSION);
             props.store(file, EditorI18N.get("APPLICATION.title"));
 
         } catch (IOException ex) {
@@ -278,8 +282,8 @@ public class FProperties {
      * open file of properties
      */
     public static void save(String fileName) {
-        if (!fileName.endsWith("." + PROPERTIES_EXTENSION)) {
-            fileName += "." + PROPERTIES_EXTENSION;
+        if (!fileName.endsWith("." + PROPERTIES_USER_EXTENSION)) {
+            fileName += "." + PROPERTIES_USER_EXTENSION;
         }
         try {
             FileOutputStream file = new FileOutputStream(
@@ -299,10 +303,10 @@ public class FProperties {
 //     */
 //    public static void saveCrypt(String userName) {
 //        userName = Crypt.getCryptFileName(userName.trim());
-//        userName += PROPERTIES_EXTENSION;
+//        userName += PROPERTIES_USER_EXTENSION;
 //        save(userName);
 //    }
-    public static void updateStaticVars() {
+    public static void updateSystemProperties() {
         try {
 
             // language = props.getProperty(languageKey);
@@ -365,6 +369,9 @@ public class FProperties {
             colorSintaxComments = getColor(keySintaxComments);
 
             digitalSignature = get(keyDigitalSignature);
+            lastProgram = get("keyLastProgramOpened");
+            
+            Fi18N.load(language, country);
 
             UIManager.put("ComboBox.background", new ColorUIResource(getColor(keySintaxBackground)));
 
@@ -445,9 +452,6 @@ public class FProperties {
         return language + "_" + country;
     }
 
-    public static Locale getLocale() {
-        return new Locale(language, country);
-    }
 
     public static void setSPACE_BETWEEN_LEVELS(int value) {
         props.setProperty(SPACE_BETWEEN_LEVELS_key, value + "");
@@ -461,21 +465,6 @@ public class FProperties {
         props.setProperty(ARROW_LENGHT_RATIO_key, ratio + "");
     }
 
-    /**
-     * open file of properties
-     */
-    public static UserName loadUserName(String filename) {
-        try {
-            //  load(filename);
-            Properties userProps = new Properties();
-            userProps.load(new FileInputStream(filename)); // load file  
-            return UserName.createUser(userProps.getProperty(keyDigitalSignature));
-
-        } catch (IOException ex) {
-            FLog.printLn("public static UserName loadUserName " + ex.getMessage() + " " + filename);
-            return null;
-        }
-    }
 
     public static void setUser(UserName user) {
         digitalSignature = user.digitalSignature();
@@ -490,7 +479,7 @@ public class FProperties {
         try {
 
             String file = PROPERTIES_PATH.getAbsolutePath() + File.separator
-                    + getUser().getName() + "." + PROPERTIES_EXTENSION;
+                    + getUser().getName() + "." + PROPERTIES_USER_EXTENSION;
             File f = new File(file);
             f.deleteOnExit();
             Files.delete(f.toPath());

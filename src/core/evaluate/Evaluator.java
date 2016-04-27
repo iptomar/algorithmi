@@ -20,6 +20,7 @@ import core.Memory;
 import core.CoreToken;
 import core.FunctionCall;
 import core.data.Fsymbol;
+import core.data.Ftext;
 import core.data.complexData.Farray;
 import core.data.exception.FlowchartException;
 import core.parser.Mark;
@@ -225,7 +226,7 @@ public class Evaluator {
     }
 
     public static Fsymbol evaluate(List expression, boolean trueValues, Memory mem) throws FlowchartException {
-//        System.out.println("EVALUATE : " + ExpressionUtils.identation(expression));
+        //System.out.println("EVALUATE : " + ExpressionUtils.identation(expression));
         //conversao para posfixa
         List posFix = fromInfix(expression);
 //        System.out.println("POSFIX  : " + ExpressionUtils.DEBUG(posFix));
@@ -254,6 +255,7 @@ public class Evaluator {
                 //:::::::::: updated 15-09-2015 - get arrays from memory
                 //::::::::::                      get vars from memory
                 //::::::::::                      get constants from expression
+                //:::::::::: updated 23-4-2016    get subarrays               
                 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                 //convert to symbol
                 Fsymbol symbol = (Fsymbol) elem;
@@ -263,14 +265,21 @@ public class Evaluator {
                     stack.add(symbol);
                 } else {//----------------------------------- MEMORY --------------
 
-                    if (memoryValue instanceof Farray) {//--------------ARRAY
+                    if (memoryValue instanceof Farray) {//--------------ARRAY                                       
                         //get the index from token
                         Farray indexes = (Farray) elem;
                         //get the indexed element of memory variable
                         if (trueValues) { // true values extract value
                             memoryValue = (Fsymbol) ((Farray) memoryValue).getElement(indexes.getIndexes(), mem);
                         } else { // fake values extract tamplate
-                            memoryValue = ((Farray) memoryValue).getTemplateElement();
+                            memoryValue = ((Farray) memoryValue).getElementFake(indexes.getIndexes(), mem);
+                        }
+                    } else if (symbol instanceof Ftext && ((Ftext) symbol).isIndexed()) {//--------------INDEXED TEXT
+                        //get the index from token
+                        Ftext indexedText = (Ftext) symbol;
+                        //get the indexed element of memory variable
+                        if (trueValues) { // true values extract value
+                            memoryValue = indexedText.getElementValue(mem);
                         }
                     }
                     //clone value 

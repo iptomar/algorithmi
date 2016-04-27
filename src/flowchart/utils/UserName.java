@@ -37,18 +37,20 @@ public class UserName implements Serializable {
 
     public static int AVATAR_SIZE = 96; // size of avatar
 
-    private String name; // username
-    private String fullName; // full name
     private String code; // code
+    private String name; // username
+    private String fullName; // full name    
     private byte[] avatar; // avatar
     private String password; // encrypted password
+    private String language = "pt"; // language
+    private String country = "PT"; // country
 
     public UserName() {
-        name = Fi18N.get("LAUNCHER.newName");
-        fullName = Fi18N.get("LAUNCHER.newFullName");
-        code = Fi18N.get("LAUNCHER.newNumber");
+        name = Fi18N.get("PROPERTIES.userName.default");
+        fullName = Fi18N.get("PROPERTIES.userFullName.default");
+        code = Fi18N.get("PROPERTIES.userNumber.default");
         try {
-            avatar = ImageUtils.getJpegByteArray(Fi18N.loadKeyIcon("PROPERTIES.userDefaultAvatar.icon", AVATAR_SIZE));
+            avatar = ImageUtils.getJpegByteArray(Fi18N.loadKeyIcon("PROPERTIES.userAvatar.default", AVATAR_SIZE));
         } catch (Exception ex) {
             FLog.printLn("User UserName() " + ex.getMessage());
             avatar = null;
@@ -56,12 +58,14 @@ public class UserName implements Serializable {
         setPassword("");
     }
 
-    public UserName(String name, String fullName, String code, ImageIcon avatar, String password) {
+    public UserName(String name, String fullName, String code, ImageIcon avatar, String password, String lang, String country) {
         this.name = name.trim();
         this.fullName = fullName.trim();
         this.code = code.trim();
         this.avatar = ImageUtils.getJpegByteArray(avatar);
         this.password = password;
+        this.language = lang;
+        this.country = country;
     }
 
     public String toString() {
@@ -74,7 +78,7 @@ public class UserName implements Serializable {
         } catch (Exception ex) {
             FLog.printLn("UserName createUser" + ex.getMessage());
             UserName user = new UserName();
-            user.avatar = ImageUtils.getJpegByteArray(Fi18N.loadKeyIcon("PROPERTIES.userErrorAvatar.icon", AVATAR_SIZE));
+            user.avatar = ImageUtils.getJpegByteArray(Fi18N.loadKeyIcon("PROPERTIES.userAvatar.default", AVATAR_SIZE));
             return user;
         }
     }
@@ -140,6 +144,12 @@ public class UserName implements Serializable {
     public ImageIcon getAvatar() {
         return ImageUtils.getByteArrayJpeg(avatar);
     }
+     /**
+     * @return the avatar
+     */
+    public ImageIcon getAvatar(int size) {
+        return ImageUtils.getByteArrayJpeg(avatar,size);
+    }
 
     /**
      * @param avatar the avatar to set
@@ -172,6 +182,23 @@ public class UserName implements Serializable {
     public void setPassword(char[] password) {
         this.password = Crypt.encrypt(new String(password));
     }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201512111115L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

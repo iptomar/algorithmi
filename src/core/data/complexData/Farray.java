@@ -37,13 +37,11 @@ package core.data.complexData;
 import core.Memory;
 import core.data.Finteger;
 import core.data.Fsymbol;
-import static core.data.Fvoid.TYPE_TOKEN;
 import core.data.exception.FlowchartException;
 import core.parser.Expression;
 import core.parser.Mark;
 import core.parser.tokenizer.BreakMarks;
 import flowchart.algorithm.Program;
-import flowchart.utils.ExpressionUtils;
 import flowchart.utils.IteratorArrayIndex;
 import ui.FLog;
 import i18n.Fi18N;
@@ -58,9 +56,10 @@ import java.util.List;
  */
 public class Farray extends FcomplexSymbol {
 
+    private Fsymbol template;
     List<Fsymbol> elements; // elements
-    List<Expression> indexExpression; // index expressions
-    Memory memory; // to evaliate index expressions
+    public List<Expression> indexExpression; // index expressions
+    Memory memory; // to avaliate index expressions
 
     /**
      * private constructor to build subArrays
@@ -68,9 +67,26 @@ public class Farray extends FcomplexSymbol {
      * @param name
      * @throws FlowchartException
      */
-    private Farray(String name) throws FlowchartException {
+    protected Farray(String name, Fsymbol template) throws FlowchartException {
         super(name, new ArrayList<Fsymbol>());
         elements = (List<Fsymbol>) value; // get elements
+        this.template = template;
+    }
+
+    /**
+     * define one array given the elements
+     *
+     * @param name name of variable
+     * @param elements list of elements
+     * @param dims dimensions of elements
+     * @throws FlowchartException
+     */
+    public Farray(String name, List<Fsymbol> elements, List<Expression> dims, Memory mem) throws FlowchartException {
+        super(name, elements); // array with no name
+        this.template = elements.get(0); // tempate of elements
+        this.elements = elements;
+        this.indexExpression = dims;
+        this.memory = mem;
     }
 
     /**
@@ -110,10 +126,7 @@ public class Farray extends FcomplexSymbol {
         String name = def.substring(0, def.indexOf(Mark.SQUARE_OPEN)).trim(); // get name
         def = def.substring(def.indexOf(Mark.SQUARE_OPEN)); // get indexes
         //create type of data
-        Fsymbol typeData = Fsymbol.create(type, name);
-        //add the type element to the begining of the list
-        // contain the seed of other elements
-        elements.add(typeData);
+        this.template = Fsymbol.create(type, name);
         //create expressions of indexes
         IteratorArrayIndex it = new IteratorArrayIndex(def);
         while (it.hasNext()) {
@@ -233,16 +246,17 @@ public class Farray extends FcomplexSymbol {
     public String getFullName() {
         return getName() + getIndexesDefinition();
     }
+
     /**
      * return the indexes expression rounded by square brackets
      *
      * @return
      */
     public String getFullNameToken() {
-         StringBuilder txt = new StringBuilder(getName());
+        StringBuilder txt = new StringBuilder(getName());
         for (Expression ex : indexExpression) {
-            txt.append(" " +Mark.SQUARE_OPEN_TOKEN +" ");
-            txt.append( FkeywordToken.translateTokensToWords( ex.getIdented() ) + " ");
+            txt.append(" " + Mark.SQUARE_OPEN_TOKEN + " ");
+            txt.append(FkeywordToken.translateTokensToWords(ex.getIdented()) + " ");
             txt.append(Mark.SQUARE_CLOSE_TOKEN);
         }
         return txt.toString();
@@ -254,6 +268,9 @@ public class Farray extends FcomplexSymbol {
      * @return
      */
     public String getIndexesDefinition() {
+        if (indexExpression.isEmpty()) { // parameter
+            return ""+ Mark.SQUARE_OPEN + Mark.SQUARE_CLOSE;
+        }
         StringBuilder txt = new StringBuilder();
         for (Expression ex : indexExpression) {
             txt.append(Mark.SQUARE_OPEN + ex.getIdented() + Mark.SQUARE_CLOSE);
@@ -304,9 +321,8 @@ public class Farray extends FcomplexSymbol {
 
         //create elements  
         //initialy position 0 of elements contains the template
-        Fsymbol template = elements.get(0);
         template.setValue(template.getDefaultValue()); // set values by default
-        elements.clear();;
+        elements.clear();
         createElements(getName(), template, dims);
     }
 
@@ -337,8 +353,8 @@ public class Farray extends FcomplexSymbol {
         txt.append("\n" + Fi18N.get("DEFINE.level.title") + " :" + getLevel());
         txt.append("\n" + Fi18N.get("DEFINE.value.title") + "\n");
         //get textual representation of values
-        __indexText = 0;
-        txt.append(getTextElements(new ArrayList<Expression>(indexExpression)));
+        int indexText = 0;
+        txt.append(getTextElements(new ArrayList<Expression>(indexExpression), indexText));
 
         if (!comments.isEmpty()) {
             txt.append("\n" + Fi18N.get("DEFINE.comments.title") + " :\n" + getComments());
@@ -346,79 +362,164 @@ public class Farray extends FcomplexSymbol {
         return txt.toString();
     }
 
-    private int __indexText;
-
-    private String getTextElements(List<Expression> list) {
+    private String getTextElements(List<Expression> list, int indexText) {
         //gets and remove the first index        
         int dim = ((Finteger) list.remove(0).getReturnType()).getIntValue();
         StringBuilder txt = new StringBuilder();
         //not the last dimension
         if (!list.isEmpty()) {
             for (int i = 0; i < dim; i++) {
-                txt.append(getTextElements(new ArrayList<>(list)));
+                txt.append(getTextElements(new ArrayList<>(list), indexText));
             }
         } else {
             for (int i = 0; i < dim; i++) {
-                txt.append(elements.get(__indexText++).getTextValue() + "  ");
+                txt.append(elements.get(indexText++).getTextValue() + "  ");
             }
             txt.append("\n");
         }
         return txt.toString();
     }
 
+    /**
+     * gests de size of the array dimension
+     *
+     * @param i number of dimension
+     * @return number of elements
+     */
     public int getDimension(int i) {
         return ((Finteger) indexExpression.get(i).getReturnType()).getIntValue();
     }
 
-    public Finteger getDimensionSymbol(int i) {
+    /**
+     * gests de size of the array dimension
+     *
+     * @param i number of dimension
+     * @return number of elements
+     */
+    public Finteger getDimensionSymbol(int i) throws FlowchartException {
+        if (elements == null) { // array as a parameter - variable dimension
+            return new Finteger(Integer.MAX_VALUE); // very large number
+        }
         return ((Finteger) indexExpression.get(i).getReturnType());
     }
 
+    /**
+     * type of elementos in the array
+     *
+     * @return
+     */
     public Fsymbol getTemplateElement() {
-        return elements.get(0);
+        return template;
     }
     
-    public String getIndexDimensions(){
+     /**
+     * gets the elements type of of the array
+     *
+     * @param indexes
+     * @param mem
+     * @return
+     * @throws FlowchartException
+     */
+    public Fsymbol getElementFake(List<Expression> indexes, Memory mem) throws FlowchartException {
+        //if the indexes is lesser than the indexesExpression - Retrurn ARRAY
+        if (indexes.size() < this.indexExpression.size()) {
+            ArrayList<Fsymbol> newElems = new ArrayList<>(); // put template in the new Elements
+            newElems.add(template);
+           return new Farray(ANONYM_VAR, newElems, indexes, mem);
+        }
+       return template;
+    }    
+       
+    
+
+    public String getIndexDimensions() {
         StringBuilder txtDimensions = new StringBuilder();
-        for (int i = 0; i < indexExpression.size() ; i++) {
-            txtDimensions.append(Mark.SQUARE_OPEN+" " + getDimension(i) + " " + Mark.SQUARE_CLOSE);
+        for (int i = 0; i < indexExpression.size(); i++) {
+            txtDimensions.append(Mark.SQUARE_OPEN + " " + getDimension(i) + " " + Mark.SQUARE_CLOSE);
         }
         return txtDimensions.toString();
     }
 
-    public Fsymbol getElement(Memory mem) throws FlowchartException {
-        return getElement(indexExpression, mem);
-    }
-
+    /**
+     * gets the elements of the array
+     *
+     * @param indexes
+     * @param mem
+     * @return
+     * @throws FlowchartException
+     */
     public Fsymbol getElement(List<Expression> indexes, Memory mem) throws FlowchartException {
-        
+        //if the indexes is lesser than the indexesExpression - Retrurn ARRAY
+        if (indexes.size() < this.indexExpression.size()) {
+            return getElementArray(indexes, mem);
+        }
+        //string to produce exception
         StringBuilder txtIndexes = new StringBuilder(); // to produce the exception
-        
-        
+
         if (elements.size() == 1) { // array not initialized - programming time
             return elements.get(0);
         }
-        //evaluate indexes and calculate position
+        //--------------------------------------------------------------------------
+        //number of elements int each dimension - optimization of get elements
+        // v[2][3][4] => [12][4][1]
+        // 
         int pos = 0;
+        int factor = 1;
         Finteger value;
-        //calculate intermediate positions
-        for (int i = 0; i < indexes.size() - 1; i++) {
+        //calculate last positions
+        for (int i = indexes.size() - 1; i >= 0; i--) {
+            //evaluate indexes and calculate position
             value = (Finteger) indexes.get(i).evaluate(mem);
-            pos += getDimension(i) * value.getIntValue();
-            txtIndexes.append(Mark.SQUARE_OPEN+" " + value + " " + Mark.SQUARE_CLOSE);
+            pos += factor * value.getIntValue();
+            factor *= getDimension(i);
+            txtIndexes.append(Mark.SQUARE_OPEN + " " + value.getIntValue() + " " + Mark.SQUARE_CLOSE);
         }
-        //add alldimension
-        value = (Finteger) indexes.get(indexes.size() - 1).evaluate(mem);
-        txtIndexes.append(Mark.SQUARE_OPEN+" " + value.getIntValue() + " " + Mark.SQUARE_CLOSE);
-        pos += value.getIntValue();
         //Value not defined
         if (pos >= elements.size()) {
             throw new FlowchartException("EXECUTE.array.indexInvalid",
-                   txtIndexes.toString(),
+                    txtIndexes.toString(),
                     getName(),
                     getIndexDimensions());
         }
         return elements.get(pos);
+    }
+
+    /**
+     * gets the elements of the array
+     *
+     * @param indexes
+     * @param mem
+     * @return
+     * @throws FlowchartException
+     */
+    public Fsymbol getElementArray(List<Expression> indexes, Memory mem) throws FlowchartException {
+        //string to produce exception
+        StringBuilder txtIndexes = new StringBuilder(); // to produce the exception
+        //indexes to the new array
+        List<Expression> newIndexes = new ArrayList<>();
+        //calculate position and number of elements
+        int factor = 1;
+        for (int i = this.indexExpression.size() - 1; i >= indexes.size(); i--) {
+            factor *= getDimension(i);
+            newIndexes.add(0, this.indexExpression.get(i));
+        }
+        int size = factor; // number elements
+        int start = 0; // start of the elements
+        Finteger value;
+        for (int i = indexes.size() - 1; i >= 0; i--) {
+            //evaluate indexes and calculate position
+            value = (Finteger) indexes.get(i).evaluate(mem);
+            start += factor * value.getIntValue();
+            factor *= getDimension(i);
+            txtIndexes.append(Mark.SQUARE_OPEN + " " + value.getIntValue() + " " + Mark.SQUARE_CLOSE);
+        }
+        //elements of the new array
+        List<Fsymbol> newElements = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            newElements.add(elements.get(start + i));
+        }
+        //create new Array
+        return new Farray(ANONYM_VAR, newElements, newIndexes, mem);
     }
 
     public void setElementValue(String newValue, List<Expression> indexes, Memory mem) throws FlowchartException {
@@ -434,24 +535,24 @@ public class Farray extends FcomplexSymbol {
      * @throws FlowchartException
      */
     public void setElementValue(Fsymbol newValue, List<Expression> indexes, Memory mem) throws FlowchartException {
-         StringBuilder txtIndexes = new StringBuilder(); // to produce the exception
-        //evaluate indexes and calculate position
+        StringBuilder txtIndexes = new StringBuilder(); // to produce the exception      
+
         int pos = 0;
+        int factor = 1;
         Finteger value;
-        //calculate intermediate positions
-        for (int i = 0; i < indexes.size() - 1; i++) {
+        //calculate last positions
+        for (int i = indexes.size() - 1; i >= 0; i--) {
+            //evaluate indexes and calculate position
             value = (Finteger) indexes.get(i).evaluate(mem);
-            pos += getDimension(i) * value.getIntValue();
-            txtIndexes.append(Mark.SQUARE_OPEN+" " + value + " " + Mark.SQUARE_CLOSE);
+            pos += factor * value.getIntValue();
+            factor *= getDimension(i);
+            txtIndexes.append(Mark.SQUARE_OPEN + " " + value.getIntValue() + " " + Mark.SQUARE_CLOSE);
         }
-        //add alldimension
-        value = (Finteger) indexes.get(indexes.size() - 1).evaluate(mem);
-        txtIndexes.append(Mark.SQUARE_OPEN+" " + value.getIntValue() + " " + Mark.SQUARE_CLOSE);
-        pos += value.getIntValue();
+
         //Value not defined
         if (pos >= elements.size()) {
             throw new FlowchartException("EXECUTE.array.indexInvalid",
-                   txtIndexes.toString(),
+                    txtIndexes.toString(),
                     getName(),
                     getIndexDimensions());
         }
@@ -462,7 +563,7 @@ public class Farray extends FcomplexSymbol {
 
     @Override
     public String getTypeName() {
-        return elements.get(0).getTypeName();
+        return template.getTypeName();
     }
 
     @Override
@@ -476,23 +577,31 @@ public class Farray extends FcomplexSymbol {
         throw new FlowchartException("TYPE.array.arrayExpected");
     }
 
+    public void setArrayValue(Farray newValue) throws FlowchartException {
+         this.elements = newValue.elements;
+         this.template = newValue.template;
+         this.indexExpression = newValue.indexExpression;
+    }
+     /**
+     * @return the Textual value
+     */
+    public String getTextValue() {
+       return toTextValue();
+    }
+    
     @Override
     public String getDefaultValue() {
-        return elements.get(0).getDefaultValue();
+        return template.getDefaultValue();
     }
 
     @Override
     public boolean acceptValue(Object value) {
-        return elements.get(0).acceptValue(value);
+        return template.acceptValue(value);
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::: methods to GUI :::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public int getlastDimension() {
-        return ((Finteger) indexExpression.get(indexExpression.size() - 1).getReturnType()).getIntValue();
-    }
-
     /**
      * returns the number of elements that are contained in the dimension i
      *
@@ -518,7 +627,7 @@ public class Farray extends FcomplexSymbol {
      * @return List of referenced elements
      */
     public Farray getsubArray(List<Integer> index) throws FlowchartException {
-        Farray subArray = new Farray(this.getName());
+        Farray subArray = new Farray(this.getName(), elements.get(0));
         subArray.memory = memory;
         subArray.indexExpression = new ArrayList<>();
 
@@ -553,9 +662,13 @@ public class Farray extends FcomplexSymbol {
 
     @Override
     public Object clone() {
+        if( elements == null) // parameter of function
+            return Farray.createParameter(template);
+        
         try { // call clone in Object.
             Farray clone = (Farray) super.clone();
             clone.elements = new ArrayList<>();
+            clone.template = template;
             for (Fsymbol element : elements) {
                 clone.elements.add(element);
             }
@@ -571,10 +684,46 @@ public class Farray extends FcomplexSymbol {
             return null;
         }
     }
-    
-     @Override
+
+    @Override
     public String getTypeToken() {
-        return elements.get(0).getTypeToken();
+        return template.getTypeToken();
+    }
+
+    public String toTextValue() {        
+        StringBuilder txt = new StringBuilder();
+        for (Fsymbol s : elements) {
+            txt.append(s.getTextValue() + ", ");
+        }
+        return txt.toString().substring(0, txt.length() - 2); // remove last ,
+    }
+
+    /**
+     * creates an array to parameter or return of functions
+     *
+     * @param name name of the array
+     * @param varSymbol template symbol
+     * @return
+     */
+    public static Fsymbol createParameter(Fsymbol varSymbol) {
+        try {
+            Farray array = new Farray(varSymbol.getName(), varSymbol);
+            array.elements = null; // identify as an parameter
+            array.indexExpression = new ArrayList<>();
+            return array;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    public boolean  isparameter(){
+        return elements==null;
+    }
+    
+     /**
+     * @return the Textual value
+     */
+    public String getDefinitionValue() {
+       return getName() + getIndexesDefinition();
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

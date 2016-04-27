@@ -426,7 +426,8 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: COMMENTS
-    public static String COMMENT_STR = FkeyWord.get("KEYWORD.comments");
+    private static String COMMENT_STR = FkeyWord.get("KEYWORD.comments");
+    private static String COMMENT_TOKEN = FkeywordToken.get("KEYWORD.comments.key");
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public String getCommentsCode() {
@@ -440,9 +441,7 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         }
         return txt.substring(0, txt.length() - 1); // remove last \n
     }
-    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: COMMENTS
-    private static String COMMENT_TOKEN = FkeywordToken.get("KEYWORD.comments.key");
-
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: COMMENTS    
     public String getCommentsToken() {
         if (comments.isEmpty()) {
             return "";

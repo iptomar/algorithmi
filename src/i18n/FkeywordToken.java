@@ -56,6 +56,10 @@ public class FkeywordToken {
     static ResourceBundle keys;
 
     static {
+        init();
+    }
+
+    public static void init() {
         keys = ResourceBundle.getBundle(LANG_FILE);
         OPERATOR_SET_KEY = keys.getString("OPERATOR.set.key");
         // get the keys
@@ -97,7 +101,7 @@ public class FkeywordToken {
         StringBuilder txt = new StringBuilder();
         for (String elem : tokens.split(" ")) {
             if (token_word.get(elem) != null) {
-               txt.append(token_word.get(elem) + " ");
+                txt.append(token_word.get(elem) + " ");
             } else {
                 txt.append(elem + " ");
             }

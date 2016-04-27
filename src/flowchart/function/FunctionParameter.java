@@ -49,6 +49,7 @@ import flowchart.arrow.Arrow;
 import flowchart.define.Define;
 import flowchart.shape.Fshape;
 import flowchart.terminator.TerminatorShape;
+import java.util.ArrayList;
 
 /**
  * Created on 26/set/2015, 17:37:13
@@ -60,7 +61,6 @@ public class FunctionParameter extends Define {
     private Function myFunction; // function where the parameter belongs 
     private int index; // function where the parameter belongs 
     private Memory myPersonalMemory; // memory to evaluate expression ( algorithm tha call function)
-    private boolean isArray = false;
 
     public FunctionParameter(final Define definition) {
         super(definition.algorithm, new TerminatorShape(FProperties.terminatorColor));
@@ -72,9 +72,11 @@ public class FunctionParameter extends Define {
 
     public FunctionParameter(Fsymbol var, boolean isArray, AlgorithmGraph algorithm) {
         super(algorithm, new TerminatorShape(FProperties.terminatorColor));
-        this.isArray = isArray;
+        if (isArray) { // convert var to array
+            var = Farray.createParameter(var);
+        }
         this.setVarSymbol(var);
-        this.setInstruction(varToParameter(var));
+        this.setInstruction(toStringParameter());
         varExpression = new Expression(Fsymbol.createSymbolByType(var.getTypeName()));
         myPersonalMemory = null; // updated in running time        
     }
@@ -83,10 +85,29 @@ public class FunctionParameter extends Define {
         FunctionParameter par = new FunctionParameter(this);
         par.index = index;
         par.myPersonalMemory = myPersonalMemory;
-        par.isArray = isArray;
         return par;
     }
 
+    public boolean isArray() {
+        return this.varSymbol instanceof Farray;
+    }
+
+    public void setisArray(boolean array) {
+        if (isArray() && !array) {
+            this.varSymbol = ((Farray) this.varSymbol).getTemplateElement();
+        } else if (!isArray() && array) {
+            this.varSymbol = Farray.createParameter(varSymbol);
+        }
+    }
+
+    /**
+     * build a shape to execute the parameter
+     *
+     * @param begin benfin shape
+     * @param mem runtime memory
+     * @param exp template to build a definition shape
+     * @param index index of the parameter
+     */
     public void expandParameter(Fshape begin, Memory mem, FunctionParameter exp, int index) {
         this.index = index;
         this.myFunction = (Function) (begin.parent);
@@ -98,18 +119,32 @@ public class FunctionParameter extends Define {
 
     }
 
+    /**
+     * verify if the parameters is ok
+     *
+     * @return
+     * @throws FlowchartException
+     */
     public boolean parseShape() throws FlowchartException {
         return true;
     }
 
-    public String varToParameter(Fsymbol var) {
+    public String toStringParameter() {
         StringBuilder txt = new StringBuilder();
-        txt.append(var.getTypeName());
+        txt.append(this.varSymbol.getTypeName());
         txt.append(" ");
-        txt.append(var.getName());
-        if (isArray) {
+        txt.append(this.varSymbol.getName());
+        if (varSymbol instanceof Farray) {
             txt.append("" + Mark.SQUARE_OPEN + Mark.SQUARE_CLOSE);
         }
+        return txt.toString();
+    }
+
+    public String toStringParameterNoArray() {
+        StringBuilder txt = new StringBuilder();
+        txt.append(this.varSymbol.getTypeName());
+        txt.append(" ");
+        txt.append(this.varSymbol.getName());
         return txt.toString();
     }
 
@@ -124,19 +159,34 @@ public class FunctionParameter extends Define {
         }
         //:::::::::::::::::::::::::::::::: FUNCTION CALL :::::::::::::::::::::::FUNCTION CALL :::::::::::::::::::::::
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//        if (varSymbol instanceof Farray) {            
+//               Farray resultExpr = (Farray)myPersonalMemory.getByName(getVarExpression().toString()); // name of the original array
+//                resultExpr = (Farray)resultExpr.getElementArray(new ArrayList<Expression>(), myPersonalMemory);
+//                resultExpr.setName(varSymbol.getName());
+//                varSymbol = resultExpr;
+//                
+//                varSymbol.setLevel(this.level);
+//                varSymbol.setComments(comments);
+//                 exe.addSymbolToMemory(varSymbol);
+//            
+//        } else {
+        //use runtime memory to evaluate 
+        Fsymbol resultExpr = getVarExpression().evaluate(myPersonalMemory);
+        //update level and value and tooltip
+        varSymbol.setLevel(this.level);
         if (varSymbol instanceof Farray) {
-            Fdialog.showMessage("Execution of array parameter not implemented!!!");
+            ((Farray) varSymbol).setArrayValue((Farray) resultExpr);
         } else {
-            //use runtime memory to evaluate 
-            Fsymbol resultExpr = getVarExpression().evaluate(myPersonalMemory);
-            //update level and value and tooltip
-
-            varSymbol.setLevel(this.level);
             varSymbol.setValue(resultExpr);
-            varSymbol.setComments(comments);
-            defineResult = varSymbol.getName() + " " + FkeyWord.OPERATOR_SET + " " + resultExpr.getTextValue();
-            exe.addSymbolToMemory(varSymbol);
-            //UPDATE the name of the function
+        }
+        varSymbol.setComments(comments);
+        defineResult = varSymbol.getName() + " " + FkeyWord.OPERATOR_SET + " " + resultExpr.getTextValue();
+        exe.addSymbolToMemory(varSymbol);
+        //UPDATE the name of the function
+        if (varSymbol instanceof Farray) {                        
+            //TODO 
+           // varExpression = new Expression(varSymbol.getDefinitionValue(), exe.getRuntimeMemory(), exe.getTemplate());
+        }else{
             varExpression = new Expression(varSymbol.getDefinitionValue(), exe.getRuntimeMemory(), exe.getTemplate());
             myFunction.updateParameter(index, this);
         }
@@ -164,7 +214,7 @@ public class FunctionParameter extends Define {
     }
 
     public String toString() {
-        return varToParameter(varSymbol);
+        return toStringParameterNoArray();
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
