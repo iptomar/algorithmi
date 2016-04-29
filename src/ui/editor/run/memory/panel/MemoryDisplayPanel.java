@@ -32,10 +32,11 @@
 //::                                                               (c)2015   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package ui.editor.run;
+package ui.editor.run.memory.panel;
 
-import ui.editor.run.memory.MemoryCellRenderer;
-import ui.editor.run.memory.MemoryVector;
+import ui.editor.run.memory.tree.*;
+import ui.editor.run.memory.tree.MemoryCellRenderer;
+import ui.editor.run.memory.tree.MemoryVector;
 import core.Memory;
 import flowchart.algorithm.run.GraphExecutor;
 import java.awt.BorderLayout;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
 
@@ -53,62 +55,34 @@ import javax.swing.tree.TreeCellRenderer;
  *
  * @author Antonio M@nso <manso@ipt.pt>
  */
-public class MemoryDisplay extends JPanel {
+public class MemoryDisplayPanel extends JPanel {
 
     GraphExecutor runningProgram;
-    JTree tree = null;
-    Vector rootVector;
+    JTabbedPane tabs;
 
-    public MemoryDisplay(GraphExecutor program) {
+    public MemoryDisplayPanel(List<Memory> lst) {
         this.setLayout(new BorderLayout());
-        this.runningProgram = program;
-
-        createMemory();
+        createMemory(lst);
     }
 
-//    private void updateListeners() {
-//        tree.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-//                if (path == null || path.getLastPathComponent() == null) {
-//                    return;
-//                }
-//                System.out.println(path.getLastPathComponent());
-//            }
-//        });
-//    }
-    public void createMemory() {
+    public void createMemory(List<Memory> lst) {
         this.removeAll();
-        //list of memorys
-        List<Memory> lst = runningProgram.getProgramMemory();
-        //System.out.println(lst);
-        //array of tree nodes
-        Vector[] nodes = new Vector[lst.size()];
-        //create variables nodes
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new MemoryVector(lst.get(i));
+        setLayout(new BorderLayout());
+        tabs = new JTabbedPane(JTabbedPane.LEFT);
+        tabs.setTabLayoutPolicy(javax.swing.JTabbedPane.WRAP_TAB_LAYOUT);
+        tabs.setTabPlacement(javax.swing.JTabbedPane.TOP);
+        for (Memory memory : lst) {
+            tabs.add(memory.getMemoryName(), new SingleMemoryDisplay(memory));
         }
-        //crerate root nodes
-        rootVector = new MemoryVector("", nodes);
-        tree = new JTree(rootVector);
-        //register to tooltip
-//        ToolTipManager.sharedInstance().registerComponent(tree);
-        //set cell Renderer
-        TreeCellRenderer renderer = new MemoryCellRenderer();
-        tree.setCellRenderer(renderer);
-        //scroolable memory
-        JScrollPane scrollPane = new JScrollPane(tree);
-        this.add(scrollPane, BorderLayout.CENTER);
-        //Expand last row
-        tree.expandRow(nodes.length - 1);
+        this.add(tabs, BorderLayout.CENTER);
+
 //        updateListeners();
         revalidate();
 //        repaint();
     }
 
     public final void updateMemory() {
-            createMemory();        
+
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

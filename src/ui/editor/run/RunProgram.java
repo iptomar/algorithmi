@@ -34,6 +34,7 @@
 //////////////////////////////////////////////////////////////////////////////
 package ui.editor.run;
 
+import ui.editor.run.memory.tree.MemoryDisplayTree;
 import core.data.complexData.Farray;
 import i18n.EditorI18N;
 import ui.dialogs.FMessages;
@@ -65,7 +66,7 @@ public class RunProgram extends javax.swing.JFrame implements Runnable {
 
 //    Console console; // console to display input and output
 //    Memory mem; // memory     
-    MemoryDisplay displayMemory;  // display of memory
+    MemoryDisplayTree displayMemory;  // display of memory
 //    Fshape nodeInExecution;  // intruction in execution
 
 //    JScrollPane scrool; // scrool to fluxogram
@@ -101,7 +102,7 @@ public class RunProgram extends javax.swing.JFrame implements Runnable {
         pnMemory.removeAll();
         pnMemory.setLayout(new BoxLayout(pnMemory, BoxLayout.Y_AXIS));
 
-        displayMemory = new MemoryDisplay(sourceFlux);
+        displayMemory = new MemoryDisplayTree(sourceFlux);
         pnMemory.add(displayMemory);
         //create graphics with first graph
 //        nodeInExecution = initRunningProgram();

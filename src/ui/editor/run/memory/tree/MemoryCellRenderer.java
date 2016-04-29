@@ -18,7 +18,7 @@
 //::                                                               (c)2015   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package ui.editor.run.memory;
+package ui.editor.run.memory.tree;
 
 import core.data.Fsymbol;
 import java.awt.Color;
