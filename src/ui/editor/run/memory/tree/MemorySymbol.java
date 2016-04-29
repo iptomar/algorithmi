@@ -32,7 +32,7 @@
 //::                                                               (c)2015   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package ui.editor.run.memory;
+package ui.editor.run.memory.tree;
 
 import core.data.Fsymbol;
 import core.data.complexData.Farray;
@@ -55,7 +55,7 @@ import javax.swing.border.TitledBorder;
  *
  * @author Antonio M@nso <manso@ipt.pt>
  */
-public class CellMemorySymbol extends JPanel {
+public class MemorySymbol extends JPanel {
 
     public static Color COLOR_SELECTED = new Color(50, 255, 50);
     public static Color COLOR_NOT_SELECTED = new Color(255, 255, 255);
@@ -69,13 +69,13 @@ public class CellMemorySymbol extends JPanel {
      */
     protected Fsymbol symbol;
 
-    public CellMemorySymbol(Fsymbol symbol) {
+    public MemorySymbol(Fsymbol symbol) {
         this.symbol = symbol;
         this.setBorder(BorderFactory.createTitledBorder(
                 null, symbol.getName(),
                 TitledBorder.LEFT,
                 TitledBorder.BELOW_TOP,
-                new Font("Courier New", Font.BOLD, 12))
+                new Font("Courier New", Font.BOLD, 16))
         );
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         createGUIMemory();
@@ -160,7 +160,7 @@ public class CellMemorySymbol extends JPanel {
             }
         } else {
             setLayout(new java.awt.GridLayout(1, 1, 0, 0));
-            JLabel txt = createVarLabel(symbol, symbol.getFullInfo());
+            JLabel txt = createVarLabel(symbol, symbol.getInstruction());
             Dimension dim = UtilsFlowchart.getTextDimension(symbol.getDefinitionValue(), txt.getFont());
             txt.setPreferredSize(new Dimension(Math.max(VAR_WITH * 3, dim.width + 7), VAR_HEIGHT));
             this.add(txt);
@@ -199,14 +199,12 @@ public class CellMemorySymbol extends JPanel {
     private JLabel createVarLabel(final Fsymbol var, String tooltip) {
         JLabel txt = new JLabel(Theme.valueToHtml(var));
         txt.setFont(new java.awt.Font("Courier New", 0, 12));
-
-        
-        txt.setToolTipText("dsfdsfs");
-
+        txt.setBackground(color[symbol.getLevel() % color.length]);
         txt.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txt.setPreferredSize(new java.awt.Dimension(VAR_WITH, VAR_HEIGHT));
-        txt.setToolTipText(Theme.toHtml(var.getFullInfo()));
+        txt.setToolTipText(Theme.toHtml(tooltip));
+        txt.setBackground(COLOR_NOT_SELECTED);
         Dimension dim = UtilsFlowchart.getTextDimension(var.getDefinitionValue(), txt.getFont());
         txt.setPreferredSize(new Dimension(Math.max(dim.width + 2, VAR_WITH), Math.max(dim.height, VAR_HEIGHT)));
         txt.addMouseListener(new java.awt.event.MouseAdapter() {
