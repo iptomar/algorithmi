@@ -12,8 +12,10 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import ui.utils.VerticalFlowLayout;
 
 /**
  *
@@ -33,13 +35,14 @@ public class SingleMemoryDisplay extends JPanel {
         );
         //setLayout(new FlowLayout(FlowLayout.LEFT));
         Box left = Box.createVerticalBox();
-        
+        this.setLayout(new VerticalFlowLayout());
         for (Fsymbol var : mem.getMem()) {
             MemorySymbol memVar = new MemorySymbol(var);
-            memVar.setAlignmentX( Component.LEFT_ALIGNMENT );//0.0
-            left.add(memVar);
+            memVar.setAlignmentX(Component.LEFT_ALIGNMENT);//0.0
+            //left.add(memVar);
+            this.add(memVar);
         }
-        this.add(left);
+        //this.add(left);
 
     }
 
