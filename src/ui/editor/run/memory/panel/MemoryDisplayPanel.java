@@ -34,19 +34,12 @@
 //////////////////////////////////////////////////////////////////////////////
 package ui.editor.run.memory.panel;
 
-import ui.editor.run.memory.tree.*;
-import ui.editor.run.memory.tree.MemoryCellRenderer;
-import ui.editor.run.memory.tree.MemoryVector;
 import core.Memory;
 import flowchart.algorithm.run.GraphExecutor;
 import java.awt.BorderLayout;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTree;
-import javax.swing.tree.TreeCellRenderer;
 
 /**
  * panel of memory

@@ -44,19 +44,19 @@ public class MemPanelTest {
         try {
             Program prog = new Program();
 
-            Memory mem0 = new Memory("Global asd d sd");
+            Memory mem0 = new Memory("Memoria global");
             mem0.add(Fsymbol.create("inteiro", "i", "10"));
             mem0.add(Fsymbol.create("real", "pi", "3.14"));
             mem0.add(Fsymbol.create("logico", "l1", "verdadeiro"));
-            mem0.add(Fsymbol.create("texto", "txt", "\"era uma vez um gato preto com rabo branco\""));
+            mem0.add(Fsymbol.create("texto", "txt", "\" Global era uma vez um gato preto com rabo branco\""));
 
-            Memory mem1 = new Memory("Programa muito principal fsa d ddsad");
+            Memory mem1 = new Memory("Programa muito principal ");
             mem1.add(Fsymbol.create("inteiro", "i", "10"));
             mem1.add(Fsymbol.create("real", "pi", "3.14"));
             mem1.add(Fsymbol.create("logico", "l1", "verdadeiro"));
-            mem1.add(Fsymbol.create("texto", "txt", "\"era uma vez um gato preto com rabo branco\""));
+            mem1.add(Fsymbol.create("texto", "txt", "\"PrincipalPrincipalPrincipalPrincipal\""));
 
-            Memory mem2 = new Memory("função sdfx sdaf dsaf sdaf ");
+            Memory mem2 = new Memory("função  ");
             mem2.add(Fsymbol.create("inteiro", "i2", "10"));
             mem2.add(Fsymbol.create("real", "pi2", "3.14"));
 
@@ -64,7 +64,7 @@ public class MemPanelTest {
             a.createArrayElements(mem2, prog);
             mem2.add(a);
             mem2.add(Fsymbol.create("logico", "l12", "verdadeiro"));
-            mem2.add(Fsymbol.create("texto", "txt2", "\"era uma vez um gato\""));
+            mem2.add(Fsymbol.create("texto", "txt2", "\"Funcao funcao \""));
 
             List<Memory> lst = new ArrayList<>();
             lst.add(mem0);
@@ -75,9 +75,9 @@ public class MemPanelTest {
             MemorySymbol s = new MemorySymbol(a);
             //SingleMemoryDisplay memoryD = new SingleMemoryDisplay(mem2);
 
-            MemoryDisplayPanel mem = new MemoryDisplayPanel(lst);
+            ListOfMemories mem = new ListOfMemories(lst);
             frame.getContentPane().add(mem, BorderLayout.CENTER);
-            frame.setSize(300, 300);
+            frame.setSize(600, 600);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
