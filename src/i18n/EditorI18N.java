@@ -15,20 +15,15 @@
 package i18n;
 
 import ui.FLog;
-import ui.FProperties;
-import i18n.Fi18N;
 import flowchart.utils.TextUtils;
 import flowchart.utils.Theme;
-import static i18n.Fi18N.country;
 import java.awt.Image;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.text.JTextComponent;
 
 /**
  *
