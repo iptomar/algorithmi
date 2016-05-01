@@ -249,10 +249,15 @@ public class GraphExecutor {
             view.getViewport().setViewPosition(nodeInExecution.getLocation()); // put shape in the top left corner of the viewport
             view.repaint();
         }
-        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: jump over arrows :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//        if (nodeInExecution instanceof Arrow) {
-//            executeNext();
-//        }
+    }
+    
+     /**
+     * Execute Instruction
+     *
+     * @throws FlowchartException
+     */
+    public void executeNextFast() throws FlowchartException {
+          nodeInExecution = nodeInExecution.execute(this); //--------------------- execute node
     }
 
     /**

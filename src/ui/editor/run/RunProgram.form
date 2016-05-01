@@ -135,7 +135,6 @@
     <Container class="javax.swing.JSplitPane" name="sppMemory">
       <Properties>
         <Property name="dividerLocation" type="int" value="100"/>
-        <Property name="dividerSize" type="int" value="5"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[350, 102]"/>
         </Property>
@@ -175,7 +174,6 @@
         <Container class="javax.swing.JSplitPane" name="sppFluxogram">
           <Properties>
             <Property name="dividerLocation" type="int" value="500"/>
-            <Property name="dividerSize" type="int" value="5"/>
             <Property name="orientation" type="int" value="0"/>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[10, 27]"/>

@@ -35,7 +35,6 @@
 package ui.editor.run;
 
 import ui.editor.run.memory.tree.MemoryDisplayTree;
-import core.data.complexData.Farray;
 import i18n.EditorI18N;
 import ui.dialogs.FMessages;
 import ui.utils.TextAreaRun;
@@ -44,14 +43,21 @@ import ui.flowchart.dialogs.Fdialog;
 import flowchart.algorithm.Program;
 import flowchart.algorithm.run.GraphExecutor;
 import flowchart.arrow.Arrow;
+import flowchart.decide.Do_Connector;
+import flowchart.decide.IfElse.IF_Connector;
+import flowchart.decide.IfElse.IfThenElse;
+import flowchart.decide.While_Do;
+import flowchart.decide.forNext.For_Next;
+import flowchart.define.Define;
+import flowchart.execute.Execute;
 import flowchart.shape.Fshape;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import flowchart.write.Write;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import ui.FLog;
+import ui.editor.run.memory.panel.ProgramMemoryDisplay;
 
 /**
  *
@@ -66,7 +72,7 @@ public class RunProgram extends javax.swing.JFrame implements Runnable {
 
 //    Console console; // console to display input and output
 //    Memory mem; // memory     
-    MemoryDisplayTree displayMemory;  // display of memory
+    ProgramMemoryDisplay displayMemory;  // display of memory
 //    Fshape nodeInExecution;  // intruction in execution
 
 //    JScrollPane scrool; // scrool to fluxogram
@@ -102,7 +108,7 @@ public class RunProgram extends javax.swing.JFrame implements Runnable {
         pnMemory.removeAll();
         pnMemory.setLayout(new BoxLayout(pnMemory, BoxLayout.Y_AXIS));
 
-        displayMemory = new MemoryDisplayTree(sourceFlux);
+        displayMemory = new ProgramMemoryDisplay(sourceFlux);
         pnMemory.add(displayMemory);
         //create graphics with first graph
 //        nodeInExecution = initRunningProgram();
@@ -293,10 +299,13 @@ public class RunProgram extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_btRun_stepActionPerformed
 
     private void updateGUI() {
-        if (sourceFlux.getNodeExecuted() != null) {
+        if (sourceFlux.getNodeExecuted() != null)
+//                && !(sourceFlux.getNodeExecuted() instanceof Arrow)
+//                && !(sourceFlux.getNodeExecuted() instanceof Write)
+//                && !(sourceFlux.getNodeExecuted() instanceof IfThenElse)
+//                ) {
             displayMemory.updateMemory();
-          //  FMessages.status(lblStatus, FMessages.OK, sourceFlux.getNodeExecuted().getExecutionResult());
-        }
+//        }
         Fshape executed = sourceFlux.getNodeExecuted();
         if (!(executed instanceof Arrow)) {
             txtInstructions.append(executed);

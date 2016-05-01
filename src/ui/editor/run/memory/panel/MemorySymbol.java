@@ -7,11 +7,14 @@ package ui.editor.run.memory.panel;
 
 import core.data.Fsymbol;
 import core.data.complexData.Farray;
+import core.data.exception.FlowchartException;
 import core.parser.Mark;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -24,12 +27,50 @@ import javax.swing.border.TitledBorder;
 public class MemorySymbol extends JPanel {
 
     protected Fsymbol symbol;
-    List<MemoryCellVar> list = new ArrayList<>(); // labels of arrays elements
+    public List<MemoryCellVar> symbolList = new ArrayList<>(); // labels of arrays elements
 
     public MemorySymbol(Fsymbol symbol) {
         this.symbol = symbol;
         createUI();
         revalidate();
+    }
+
+    public String toString() {
+        return "< " + symbolList.toString() + " >";
+    }
+
+    /**
+     * update the display of the symbol if needed
+     * returns the cell updated
+     * 
+     * @param newValue new value to cells
+     * @return value updated
+     */
+    public MemoryCellVar update(Fsymbol newValue) {
+        // cell changed
+        MemoryCellVar changed = null;
+        try {
+            // is an Array
+            if (newValue instanceof Farray) {
+                //get new values of the arrays
+                List<Fsymbol> elements = ((Farray) newValue).getElements();
+                for (int i = 0; i < elements.size(); i++) {
+                    //verify updates
+                    if (!symbolList.get(i).isEqual(elements.get(i))) {
+                        changed = symbolList.get(i);
+                        changed.update(elements.get(i));
+                    }
+                }
+            } //simple symbol
+            else if (!symbolList.get(0).isEqual(newValue)) {
+                changed = symbolList.get(0);
+                changed.update(newValue);
+            }
+        } catch (Exception e) {
+            //something wrong happens!!!!!! 
+        }
+        symbol = newValue; //update symbol
+        return changed;
     }
 
     public void createUI() {
@@ -41,31 +82,29 @@ public class MemorySymbol extends JPanel {
                     createArray2D(this, a.getElements(), 0, 1, a.getDimension(0), a.getName());
                     break;
                 case 2:
-                     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                     createArray2D(this, a.getElements(), 0, a.getDimension(0), a.getDimension(1), a.getName());
                     break;
                 default:
                     buildPanel(this, symbol.getName());
-                     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                     generatePanels(this, new ArrayList<Integer>(), a.getDimensions());
             }
         } else {
             buildPanel(this, symbol.getName());
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             MemoryCellVar var = new MemoryCellVar(symbol);
-            list.add(var);
+            symbolList.add(var);
             this.add(var);
         }
     }
-
-  
 
     private void createArray2D(JPanel panel, List<Fsymbol> elements, int start, int lines, int rows, String title) {
         panel.setLayout(new GridLayout(lines, rows, 0, 0));
         buildPanel(panel, title);
         for (int i = 0; i < lines * rows; i++) {
             MemoryCellVar txt = new MemoryCellVar(elements.get(start + i));
-            list.add(txt);
+            symbolList.add(txt);
             panel.add(txt);
         }
     }
@@ -94,7 +133,7 @@ public class MemorySymbol extends JPanel {
             //add lists
             newList.addAll(result);
         }
-        //return result list
+        //return result symbolList
         return newList;
     }
 
@@ -107,14 +146,14 @@ public class MemorySymbol extends JPanel {
             //:::::::::::::::::::::::::::::::::::: PANELS :::::::::::::
             Farray a = (Farray) symbol;
             int start = 0;
-            int factor = indexes.get(0)*indexes.get(1);
+            int factor = indexes.get(0) * indexes.get(1);
             String txtIndex = "";
-            for (int i = current.size()-1; i>=0; i--) {
-                
+            for (int i = current.size() - 1; i >= 0; i--) {
+
                 //add indexes to name
-                txtIndex = Mark.SQUARE_OPEN + "" + current.get(i) + Mark.SQUARE_CLOSE+txtIndex;
+                txtIndex = Mark.SQUARE_OPEN + "" + current.get(i) + Mark.SQUARE_CLOSE + txtIndex;
                 //update start
-                start += current.get(i) *factor;
+                start += current.get(i) * factor;
                 factor *= a.getDimension(i);
             }
             txtIndex = symbol.getName() + txtIndex;
@@ -131,7 +170,7 @@ public class MemorySymbol extends JPanel {
         if (!current.isEmpty()) {
             //:::::::::::::::::::::::::::::::::::: PANELS :::::::::::::
             JPanel newPanel = new JPanel();
-            newPanel.setLayout(new GridLayout(size,0,  0, 0));
+            newPanel.setLayout(new GridLayout(size, 0, 0, 0));
             buildPanel(newPanel, current);
             myPanel.add(newPanel);
             myPanel = newPanel;
@@ -154,7 +193,7 @@ public class MemorySymbol extends JPanel {
             //add lists
             newList.addAll(result);
         }
-        //return result list
+        //return result symbolList
         return newList;
     }
 

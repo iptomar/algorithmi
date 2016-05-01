@@ -57,7 +57,7 @@ import java.util.List;
 public class Farray extends FcomplexSymbol {
 
     private Fsymbol template;
-    List<Fsymbol> elements; // elements
+    private List<Fsymbol> elements; // elements
     public List<Expression> indexExpression; // index expressions
     Memory memory; // to avaliate index expressions
 
