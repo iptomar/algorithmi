@@ -48,7 +48,7 @@ public class MemoryCellVar extends JLabel {
     }
 
     public void clearColor() {
-          this.setBackground(clearColor);
+        this.setBackground(clearColor);
     }
 
     public String toString() {
@@ -59,6 +59,8 @@ public class MemoryCellVar extends JLabel {
 //        setColor(clearColor);
         setLayout(new java.awt.GridLayout(1, 1, 0, 0));
         setFont(new java.awt.Font("Courier New", 0, 12));
+        clearColor();
+        setOpaque(true);
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

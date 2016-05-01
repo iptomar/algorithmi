@@ -158,7 +158,6 @@ public class MemorySymbol extends JPanel {
             }
             txtIndex = symbol.getName() + txtIndex;
 //            start += indexes.get(0) * a.getDimension(current.size()+1);
-            System.out.println(txtIndex + " -> " + start);
             JPanel aPanel = new JPanel();
             createArray2D(aPanel, ((Farray) symbol).getElements(), start, indexes.get(0), indexes.get(1), txtIndex);
             myPanel.add(aPanel);
@@ -213,17 +212,6 @@ public class MemorySymbol extends JPanel {
                 new Font("Courier New", Font.BOLD, 12))
         );
 
-    }
-
-    public static void main(String[] args) {
-        List<Integer> lst = new ArrayList<>();
-        lst.add(2);
-        lst.add(3);
-        lst.add(3);
-        List<List<Integer>> x = generateIndexes(new ArrayList<Integer>(), lst);
-        for (List<Integer> list : x) {
-            System.out.println(list);
-        }
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
