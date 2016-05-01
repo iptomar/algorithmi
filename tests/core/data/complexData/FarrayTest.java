@@ -202,7 +202,7 @@ public class FarrayTest extends TestCase {
                     // indexA.add(new Expression(new Finteger(j)));
                     Farray array = (Farray) a1.getElement(indexA, Memory.constants);
                     System.out.println(array.toString() + " " + array.toTextValue());
-                    assertEquals(array.elements.size(), v[0][0][0].length);
+                    assertEquals(array.getElements().size(), v[0][0][0].length);
 //                    }
                 }
                 System.out.println("-------------------");
@@ -220,7 +220,7 @@ public class FarrayTest extends TestCase {
                 // indexA.add(new Expression(new Finteger(j)));
                 Farray array = (Farray) a1.getElement(indexA, Memory.constants);
                 System.out.println(array.toString() + " " + array.toTextValue());
-                assertEquals(array.elements.size(), v[0][0][0].length * v[0][0].length);
+                assertEquals(array.getElements().size(), v[0][0][0].length * v[0][0].length);
 //                    }
             }
             System.out.println("-------------------");
@@ -237,7 +237,7 @@ public class FarrayTest extends TestCase {
                 // indexA.add(new Expression(new Finteger(j)));
                 Farray array = (Farray) a1.getElement(indexA, Memory.constants);
                 System.out.println(array.toString() + " " + array.toTextValue());
-                assertEquals(array.elements.size(), v[0][0][0].length * v[0][0].length* v[0].length);
+                assertEquals(array.getElements(), v[0][0][0].length * v[0][0].length* v[0].length);
 //                    }
         }
     }
