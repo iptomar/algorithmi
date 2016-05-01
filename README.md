@@ -6,8 +6,8 @@
 
   <p>
     &nbsp;&nbsp;Editor:
-	&nbsp;&nbsp;&nbsp;Optimização da memória : 10% Completed - M@nso
-    &nbsp;&nbsp;&nbsp;Core : 90% Completed - M@nso
+	&nbsp;&nbsp;&nbsp;Optimização da memória : 50% Completed - M@nso
+    &nbsp;&nbsp;&nbsp;Core : 100% Completed - M@nso
 	&nbsp;&nbsp;&nbsp;Undo/Redo: 70% Completed - Renato
     &nbsp;&nbsp;&nbsp;Drag&Drop: ?% Completed - Florencio
   </p>
