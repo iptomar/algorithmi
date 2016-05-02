@@ -103,6 +103,17 @@ public class GraphExecutor {
         graph.setComponentPopupMenu(rightMenu);
         restart();
     }
+    
+    public GraphExecutor(Program template,Console myConsole) {
+        this.template = template.getClone(); //clone template to preserve original in the editor
+        graph = new JPanel(null);
+        this.graph.setLayout(null); // to suport x,y positions
+        view = new JScrollPane(graph);
+        createPopupMenu();
+        graph.setComponentPopupMenu(rightMenu);
+        this.runtimeConsole=myConsole;
+        restart();
+    }
 
     public void restart() {
         lastExecuted = null;
@@ -250,14 +261,24 @@ public class GraphExecutor {
             view.repaint();
         }
     }
-    
-     /**
+
+    /**
      * Execute Instruction
      *
      * @throws FlowchartException
      */
-    public void executeNextFast() throws FlowchartException {
-          nodeInExecution = nodeInExecution.execute(this); //--------------------- execute node
+    public void executeFast() throws FlowchartException {
+        nodeInExecution = nodeInExecution.execute(this); //--------------------- execute node
+    }
+
+    
+    /**
+     * Execute Instruction
+     *
+     * @throws FlowchartException
+     */
+    public boolean isDone() throws FlowchartException {
+        return nodeInExecution == null;
     }
 
     /**

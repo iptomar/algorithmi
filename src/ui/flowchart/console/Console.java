@@ -7,9 +7,6 @@ package ui.flowchart.console;
 
 import core.data.Fsymbol;
 import i18n.Fi18N;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
@@ -78,7 +75,7 @@ public class Console extends javax.swing.JPanel {
 
         //memorize input
         inputMemory.add(var);
-        txtOutput.append(var + "\n");
+//        txtOutput.append(var + "\n");
         //return var
         return var;
     }

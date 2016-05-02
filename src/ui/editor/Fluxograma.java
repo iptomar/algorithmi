@@ -61,7 +61,6 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -69,7 +68,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 import ui.FLog;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
@@ -81,8 +79,9 @@ import ui.flowchart.dialogs.NewProgram;
 public class Fluxograma extends javax.swing.JFrame {
 
     boolean showAboutBox = false;
-    Program myProgram;
-    private UserName user;
+    public Program myProgram;
+    public UserName user;
+        
 //    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
 
     /**
@@ -93,9 +92,7 @@ public class Fluxograma extends javax.swing.JFrame {
         this.user = user;
         I18N();
         initMyComponents();
-        if (showAboutBox) {
-            showAbout();
-        }
+
     }
 
     public void initMyComponents() {
@@ -119,11 +116,10 @@ public class Fluxograma extends javax.swing.JFrame {
 //            showAbout();
         }
         updateFileList(myProgram.getFileName());
-       
-        
-    }
+        //link this fluxogram with console
+        consolePanel.setMyFluxogram(this);
 
-   
+    }
 
     public final void I18N() {
 
@@ -159,10 +155,10 @@ public class Fluxograma extends javax.swing.JFrame {
             EditorI18N.loadResource(mnOpenFunction, btOpenFunction, "FILE.open.function");
 
             EditorI18N.loadResource(mnGlobalMemory, btGlobalMemory, "PROGRAM.globalMemory");
-            
+
             EditorI18N.loadTab(leftPanel, 0, "LEFTPANEL.tab.files");
             EditorI18N.loadTab(leftPanel, 1, "LEFTPANEL.tab.console");
-            EditorI18N.loadTab(leftPanel, 2, "LEFTPANEL.tab.problem");
+
 
             setTitle(Fi18N.get("FLOWCHART.application.title"));
         } catch (Exception e) {
@@ -223,7 +219,7 @@ public class Fluxograma extends javax.swing.JFrame {
         txtPath = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstProgramFiles = new javax.swing.JList();
-        consolePanel1 = new ui.editor.left.ConsolePanel();
+        consolePanel = new ui.editor.left.ConsolePanel();
         jPanel5 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         btGlobalMemory = new javax.swing.JButton();
@@ -381,7 +377,7 @@ public class Fluxograma extends javax.swing.JFrame {
         jPanel6.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         leftPanel.addTab("tab1", jPanel6);
-        leftPanel.addTab("tab2", consolePanel1);
+        leftPanel.addTab("tab2", consolePanel);
 
         jPanel3.add(leftPanel, java.awt.BorderLayout.CENTER);
 
@@ -731,13 +727,8 @@ public class Fluxograma extends javax.swing.JFrame {
 
 
     private void btRunFluxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunFluxActionPerformed
-        myProgram.tryToSave();
-        List<Fshape> errors = myProgram.compile();
-        if (errors.isEmpty()) {
-            FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.run", myProgram.getFileName());
-            Program toRun = myProgram.getClone();
-            new RunProgram(toRun);
-        }
+        leftPanel.setSelectedComponent(consolePanel);
+        consolePanel.tryExecution();       
     }//GEN-LAST:event_btRunFluxActionPerformed
 
     private void mnCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCodeActionPerformed
@@ -1079,7 +1070,7 @@ public class Fluxograma extends javax.swing.JFrame {
         }
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             displayFile(FileUtils.getPath(myProgram.getFileName())
-                + lstProgramFiles.getSelectedValue().toString());
+                    + lstProgramFiles.getSelectedValue().toString());
         }
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             askToDeleteFile();
@@ -1120,7 +1111,7 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JButton btSaveFileAs;
     private javax.swing.JButton btZoomIn;
     private javax.swing.JButton btZoomOut;
-    private ui.editor.left.ConsolePanel consolePanel1;
+    private ui.editor.left.ConsolePanel consolePanel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
