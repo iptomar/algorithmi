@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -208,6 +209,29 @@ public class EditorI18N {
         FLog.printLn(txt.toString());
         FLog.printSeparator();
     }
+    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    public static void loadTab(JTabbedPane item, String key,int index,  int size) {
+        key = key.trim();
+        try {
+            item.setTitleAt(index,get(key).trim());
+        } catch (Exception ex) {
+            item.setTitleAt(index,get(key + ".title").trim());
+        }
+        try {
+            item.setToolTipTextAt(index,resourcesI18n.getString(key + ".help").trim());
+        } catch (Exception ex) {
+        }
+        try {
+            item.setIconAt(index,loadIcon(key + ".icon", size));
+        } catch (Exception ex) {
+        }
+    }
+
+    public static void loadTab(JTabbedPane tab,int index, String key) {
+        loadTab(tab, key, index, 32);
+    }
+    
     //----------------------------------------------------------------------------------
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
