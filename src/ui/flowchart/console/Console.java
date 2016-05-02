@@ -7,9 +7,6 @@ package ui.flowchart.console;
 
 import core.data.Fsymbol;
 import i18n.Fi18N;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
@@ -28,10 +25,11 @@ public class Console extends javax.swing.JPanel {
      */
     public Console() {
         initComponents();
-
-        Fi18N.loadButton(btClean, "CONSOLE.btCleanInput");
-        Fi18N.loadButton(btCopy, "CONSOLE.copyConsole");
         clear();
+    }
+    
+    public void setVerticalOrientation(){
+        spltIO.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
     }
 
     public void setDividerLocation(int location) {
@@ -77,7 +75,7 @@ public class Console extends javax.swing.JPanel {
 
         //memorize input
         inputMemory.add(var);
-        txtOutput.append(var + "\n");
+//        txtOutput.append(var + "\n");
         //return var
         return var;
     }
@@ -120,18 +118,14 @@ public class Console extends javax.swing.JPanel {
         txtOutput = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtInput = new javax.swing.JTextArea();
-        jToolBar1 = new javax.swing.JToolBar();
-        btClean = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        btCopy = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
         spltIO.setDividerLocation(200);
-        spltIO.setDividerSize(5);
 
         jScrollPane5.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
 
+        txtOutput.setEditable(false);
         txtOutput.setBackground(new java.awt.Color(0, 0, 0));
         txtOutput.setColumns(20);
         txtOutput.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
@@ -146,66 +140,18 @@ public class Console extends javax.swing.JPanel {
         txtInput.setBackground(new java.awt.Color(204, 204, 204));
         txtInput.setColumns(20);
         txtInput.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        txtInput.setForeground(new java.awt.Color(0, 0, 0));
         txtInput.setRows(5);
         jScrollPane2.setViewportView(txtInput);
 
         spltIO.setLeftComponent(jScrollPane2);
 
         add(spltIO, java.awt.BorderLayout.CENTER);
-
-        jToolBar1.setRollover(true);
-
-        btClean.setText("clean ");
-        btClean.setFocusable(false);
-        btClean.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btClean.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btClean.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCleanActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btClean);
-
-        jLabel1.setText("                                                                 ");
-        jToolBar1.add(jLabel1);
-
-        btCopy.setText("copy");
-        btCopy.setFocusable(false);
-        btCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btCopy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCopyActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btCopy);
-
-        add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCleanActionPerformed
-        inputMemory.clear();
-        txtInput.setText("");
-    }//GEN-LAST:event_btCleanActionPerformed
-
-    private void btCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCopyActionPerformed
-        String myString = txtOutput.getText();
-        myString += "\n::::::::::::::: INPUT :::::::::::::::::\n";
-        myString += txtInput.getText();
-        StringSelection stringSelection = new StringSelection(myString);
-        Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clpbrd.setContents(stringSelection, null);
-    }//GEN-LAST:event_btCopyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btClean;
-    private javax.swing.JButton btCopy;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JSplitPane spltIO;
     private javax.swing.JTextArea txtInput;
     private javax.swing.JTextArea txtOutput;
