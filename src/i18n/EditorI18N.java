@@ -56,7 +56,7 @@ public class EditorI18N {
             return resourcesI18n.getString(key.trim()).trim();
         } catch (Exception e) {
             //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: LOG
-            FLog.printLn(EditorI18N.class.getName() + "  get Key[" + key + "] Error " + e.getMessage());
+          //  FLog.printLn(EditorI18N.class.getName() + "  get Key[" + key + "] Error " + e.getMessage());
             //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: LOG
             return null;
         }
@@ -104,7 +104,7 @@ public class EditorI18N {
 
     public static void loadResource(AbstractButton item, String key) {
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: LOG
-        // FLog.printLn(EditorI18N.class.getName() + " loadResource " + key);
+//         FLog.printLn(EditorI18N.class.getName() + " loadResource " + key);
         key = key.trim();
         try {
             item.setText(get(key).trim());

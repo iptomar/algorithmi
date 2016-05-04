@@ -13,16 +13,21 @@
 //::                                                               (c)2015   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-
 package core;
 
+import core.data.exception.FlowchartException;
+import core.parser.Expression;
+import flowchart.algorithm.Program;
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Antonio M@nso <manso@ipt.pt>
  */
-public class CoreToken implements  Cloneable, Serializable {
+public class CoreToken implements Cloneable, Serializable {
 
     //Position in the expression
     public int ID = -1; //used in expressions to identify the position the token int the inordem version
@@ -40,21 +45,34 @@ public class CoreToken implements  Cloneable, Serializable {
     public String getDescriptor() {
         return descriptor;
     }
-    
+
     /**
-     * gets toke of the elements 
-     * @return 
+     * gets toke of the elements
+     *
+     * @return
      */
-    public String getTokenID(){
+    public String getTokenID() {
         return descriptor;
     }
     
+      /**
+     * convert coretoken in tokens
+     * Function call needs to recode paramaeters
+     *
+     * @return
+     */
+    public String getExpandedTokens() {
+        return descriptor;
+    }
+    
+    
+
    
 
     public void setDescriptor(String descriptor) {
         this.descriptor = descriptor.trim();
     }
-    
+
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 1509071119;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

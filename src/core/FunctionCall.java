@@ -23,6 +23,7 @@ import core.parser.Mark;
 import flowchart.algorithm.FunctionGraph;
 import flowchart.function.Function;
 import flowchart.function.FunctionParameter;
+import flowchart.utils.ExpressionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,21 +71,21 @@ public class FunctionCall extends CoreToken {
         for (int i = 0; i < funcParams.size(); i++) {
             Fsymbol p = myParameters.get(i).getVarSymbol();
             Fsymbol np = funcParams.get(i).getReturnType();
-            if( p instanceof Farray && np instanceof Farray){
-                Farray a1 = (Farray)p;
-                Farray a2 = (Farray)np;
-                if( ! a1.getTemplateElement().isCompatible(a2.getTemplateElement())){
+            if (p instanceof Farray && np instanceof Farray) {
+                Farray a1 = (Farray) p;
+                Farray a2 = (Farray) np;
+                if (!a1.getTemplateElement().isCompatible(a2.getTemplateElement())) {
                     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-                //::::::::::::::::::::: FLOWCHART EXCEPTION ERROR :::::::::::::::::
-                //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-                throw new FlowchartException("FUNCTIONCALL.invalidTypeOfParameter",
-                        myFunctionName,
-                        myParameters.get(i).getVarSymbol().getTypeName() + " "
-                        + myParameters.get(i).getVarSymbol().getName() + "",
-                        funcParams.get(i).getIdented() + ""
-                );
+                    //::::::::::::::::::::: FLOWCHART EXCEPTION ERROR :::::::::::::::::
+                    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                    throw new FlowchartException("FUNCTIONCALL.invalidTypeOfParameter",
+                            myFunctionName,
+                            myParameters.get(i).getVarSymbol().getTypeName() + " "
+                            + myParameters.get(i).getVarSymbol().getName() + "",
+                            funcParams.get(i).getIdented() + ""
+                    );
                 }
-            }else  if (!p.acceptValue(funcParams.get(i).getReturnType().getDefinitionValue())) {
+            } else if (!p.acceptValue(funcParams.get(i).getReturnType().getDefinitionValue())) {
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                 //::::::::::::::::::::: FLOWCHART EXCEPTION ERROR :::::::::::::::::
                 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -108,24 +109,24 @@ public class FunctionCall extends CoreToken {
                 throw new FlowchartException("FUNCTION.invalidName", myFunctionName);
             }
             // 2 - the number of parameters is ok
-            Function f = (Function)template.getBegin();
-            if( f.parameters.size() != myParameters.size()){
-               throw new FlowchartException("FUNCTIONCALL.invalidNumberOfParameters", 
-                       f.getFunctionName(),
-                       f.parameters.size()+"",
-                       myParameters.size()+"");
+            Function f = (Function) template.getBegin();
+            if (f.parameters.size() != myParameters.size()) {
+                throw new FlowchartException("FUNCTIONCALL.invalidNumberOfParameters",
+                        f.getFunctionName(),
+                        f.parameters.size() + "",
+                        myParameters.size() + "");
             }
             // 3 - the type of parameters is compatible
             for (int i = 0; i < f.parameters.size(); i++) {
-               FunctionParameter def = f.parameters.get(i);
-               FunctionParameter call = myParameters.get(i);
-               if( ! def.isCompatible(call)){ // values not compatible
-                   throw new FlowchartException("FUNCTIONCALL.invalidTypeOfParameter", 
-                           def.getVarSymbol().getInstruction(),
-                           f.getFunctionName(),
-                           call.getInstruction());
-               }                
-            }            
+                FunctionParameter def = f.parameters.get(i);
+                FunctionParameter call = myParameters.get(i);
+                if (!def.isCompatible(call)) { // values not compatible
+                    throw new FlowchartException("FUNCTIONCALL.invalidTypeOfParameter",
+                            def.getVarSymbol().getInstruction(),
+                            f.getFunctionName(),
+                            call.getInstruction());
+                }
+            }
 
         } catch (Exception e) {
             //something wrong happens
@@ -180,6 +181,26 @@ public class FunctionCall extends CoreToken {
     public String toString() {
         return getFullName();
     }
+
+//    /**
+//     * convert coretoken in tokens Function call needs to recode paramaeters
+//     *
+//     * @return
+//     */
+//    public String getExpandedTokens() {
+//        StringBuilder txt = new StringBuilder(myFunctionName + " ");
+//        txt.append(Mark.BRACE_OPEN_TOKEN + " ");
+//        for (int i = 0; i < myParameters.size(); i++) {
+//            //covert parameter to tokens
+//            String toks = ExpressionUtils.getExpressionTokens(myParameters.get(i).getVarExpression());
+//            txt.append(toks + " ");
+//            if (i < myParameters.size() - 1) {
+//                txt.append(Mark.COMMA_CHAR_TOKEN + " ");
+//            }
+//        }
+//        txt.append(Mark.BRACE_CLOSE_TOKEN);
+//        return txt.toString();
+//    }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

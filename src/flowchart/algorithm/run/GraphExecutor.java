@@ -477,7 +477,7 @@ public class GraphExecutor {
         Fi18N.loadMenuItem(clipboardImg, "BUTTON.clipboardImg", 24);
         clipboardImg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.copyToClipBoard(graph, UserName.createUser(template.digitalSignature));
+                FluxImage.copyToClipBoard(graph,template.myProblem.user);
             }
         });
 
@@ -485,7 +485,7 @@ public class GraphExecutor {
         Fi18N.loadMenuItem(savePNG, "BUTTON.saveImage", 24);
         savePNG.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.saveTofile(graph, UserName.createUser(template.digitalSignature));
+                FluxImage.saveTofile(graph, template.myProblem.user);
             }
         });
 

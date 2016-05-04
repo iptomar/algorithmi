@@ -37,7 +37,6 @@ package ui.editor.run;
 import ui.editor.run.memory.tree.MemoryDisplayTree;
 import i18n.EditorI18N;
 import ui.dialogs.FMessages;
-import ui.utils.TextAreaRun;
 import core.data.exception.FlowchartException;
 import ui.flowchart.dialogs.Fdialog;
 import flowchart.algorithm.Program;

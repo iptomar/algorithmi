@@ -369,7 +369,8 @@ public class Define extends Fshape {
                     + varSymbol.getTypeToken() + " "
                     + varSymbol.getFullNameToken() + " "
                     + FkeywordToken.OPERATOR_SET_KEY + " "
-                    + ExpressionUtils.getExpressionTokens(varExpression);
+                    +  FkeywordToken.translateWordsToTokens(varExpression.getIdented()).trim();
+                          //ExpressionUtils.getExpressionTokens(varExpression);
         } else {
             //arrays
             return PseudoLanguage.ident(this) + KEY +

@@ -42,10 +42,8 @@ import flowchart.utils.ProgramFile;
 import flowchart.utils.UserName;
 import i18n.Fi18N;
 import i18n.FkeyWord;
-import i18n.FkeywordToken;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,35 +51,31 @@ import languages.AbstractLang;
 import languages.JavaLang;
 import languages.PythonLang;
 import ui.FLog;
-import ui.FProperties;
 
 /**
  *
  * @author zulu
  */
 public class Program implements Cloneable, Serializable {
-
+    //optimization 
+    transient public static final String COMMENTS = FkeyWord.get("KEYWORD.comments");
     transient private static final String PROGRAM_EXTENSION = Fi18N.get("PROGRAM.file.filterExt");
     transient public static final String defaultFileName = Fi18N.get("PROGRAM.file.defaultFileName")
             + "."
             + PROGRAM_EXTENSION;
 
-    public String digitalSignature; // digital signature of programmer
-    public long timeOfCreation; // time of creation
-    public long problemID = 0; // ID of the problem ( to use in the backOffice )
-//    public String txtProblem; // description of the problem.
+    public Problem myProblem; // problem to solve
     public String fileName;
     private AlgorithmGraph main;  // main program
     private GlobalMemoryGraph globalMem; // definition of global memory
     private List<FunctionGraph> functions; // user defined functions
 
-    public Program() {
+    public Program(UserName user) {
         main = null;
         functions = new ArrayList<>();
         globalMem = null;
         fileName = defaultFileName;
-        digitalSignature = FProperties.get(FProperties.keyDigitalSignature);
-        timeOfCreation = new Date().getTime();
+        myProblem = new Problem(user);
     }
 
     public String getFileName() {
@@ -89,7 +83,7 @@ public class Program implements Cloneable, Serializable {
     }
 
     public void setFileName(String fileName) {
-        if( fileName == null){
+        if (fileName == null) {
             fileName = Fi18N.get("PROGRAM.file.defaultFileName");
         }
         if (!fileName.endsWith(FileUtils.FILTER_PROG_EXT)) {
@@ -162,7 +156,6 @@ public class Program implements Cloneable, Serializable {
     public void saveAs() throws Exception {
         FileUtils.saveProgramAs(this);
     }
-    
 
     /**
      * Load a program from a file
@@ -335,6 +328,23 @@ public class Program implements Cloneable, Serializable {
         }
         return erros;
     }
+    
+    /**
+     * clean unecessary elements to minimize code
+     */
+    public void cleanNonExecutableElements() {
+        // clean shapes
+        if (globalMem != null) {
+            globalMem.cleanNonExecutableElements();
+        }
+        main.cleanNonExecutableElements();
+        for (FunctionGraph func : functions) {
+            func.cleanNonExecutableElements();
+        }        
+        //clean problem
+        this.myProblem=null;
+        this.fileName="";
+    }
 
     public FunctionGraph getFunctionByName(String name) {
         for (FunctionGraph function : getFunctions()) {
@@ -347,11 +357,11 @@ public class Program implements Cloneable, Serializable {
 
     public String getPseudoCode() {
         StringBuilder code = new StringBuilder();
-        UserName user = UserName.createUser(digitalSignature);
-        code.append(FkeyWord.get("KEYWORD.comments") + Fi18N.get("TRANSLATOR.user") + " " + user.getName() + "\n");
-        code.append(FkeyWord.get("KEYWORD.comments") + Fi18N.get("TRANSLATOR.code") + " " + user.getCode() + "\n");
-        code.append(FkeyWord.get("KEYWORD.comments") + Fi18N.get("TRANSLATOR.fullName") + " " + user.getFullName() + "\n");
-        code.append(FkeyWord.get("KEYWORD.comments") + Fi18N.get("TRANSLATOR.fileName") + " " + FileUtils.getFileFromPath(getFileName()) + "\n");
+        UserName user = myProblem.user;
+        code.append(COMMENTS + Fi18N.get("TRANSLATOR.user") + " " + user.getName() + "\n");
+        code.append(COMMENTS + Fi18N.get("TRANSLATOR.code") + " " + user.getCode() + "\n");
+        code.append(COMMENTS + Fi18N.get("TRANSLATOR.fullName") + " " + user.getFullName() + "\n");
+        code.append(COMMENTS + Fi18N.get("TRANSLATOR.fileName") + " " + FileUtils.getFileFromPath(getFileName()) + "\n");
         code.append("\n\n");
 
         if (globalMem != null) {
@@ -363,12 +373,11 @@ public class Program implements Cloneable, Serializable {
             code.append("\n");
             code.append(function.getPseudoCode());
         }
-        return code.toString() + "\n";
+        return code.toString() + "\n" ;
     }
 
-    public String getTokens() {
-        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
-        StringBuilder code = new StringBuilder(ProgramFile.getProgramHeader(this));   
+    public String getTokens() {       
+        StringBuilder code = new StringBuilder(ProgramFile.getProgramHeader(this));
         //code.append(digitalSignature + "\n");
         if (globalMem != null) {
             code.append(globalMem.getPseudoTokens());
@@ -379,7 +388,7 @@ public class Program implements Cloneable, Serializable {
             code.append("\n");
             code.append(function.getPseudoTokens());
         }
-        return code.toString().trim();
+        return code.toString().trim() ;
     }
 
     public String getHigLevelLang(String lang) {
@@ -400,11 +409,11 @@ public class Program implements Cloneable, Serializable {
             code.append("\n");
         }
         code.append(main.getLanguage());
-        code.append(AbstractLang.lang.ident(main.getEnd())+AbstractLang.lang.getEnd(main.getEnd())+ "\n");
+        code.append(AbstractLang.lang.ident(main.getEnd()) + AbstractLang.lang.getEnd(main.getEnd()) + "\n");
         for (FunctionGraph function : getFunctions()) {
             code.append("\n");
             code.append(function.getLanguage());
-            code.append(AbstractLang.lang.ident(function.getBegin())+AbstractLang.lang.getEnd(main.getEnd())+ "\n");
+            code.append(AbstractLang.lang.ident(function.getBegin()) + AbstractLang.lang.getEnd(main.getEnd()) + "\n");
         }
 
         code.append(AbstractLang.lang.getEndOfProgram(main.getEnd()));

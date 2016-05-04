@@ -210,12 +210,16 @@ public class FunctionParameter extends Define {
         } else {
             txt.append(" " + FkeyWord.OPERATOR_SET + " " + varExpression.getIdented());
         }
+       
+        
         return txt.toString().trim();
     }
 
     public String toString() {
         return toStringParameterNoArray();
     }
+    
+   
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

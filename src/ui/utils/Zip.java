@@ -21,10 +21,6 @@
 package ui.utils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import ui.FLog;
@@ -36,7 +32,10 @@ import ui.FLog;
  */
 public class Zip {
 
-    public static byte[] compress(byte[] data)  {
+    public static byte[] compress(byte[] data) {
+        if (data.length == 0) { // empty data
+            return data;
+        }
         try {
             Deflater deflater = new Deflater();
             deflater.setInput(data);
@@ -55,8 +54,15 @@ public class Zip {
             return data;
         }
     }
-
-    public static byte[] expand(byte[] data)  {
+    /**
+     * expands a ziped data
+     * @param data data
+     * @return 
+     */  
+    public static byte[] expand(byte[] data) {
+        if (data.length == 0) { // empty data
+            return data;
+        }
         try {
             Inflater inflater = new Inflater();
             inflater.setInput(data);

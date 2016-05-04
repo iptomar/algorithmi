@@ -34,10 +34,18 @@
 //////////////////////////////////////////////////////////////////////////////
 package i18n;
 
+import core.data.Ftext;
+import core.parser.Mark;
+import core.parser.tokenizer.BreakSpaces;
+import java.util.ArrayList;
 import ui.FLog;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -75,6 +83,7 @@ public class FkeywordToken {
             //get word for native language
             token_word.put(token, word);
             word_Token.put(word, token);
+          //  System.out.println(key + " \t" + word + " \t" + token);
         }
     }
 
@@ -97,6 +106,12 @@ public class FkeywordToken {
     }
     //----------------------------------------------------------------------------------
 
+    /**
+     * translate one expression in tokens language to natural language 
+     *
+     * @param tokens expression in tokens language
+     * @return natural language 
+     */
     public static String translateTokensToWords(String tokens) {
         StringBuilder txt = new StringBuilder();
         for (String elem : tokens.split(" ")) {
@@ -109,9 +124,16 @@ public class FkeywordToken {
         return txt.toString();
     }
 
+    /**
+     * translate one expression in natural language to tokens language
+     *
+     * @param words expression in natural language
+     * @return tokens language
+     */
     public static String translateWordsToTokens(String words) {
+        List<String> mylst = BreakSpaces.breakSpacesAndMarks(words, Mark.ALL_CHAR_MARKS);
         StringBuilder txt = new StringBuilder();
-        for (String elem : words.split(" ")) {
+        for (String elem : mylst) {
             if (word_Token.get(elem) != null) {
                 txt.append(word_Token.get(elem) + " ");
             } else {

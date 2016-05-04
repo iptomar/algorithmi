@@ -170,7 +170,7 @@ public class ParseText {
                 continue; // next elem
             }
             //break by parentesis and comas
-            StringTokenizer tok = new StringTokenizer(elem, Mark.CHAR_MARKS, true);
+            StringTokenizer tok = new StringTokenizer(elem, Mark.ALL_CHAR_MARKS, true);
             while (tok.hasMoreElements()) {
                 result.add(tok.nextElement().toString());
             }
