@@ -234,7 +234,7 @@ public class Return extends Fshape {
         if (returnExpression != null) {
             txt.append(" " + ExpressionUtils.getExpressionTokens(returnExpression));
         }
-        return txt.toString().trim();
+        return txt.toString();
 
     }
     //----------------TYPE OF INSTRUCTION -------------------------

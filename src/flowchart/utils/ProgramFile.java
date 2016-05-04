@@ -24,6 +24,7 @@ import core.data.exception.FlowchartException;
 import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.FunctionGraph;
 import flowchart.algorithm.GlobalMemoryGraph;
+import flowchart.algorithm.Problem;
 import flowchart.algorithm.Program;
 import flowchart.arrow.Arrow;
 import flowchart.decide.Do_Connector;
@@ -47,7 +48,6 @@ import i18n.FkeywordToken;
 import java.util.Date;
 import java.util.LinkedList;
 import javax.swing.JPanel;
-import ui.FProperties;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -65,16 +65,14 @@ public class ProgramFile {
     public static final String problemID = "ID";
 
     public static String getProgramHeader(Program prog) {
-        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
         StringBuilder code = new StringBuilder();
-        UserName user = UserName.createUser(prog.digitalSignature);
-        code.append(COMMENT + MyString.setSize(" " + problemID, 10) + " " + prog.problemID + "\n");
-        code.append(COMMENT + MyString.setSize(" " + userTagCode, 10) + " " + user.getCode() + "\n");
-        code.append(COMMENT + MyString.setSize(" " + userTagName, 10) + " " + user.getName() + "\n");
-        code.append(COMMENT + MyString.setSize(" " + userTagFullName, 10) + " " + user.getFullName() + "\n");
-        code.append(COMMENT + MyString.setSize(" " + fileCreationTime, 10) + " " + prog.timeOfCreation + "\n");
-        code.append(COMMENT + MyString.setSize(" " + coreVersion, 10) + " " + Fi18N.get("FLOWCHART.application.title")
-                + " " + MyString.toString(new Date(prog.timeOfCreation)) + "\n");
+        Problem problem = prog.myProblem;        
+        code.append(Program.COMMENTS + MyString.setSize(" " + problemID, 10) + " " + problem.serialize() + "\n");
+        code.append(Program.COMMENTS + MyString.setSize(" " + userTagCode, 10) + " " + problem.user.getCode() + "\n");
+        code.append(Program.COMMENTS + MyString.setSize(" " + userTagName, 10) + " " + problem.user.getName() + "\n");
+        code.append(Program.COMMENTS + MyString.setSize(" " + userTagFullName, 10) + " " + problem.user.getFullName() + "\n");
+        code.append(Program.COMMENTS + MyString.setSize(" " + fileCreationTime, 10) + " " + MyString.toString(new Date(problem.creationDate))+ "\n");
+        code.append(Program.COMMENTS + MyString.setSize(" " + coreVersion, 10) + " " + Fi18N.get("FLOWCHART.application.title")+ "\n");
         code.append("\n\n");
         return code.toString();
     }
@@ -84,29 +82,29 @@ public class ProgramFile {
         Program prog = buildFromTokens(txt);
         return prog;//createProgram(txt);
     }
+
     /**
      * remove the program information of the program and sets it to program
+     *
      * @param tokProgram tokens of program
      * @return iterator to the code
      */
     private static IteratorLines getHeaderOfProgram(String tokProgram, Program prog) {
-        String COMMENT = FkeywordToken.get("KEYWORD.comments.key");
+
         IteratorLines it = new IteratorLines(tokProgram);
-        while (it.hasNext() && it.peek().trim().startsWith(COMMENT)) {
+        while (it.hasNext() && it.peek().trim().startsWith(Program.COMMENTS)) {
             //remove Comment
-            String h = it.next().substring(COMMENT.length()).trim()+ " "; // insert space to prevent error
-            String tag = h.substring(0,h.indexOf(" ")).trim();
+            String h = it.next().substring(Program.COMMENTS.length()).trim() + " "; // insert space to prevent error
+            String tag = h.substring(0, h.indexOf(" ")).trim();
             String code = h.substring(h.indexOf(" ")).trim();
             switch (tag) {
                 case userTagName:
-                    UserName user = UserName.loadUser(code);
-                    prog.digitalSignature = user.digitalSignature();
+//                    UserName user = UserName.loadUser(code);
+//                    prog.digitalSignature = user.digitalSignature();
                     break;
                 case problemID:
-                    prog.problemID = Long.parseLong(code);
-                    break;
-                case fileCreationTime:
-                    prog.timeOfCreation = Long.parseLong(code);
+                    prog.myProblem = Problem.load(code);                    
+//                    prog.problemID = Long.parseLong(code);
                     break;
             }
         }
@@ -121,12 +119,11 @@ public class ProgramFile {
      */
     public static Program buildFromTokens(String tokProgram) throws FlowchartException {
         try {
-            Program prog = new Program(); // program to load
+            Program prog = new Program(null); //username is loaded inProblem
             AlgorithmGraph currentAlgorithm = null;  // algorithm of instructions
             LinkedList<Instruction> instructions = new LinkedList<>();
             //information of program  
             IteratorLines it = getHeaderOfProgram(tokProgram, prog);
-
 
             while (it.hasNext()) {
 //                String comment = getComents(it);
@@ -145,7 +142,8 @@ public class ProgramFile {
 
                     // loadAlgoritmhFunction(it, func);
                 } else//----------------------------------------------------------LOAD GLOBAL MEMORY
-                 if (newShape.shape instanceof BeginGlobalMemory) {
+                {
+                    if (newShape.shape instanceof BeginGlobalMemory) {
                         GlobalMemoryGraph mem = new GlobalMemoryGraph(new JPanel(), prog);
                         mem.getBegin().setComments(newShape.shape.comments);
                         prog.setGlobalMemory(mem);
@@ -159,6 +157,7 @@ public class ProgramFile {
                         currentAlgorithm = main;
                         // loadAlgoritmhFunction(it, main);
                     }
+                }
             }
             createProgram(prog, instructions);
             return prog;
@@ -185,7 +184,8 @@ public class ProgramFile {
                     FunctionGraph func = prog.getFunctionByName(((Function) newShape.shape).getFunctionName());
                     loadAlgoritmhFunction(func, instructions);
                 } else//----------------------------------------------------------LOAD GLOBAL MEMORY
-                 if (newShape.shape instanceof BeginGlobalMemory) {
+                {
+                    if (newShape.shape instanceof BeginGlobalMemory) {
                         GlobalMemoryGraph mem = prog.getGlobalMem();
                         loadAlgoritmhFunction(mem, instructions);
                     } //----------------------------------------------------------- LOAD MAIN
@@ -196,6 +196,7 @@ public class ProgramFile {
                     else {
                         throw new FlowchartException(new RuntimeException("Prograaming ERROR public static Program createProgram(String tokProgram"));
                     }
+                }
             }
         } catch (Exception e) {
             throw new FlowchartException(e);
@@ -237,7 +238,8 @@ public class ProgramFile {
             //return next
             return (Arrow) ifElse.next.next;
         } else //::::::::: WHILE :::::::::::::::::::::::::::::::::::::::::::::::WHILE
-         if (newShape.shape instanceof While_Do) {
+        {
+            if (newShape.shape instanceof While_Do) {
                 //convert to If Else
                 While_Do whileDo = (While_Do) newShape.shape;
                 //Add shape to algorithm
@@ -253,7 +255,8 @@ public class ProgramFile {
                 //return next
                 return (Arrow) whileDo.next;
             } else //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::FOR
-             if (newShape.shape instanceof For_Next) {
+            {
+                if (newShape.shape instanceof For_Next) {
                     //convert to If Else
                     For_Next forNext = (For_Next) newShape.shape;
                     //Add shape to algorithm
@@ -269,7 +272,8 @@ public class ProgramFile {
                     //return next 
                     return (Arrow) forNext.next;
                 } else //::::::::: DO . . .WHILE :::::::::::::::::::::::::::::::::::::::DO WHILE
-                 if (newShape.shape instanceof Do_Connector) {
+                {
+                    if (newShape.shape instanceof Do_Connector) {
                         //convert to If Else
                         Do_While doWhile = new Do_While(alg);
                         //Add shape to algorithm
@@ -297,6 +301,9 @@ public class ProgramFile {
                         //update cursor
                         return (Arrow) newShape.shape.next;
                     }
+                }
+            }
+        }
     }
 
     private static void addIf(IfThenElse shapeIf, LinkedList<Instruction> instructions, AlgorithmGraph alg) throws FlowchartException {
@@ -369,25 +376,6 @@ public class ProgramFile {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////

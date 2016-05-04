@@ -36,7 +36,6 @@ package ui.editor;
 
 import i18n.EditorI18N;
 import ui.dialogs.FMessages;
-import ui.editor.run.RunProgram;
 import ui.utils.ButtonsFluxTab;
 import flowchart.utils.FileUtils;
 import core.data.exception.FlowchartException;
@@ -69,6 +68,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import ui.FLog;
+import ui.editor.center.ProblemPanel;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
 
@@ -81,9 +81,9 @@ public class Fluxograma extends javax.swing.JFrame {
     boolean showAboutBox = false;
     public Program myProgram;
     public UserName user;
-        
-//    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
+    ProblemPanel programDisplay;
 
+//    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
     /**
      * Creates new form Fluxograma to the user
      */
@@ -97,7 +97,7 @@ public class Fluxograma extends javax.swing.JFrame {
 
     public void initMyComponents() {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        myProgram = new Program();
+        myProgram = new Program(user);
 
         user = FProperties.load(user.getName());
 
@@ -158,7 +158,6 @@ public class Fluxograma extends javax.swing.JFrame {
 
             EditorI18N.loadTab(leftPanel, 0, "LEFTPANEL.tab.files");
             EditorI18N.loadTab(leftPanel, 1, "LEFTPANEL.tab.console");
-
 
             setTitle(Fi18N.get("FLOWCHART.application.title"));
         } catch (Exception e) {
@@ -679,11 +678,11 @@ public class Fluxograma extends javax.swing.JFrame {
         }
         if (!NewProgram.isCanceled) {
             //create program
-            myProgram = new Program();
+            myProgram = new Program(user);
             //create file in the current path
             myProgram.setFileName(NewProgram.fileName);
             myProgram.setMain(new AlgorithmGraph(new JPanel(), myProgram));
-            myProgram.digitalSignature = user.digitalSignature();
+
             createDisplayToProgram(myProgram);
             FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName());
             if (!firstTime) {//save the program if is not the first time
@@ -728,7 +727,7 @@ public class Fluxograma extends javax.swing.JFrame {
 
     private void btRunFluxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunFluxActionPerformed
         leftPanel.setSelectedComponent(consolePanel);
-        consolePanel.tryExecution();       
+        consolePanel.tryExecution();
     }//GEN-LAST:event_btRunFluxActionPerformed
 
     private void mnCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCodeActionPerformed
@@ -826,12 +825,12 @@ public class Fluxograma extends javax.swing.JFrame {
         } else {
             myProgram.remove(fg);
         }
-
     }//GEN-LAST:event_btAddFunctionActionPerformed
 
 
     private void mnSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveAsActionPerformed
         try {
+            this.programDisplay.updateProblem(myProgram);
             FileUtils.saveProgramAs(myProgram);
 
             FMessages.status(lbblStatus, FMessages.INFO, "FILES.prog.success.message", myProgram.getFileName());
@@ -849,7 +848,7 @@ public class Fluxograma extends javax.swing.JFrame {
             return;
         }
         if (myProgram.getGlobalMem() != null) {
-            tbProgram.setSelectedIndex(0);
+            tbProgram.setSelectedIndex(1);
             FMessages.status(lbblStatus, FMessages.WARNING, "PROGRAM.memory.load.duplicated");
         } else {
             GlobalMemoryGraph mem = new GlobalMemoryGraph(new JPanel(), myProgram);
@@ -867,11 +866,11 @@ public class Fluxograma extends javax.swing.JFrame {
         String toolTip = EditorI18N.get("APPLICATION.tabedPane.memory.help");
         ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.memory.icon", 16);
         //insert tab
-        tbProgram.insertTab(title, icon, memory, toolTip, 0);
+        tbProgram.insertTab(title, icon, memory, toolTip, 1);
         //insert close button
-        tbProgram.setTabComponentAt(0, new ButtonsFluxTab(tbProgram, myProgram));
+        tbProgram.setTabComponentAt(1, new ButtonsFluxTab(tbProgram, myProgram));
         //select tab
-        tbProgram.setSelectedIndex(0);
+        tbProgram.setSelectedIndex(1);
         updateGUI();
     }
 
@@ -895,13 +894,25 @@ public class Fluxograma extends javax.swing.JFrame {
         //clear all
         tbProgram.removeAll();
         //create elements of the tab
+
         FeditorScrool mainProg = new FeditorScrool(alg);
         String title = EditorI18N.get("APPLICATION.tabedPane.main.title");
         String toolTip = EditorI18N.get("APPLICATION.tabedPane.main.help");
         ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.main.icon", 16);
         tbProgram.insertTab(title, icon, mainProg, toolTip, 0);
         tbProgram.setSelectedComponent(mainProg);
+        createProblemDisplay();
         updateGUI();
+    }
+
+    private void createProblemDisplay() {
+        String title = EditorI18N.get("APPLICATION.tabedPane.problem.title");
+        String toolTip = EditorI18N.get("APPLICATION.tabedPane.problem.help");
+        ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.problem.icon", 16);
+        this.programDisplay = new ProblemPanel();
+        programDisplay.setProblem(myProgram);
+        tbProgram.insertTab(title, icon, programDisplay, toolTip, 0);
+        tbProgram.setSelectedComponent(programDisplay);
     }
 
     private void btGlobalMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGlobalMemoryActionPerformed
@@ -1052,6 +1063,7 @@ public class Fluxograma extends javax.swing.JFrame {
     private void lstProgramFilesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstProgramFilesValueChanged
         if (lstProgramFiles.getSelectedIndex() >= 0) {
             if (myProgram != null) { // save if not null ( deleted file )
+                this.programDisplay.updateProblem(myProgram);
                 myProgram.tryToSave();
                 //                displayFile(FileUtils.getPath(myProgram.getFileName()) + lstProgramFiles.getSelectedValue().toString());
             }
@@ -1082,7 +1094,7 @@ public class Fluxograma extends javax.swing.JFrame {
     }//GEN-LAST:event_lstProgramFilesMouseClicked
 
     private void btSaveFileAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveFileAsActionPerformed
-        mnSaveAsActionPerformed(evt);
+        mnSaveAsActionPerformed(evt);        
     }//GEN-LAST:event_btSaveFileAsActionPerformed
 
     private void btOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOpenFileActionPerformed

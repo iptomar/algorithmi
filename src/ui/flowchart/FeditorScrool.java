@@ -123,7 +123,7 @@ public class FeditorScrool extends JScrollPane {
         Fi18N.loadMenuItem(clipboardImg, "BUTTON.clipboardImg", 24);
         clipboardImg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.copyToClipBoard(flux.graph, UserName.createUser(flux.getMyProgram().digitalSignature));
+                FluxImage.copyToClipBoard(flux.graph, flux.myProgram.myProblem.user);
             }
         });
 
@@ -131,8 +131,7 @@ public class FeditorScrool extends JScrollPane {
         Fi18N.loadMenuItem(savePNG, "BUTTON.saveImage", 24);
         savePNG.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FluxImage.saveTofile(flux.graph,
-                        UserName.createUser(flux.getMyProgram().digitalSignature));
+                FluxImage.saveTofile(flux.graph,flux.myProgram.myProblem.user);
             }
         });
 

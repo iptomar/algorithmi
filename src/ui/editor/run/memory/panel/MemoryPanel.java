@@ -21,12 +21,7 @@
 package ui.editor.run.memory.panel;
 
 import core.Memory;
-import core.data.Fsymbol;
-import core.data.complexData.Farray;
-import core.data.exception.FlowchartException;
-import flowchart.algorithm.Program;
 import i18n.EditorI18N;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -34,12 +29,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -52,7 +42,6 @@ import static javax.swing.border.TitledBorder.BELOW_TOP;
 import static javax.swing.border.TitledBorder.BOTTOM;
 import static javax.swing.border.TitledBorder.DEFAULT_POSITION;
 import static javax.swing.border.TitledBorder.TOP;
-import ui.LauncherTeacher;
 
 /**
  * Created on 30/abr/2016, 9:16:06

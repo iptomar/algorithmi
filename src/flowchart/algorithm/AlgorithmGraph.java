@@ -879,33 +879,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public static void doSave(String file) {
-        JPanel pn = new JPanel(true);
-        JFrame window = new JFrame(file);
-        window.setLayout(new BorderLayout());
-        window.add(pn, BorderLayout.CENTER);
-        AlgorithmGraph flux = new AlgorithmGraph(pn, new Program());
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        flux.alignPatterns();
-        window.setVisible(true);
-        try {
-            flux.save(file);
-        } catch (Exception ex) {
-            Logger.getLogger(AlgorithmGraph.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public static void doLoad(String file) throws Exception {
-        JFrame window = new JFrame(file);
-        window.setLayout(new BorderLayout());
-        AlgorithmGraph flux = AlgorithmGraph.load(file);
-        window.add(flux.graph, BorderLayout.CENTER);
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        flux.alignPatterns();
-        flux.positionCalc.translateTo(400, 400);
-        window.setVisible(true);
-
-    }
+  
+  
 
     public void deselectAll() {
         for (Component c : graph.getComponents()) {
@@ -964,6 +939,19 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
     public String toString() {
         return name;
+    }
+    
+    /**
+     * clean all comments in the algorithm
+     * used to minimalize the source code
+     */
+    public void cleanNonExecutableElements(){
+         ArrayList<Fshape> errors = new ArrayList<>();
+        for (Component c : graph.getComponents()) {
+            if (c instanceof Fshape) {
+               ((Fshape) c).comments="";
+            }
+        }
     }
 
     public static String INIT_COMMENTS = FkeyWord.get("KEYWORD.comments")
@@ -1024,10 +1012,6 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
-    
-    public static void main(String[] args) {
-        FProperties.init();
-        AlgorithmGraph alg = new AlgorithmGraph(new JPanel(), new Program());
-    }
+  
 
 }

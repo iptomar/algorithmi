@@ -87,7 +87,7 @@ public class FunctionFile extends ProgramFile {
             } else //----------------------------------------------------------- LOAD MAIN
             if (newShape.shape instanceof Begin) {
                 //---------------------------------------------
-                prog = new Program(); // create new program
+                prog = new Program(prog.myProblem.user); // create new program
                 AlgorithmGraph main = new AlgorithmGraph(new JPanel(), prog);
                 main.getBegin().setComments(newShape.shape.comments);
                 prog.setMain(main);

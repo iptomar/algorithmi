@@ -47,7 +47,7 @@ public class Expression implements Serializable {
 
     public static boolean debug = false;
     public transient Program myProgram; // program of the expression to replace userdefined functions
-    Memory memory; // memory of the expression
+    public Memory memory; // memory of the expression
     String text;  // original text
     private List<Object> tokens;  // tokens of the expression
 

@@ -31,6 +31,13 @@ public class Console extends javax.swing.JPanel {
     public void setVerticalOrientation(){
         spltIO.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
     }
+    
+    public void setInput(String txt){
+        this.txtInput.setText(txt);
+    }
+    public String getOutput(){
+        return txtOutput.getText();
+    }
 
     public void setDividerLocation(int location) {
         spltIO.setDividerLocation(location);

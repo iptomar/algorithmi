@@ -37,18 +37,11 @@ package flowchart.utils;
 import core.CoreToken;
 import core.CoreCalculator;
 import core.Memory;
-import core.data.Finteger;
-import core.data.Freal;
-import core.data.Fsymbol;
 import core.data.exception.FlowchartException;
-import core.evaluate.CoreElement;
 import core.parser.Expression;
 import flowchart.algorithm.Program;
-import i18n.FkeyWord;
 import i18n.FkeywordToken;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -175,20 +168,7 @@ public class ExpressionUtils {
      * @return string of tokens
      */
     public static String getExpressionTokens(Expression ex) {
-        StringBuilder txt = new StringBuilder();
-        if (ex != null) {
-            for (Object tok : ex.getTokens()) {
-                if (tok instanceof Fsymbol //--------------------------------------- constants
-                        && Memory.constants.isDefined(((Fsymbol) tok).getName())) {
-                    txt.append(FkeywordToken.getTokenOfWord(((Fsymbol) tok).getName()) + " ");
-                } else if (tok instanceof CoreToken) { //--------------------------- coreTokens
-                    txt.append(((CoreToken) tok).getTokenID() + " ");
-                } else {
-                    txt.append(tok.toString() + " ");
-                }
-            }
-        }
-        return txt.toString().trim();
+        return FkeywordToken.translateWordsToTokens(ex.getIdented().trim());
     }
 
     /**
@@ -204,5 +184,4 @@ public class ExpressionUtils {
         return new Expression(FkeywordToken.translateTokensToWords(expression), mem, prog);
     }
 
-   
 }

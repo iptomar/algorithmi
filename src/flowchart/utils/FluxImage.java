@@ -240,7 +240,7 @@ public class FluxImage {
     }
 
     public static BufferedImage getImage(Program prog) {
-        UserName user = UserName.createUser(prog.digitalSignature);
+        UserName user = prog.myProblem.user;
         ArrayList<BufferedImage> algs = new ArrayList<>();
         BufferedImage img;
         int maxX = 0;

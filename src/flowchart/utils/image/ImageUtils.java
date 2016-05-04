@@ -296,6 +296,23 @@ public class ImageUtils {
             return null;
         }
     }
+    
+    /**
+     * Load a icon in the path
+     *
+     * @param imageFile name of the file
+     * @param height height of the icon [ 0 ] = not scalling
+     * @return icon with size
+     */
+    public static byte[] getJpegByteArray(Icon image) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            writeJPG(convertToBufferedImage(image), out, 0.99f);
+            return out.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Load a icon in the path
@@ -353,7 +370,7 @@ public class ImageUtils {
         return null;
     }
 
-    public static BufferedImage convertToBufferedImage(ImageIcon icon) {
+    public static BufferedImage convertToBufferedImage(Icon icon) {
         BufferedImage bi = new BufferedImage(
                 icon.getIconWidth(),
                 icon.getIconHeight(),

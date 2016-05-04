@@ -44,6 +44,7 @@ import i18n.FkeyWord;
 import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.Program;
 import flowchart.algorithm.run.GraphExecutor;
+import static flowchart.returnFunc.Return.KEY;
 import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.terminator.Begin;
@@ -52,6 +53,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import languages.AbstractLang;
+import languages.PseudoLanguage;
 
 /**
  *
@@ -258,7 +260,7 @@ public class Function extends Begin {
         params.append(getFunctionName() + Mark.ROUND_OPEN);
         for (int i = 0; i < getParameters().size(); i++) {
             if (getParameters().get(i).getVarSymbol() instanceof Farray) {
-                params.append(" " +  getParameters().get(i).varExpression+ " ");
+                params.append(" " + getParameters().get(i).varExpression + " ");
             } else {
                 params.append(" " + getParameters().get(i).getVarSymbol().getDefinitionValue() + " ");
             }
@@ -428,7 +430,7 @@ public class Function extends Begin {
      * @return tokens of the instruction
      */
     public String getPseudoTokens() {
-        StringBuilder txt = new StringBuilder(KEY + " ");
+        StringBuilder txt = new StringBuilder(PseudoLanguage.ident(this) + KEY + " ");
 
         txt.append(FkeywordToken.getTokenOfWord(returnSymbol.getTypeName()));
         if (isReturnAnArray()) {

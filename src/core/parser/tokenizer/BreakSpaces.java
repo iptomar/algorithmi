@@ -37,11 +37,15 @@ package core.parser.tokenizer;
 import core.data.Fcharacter;
 import core.data.Ftext;
 import core.data.exception.FlowchartException;
+import core.parser.Mark;
 import flowchart.utils.ExpressionUtils;
 import flowchart.utils.ParseText;
 import i18n.FkeyWord;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created on 7/set/2015, 12:15:34
@@ -49,7 +53,44 @@ import java.util.List;
  * @author Antonio M@nso <manso@ipt.pt>
  */
 public class BreakSpaces {
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+    /**
+     * break a string with "" and marks
+     *
+     * @param txt text string
+     * @return array with string string splited by space
+     * @throws FlowchartException
+     */
+    public static List<String> breakSpacesAndMarks(String txt, String marks) {
+        try {
+            StringTokenizer tok;
+            List l = new ArrayList();
+            l.add(txt);
+            l = execute(l);
+            List<String> txtLst = new ArrayList<>(); // break strings \"txt\"  and spaces
+            for (Object elem : l) {
+                if (elem instanceof Ftext) { // string
+                    txtLst.add(((Ftext) elem).getDefinitionValue());
+                } else {
+                    //break marks
+                    tok = new StringTokenizer(elem.toString(), marks, true);
+                    while (tok.hasMoreElements()) {
+                        txtLst.add(tok.nextToken());
+                    }
+                }
+            }
+            return txtLst;
+        } catch (FlowchartException ex) {
+            List<String> l = new ArrayList();
+            l.add(txt);
+            return l;
+        }
+    }
+
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public static List<Object> execute(List<Object> exp) throws FlowchartException {
         List<Object> result = new ArrayList<>();
         for (Object elem : exp) {
@@ -70,18 +111,20 @@ public class BreakSpaces {
                                 Ftext.DELIMITATOR_TEXT + ""
                         );
                     } else //is ' '
-                    if (txt.startsWith(Fcharacter.DELIMITATOR_CHAR + "") && txt.endsWith(Fcharacter.DELIMITATOR_CHAR + "") && txt.length() == 3) {
-                        Fcharacter c = new Fcharacter(txt);
-                        c.setDescriptor(txt);
-                        result.add(c);
-                    } else if ((txt.startsWith(Fcharacter.DELIMITATOR_CHAR + "") || txt.endsWith(Fcharacter.DELIMITATOR_CHAR + "")) && txt.length() != 3) {
-                        throw new FlowchartException("DEFINE.invalidCharDefiniton",
-                                txt.toString(),
-                                ExpressionUtils.toString(exp),
-                                Fcharacter.DELIMITATOR_CHAR + ""
-                        );
-                    } else {
-                        result.add(txt);
+                    {
+                        if (txt.startsWith(Fcharacter.DELIMITATOR_CHAR + "") && txt.endsWith(Fcharacter.DELIMITATOR_CHAR + "") && txt.length() == 3) {
+                            Fcharacter c = new Fcharacter(txt);
+                            c.setDescriptor(txt);
+                            result.add(c);
+                        } else if ((txt.startsWith(Fcharacter.DELIMITATOR_CHAR + "") || txt.endsWith(Fcharacter.DELIMITATOR_CHAR + "")) && txt.length() != 3) {
+                            throw new FlowchartException("DEFINE.invalidCharDefiniton",
+                                    txt.toString(),
+                                    ExpressionUtils.toString(exp),
+                                    Fcharacter.DELIMITATOR_CHAR + ""
+                            );
+                        } else {
+                            result.add(txt);
+                        }
                     }
                 }
             } else {
@@ -91,8 +134,6 @@ public class BreakSpaces {
         }
         return result;
     }
-
-    
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

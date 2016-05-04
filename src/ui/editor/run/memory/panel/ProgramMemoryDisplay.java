@@ -21,19 +21,11 @@
 package ui.editor.run.memory.panel;
 
 import core.Memory;
-import core.data.Fsymbol;
-import core.data.complexData.Farray;
-import core.data.exception.FlowchartException;
-import flowchart.algorithm.Program;
 import flowchart.algorithm.run.GraphExecutor;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import ui.LauncherTeacher;
 
 /**
  * Created on 30/abr/2016, 12:51:08

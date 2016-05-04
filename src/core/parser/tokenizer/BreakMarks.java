@@ -28,6 +28,7 @@ import java.util.Stack;
  * @author Antonio M@nso <manso@ipt.pt>
  */
 public class BreakMarks {
+   
 
     public static List<Object> execute(List<Object> exp) throws FlowchartException {
 
@@ -41,7 +42,7 @@ public class BreakMarks {
 
                 while (index < txt.length()) {
                     //verify if is one mark
-                    if (Mark.CHAR_MARKS.contains(txt.charAt(index) + "")) {
+                    if (Mark.ALL_CHAR_MARKS.contains(txt.charAt(index) + "")) {
                         //append last word
                         String elem = word.toString().trim();
                         if (!elem.isEmpty()) {

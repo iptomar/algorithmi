@@ -26,9 +26,8 @@ import java.io.Serializable;
  * @author Antonio M@nso <manso@ipt.pt>
  */
 public class Mark extends CoreToken implements Serializable {
-    
-     char specialChar; // char MARK
-     
+
+    char specialChar; // char MARK
 
     public static String COMMA_CHAR_TOKEN = FkeywordToken.get("SEPARATOR.comma.key");
     public static final char COMMA_CHAR = FkeyWord.get("SEPARATOR.comma").charAt(0);
@@ -53,13 +52,11 @@ public class Mark extends CoreToken implements Serializable {
 
     public static final String BRACKETS = "" + ROUND_OPEN + ROUND_CLOSE + SQUARE_OPEN + SQUARE_CLOSE + BRACE_OPEN + BRACE_CLOSE;
 
-    public static final String CHAR_MARKS = BRACKETS + COMMA_CHAR;
+    public static final String ALL_CHAR_MARKS = BRACKETS + COMMA_CHAR;
 
     public static boolean isMark(char ch) {
-        return CHAR_MARKS.indexOf(ch) >= 0;
+        return ALL_CHAR_MARKS.indexOf(ch) >= 0;
     }
-
-   
 
     public Mark(char special) {
         this.specialChar = special;
@@ -150,8 +147,7 @@ public class Mark extends CoreToken implements Serializable {
     public boolean isRoundCloseBracket() {
         return specialChar == ROUND_CLOSE;
     }
-    
-    
+
     /**
      * gets toke of the elements
      *
@@ -182,39 +178,73 @@ public class Mark extends CoreToken implements Serializable {
         if (specialChar == BRACE_CLOSE) {
             return BRACE_CLOSE_TOKEN;
         }
-        
+
         return "MARK ERROR";
     }
-    
-    
+
+    /**
+     * gets toke of the elements
+     *
+     * @return
+     */
+    public static String getTokenID(String str) {
+        char markChar = str.charAt(0);
+        if (markChar == COMMA_CHAR) {
+            return COMMA_CHAR_TOKEN;
+        }
+
+        if (markChar == ROUND_OPEN) {
+            return ROUND_OPEN_TOKEN;
+        }
+        if (markChar == ROUND_CLOSE) {
+            return ROUND_CLOSE_TOKEN;
+        }
+
+        if (markChar == SQUARE_OPEN) {
+            return SQUARE_OPEN_TOKEN;
+        }
+        if (markChar == SQUARE_CLOSE) {
+            return SQUARE_CLOSE_TOKEN;
+        }
+
+        if (markChar == BRACE_OPEN) {
+            return BRACE_OPEN_TOKEN;
+        }
+        if (markChar == BRACE_CLOSE) {
+            return BRACE_CLOSE_TOKEN;
+        }
+
+        return "MARK ERROR";
+    }
+
     /**
      * gets toke of the elements
      *
      * @return
      */
     public static Mark getMark(String token) {
-        if (token.equalsIgnoreCase(COMMA_CHAR_TOKEN) ) {
+        if (token.equalsIgnoreCase(COMMA_CHAR_TOKEN)) {
             return new Mark(COMMA_CHAR);
         }
 
-        if (token.equalsIgnoreCase(ROUND_OPEN_TOKEN) ) {
+        if (token.equalsIgnoreCase(ROUND_OPEN_TOKEN)) {
             return new Mark(ROUND_OPEN);
         }
-        if (token.equalsIgnoreCase(ROUND_CLOSE_TOKEN) ) {
+        if (token.equalsIgnoreCase(ROUND_CLOSE_TOKEN)) {
             return new Mark(ROUND_CLOSE);
         }
 
-        if (token.equalsIgnoreCase(SQUARE_OPEN_TOKEN) ) {
+        if (token.equalsIgnoreCase(SQUARE_OPEN_TOKEN)) {
             return new Mark(SQUARE_OPEN);
         }
-        if (token.equalsIgnoreCase(SQUARE_CLOSE_TOKEN) ) {
+        if (token.equalsIgnoreCase(SQUARE_CLOSE_TOKEN)) {
             return new Mark(SQUARE_CLOSE);
         }
 
-        if (token.equalsIgnoreCase(BRACE_OPEN_TOKEN) ) {
+        if (token.equalsIgnoreCase(BRACE_OPEN_TOKEN)) {
             return new Mark(BRACE_OPEN);
         }
-        if (token.equalsIgnoreCase(BRACE_CLOSE_TOKEN) ) {
+        if (token.equalsIgnoreCase(BRACE_CLOSE_TOKEN)) {
             return new Mark(BRACE_CLOSE);
         }
 
