@@ -24,8 +24,13 @@
   
   <p>
     &nbsp;&nbsp;Plaggie:
-    &nbsp;&nbsp;&nbsp; 50% Completed - Luis Marques
+    &nbsp;&nbsp;&nbsp; 100% Completed - Luis Marques
   </p>
+  
+  <p>
+    &nbsp;&nbsp;Auto-Correction:
+    &nbsp;&nbsp;&nbsp; 50% Completed - Luis Marques
+  </p>  
   
   <p>
     &nbsp;&nbsp;Mooshak:
