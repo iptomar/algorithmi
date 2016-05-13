@@ -59,7 +59,7 @@ public class ConsolePanel extends javax.swing.JPanel {
         pnLeftPanelConsoleToolBar = new javax.swing.JPanel();
         btConsoleRun = new javax.swing.JButton();
         btConsoleDebug = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btConsoleEvaluate = new javax.swing.JButton();
         console = new ui.flowchart.console.Console();
         lblConsoleTab = new javax.swing.JLabel();
 
@@ -79,7 +79,12 @@ public class ConsolePanel extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("jButton4");
+        btConsoleEvaluate.setText("evaluate");
+        btConsoleEvaluate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConsoleEvaluateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnLeftPanelConsoleToolBarLayout = new javax.swing.GroupLayout(pnLeftPanelConsoleToolBar);
         pnLeftPanelConsoleToolBar.setLayout(pnLeftPanelConsoleToolBarLayout);
@@ -91,7 +96,7 @@ public class ConsolePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btConsoleDebug)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
+                .addComponent(btConsoleEvaluate)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnLeftPanelConsoleToolBarLayout.setVerticalGroup(
@@ -101,7 +106,7 @@ public class ConsolePanel extends javax.swing.JPanel {
                 .addGroup(pnLeftPanelConsoleToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btConsoleRun)
                     .addComponent(btConsoleDebug)
-                    .addComponent(jButton4))
+                    .addComponent(btConsoleEvaluate))
                 .addContainerGap())
         );
 
@@ -124,6 +129,19 @@ public class ConsolePanel extends javax.swing.JPanel {
         Program toRun = myFluxogram.myProgram.getClone();
         new RunProgram(toRun);
     }//GEN-LAST:event_btConsoleDebugActionPerformed
+
+    private void btConsoleEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConsoleEvaluateActionPerformed
+        // TODO add your handling code here:
+        
+        // 1st student myFluxograma
+         
+        // 2nd solver professor
+        
+        // 3rd compare output evaluate
+        
+        
+        
+    }//GEN-LAST:event_btConsoleEvaluateActionPerformed
 
     public void tryExecution() {
         if (!compile()) {
@@ -164,9 +182,9 @@ public class ConsolePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConsoleDebug;
+    private javax.swing.JButton btConsoleEvaluate;
     private javax.swing.JButton btConsoleRun;
     private ui.flowchart.console.Console console;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel lblConsoleTab;
     private javax.swing.JPanel pnLeftPanelConsoleToolBar;
     // End of variables declaration//GEN-END:variables
