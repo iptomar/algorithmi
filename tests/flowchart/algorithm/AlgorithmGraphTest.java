@@ -5,6 +5,7 @@
  */
 package flowchart.algorithm;
 
+import flowchart.utils.UserName;
 import javax.swing.JPanel;
 import junit.framework.TestCase;
 
@@ -23,7 +24,7 @@ public class AlgorithmGraphTest extends TestCase {
      */
     public void testNew() {
         System.out.println(this.getClass().getSimpleName() + " NEW");
-        AlgorithmGraph alg = new AlgorithmGraph(new JPanel(), new Program());
+        AlgorithmGraph alg = new AlgorithmGraph(new JPanel(), new Program(new UserName()));
     }
 
    

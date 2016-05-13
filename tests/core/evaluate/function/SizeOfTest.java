@@ -15,6 +15,7 @@ import core.data.exception.FlowchartException;
 import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.Program;
 import flowchart.define.Define;
+import flowchart.utils.UserName;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import junit.framework.TestCase;
@@ -106,7 +107,7 @@ public class SizeOfTest extends TestCase {
          ElementsOf calc = new ElementsOf();
         try { 
             //define instruction
-            Define defArray = new Define(new AlgorithmGraph(new JPanel(), new Program()));
+            Define defArray = new Define(new AlgorithmGraph(new JPanel(), new Program(new UserName())));
             defArray.buildInstruction("inteiro v[10]", "teste");
             //information to console
             System.out.println(calc.getClass().getName() + " - " + defArray.varSymbol.getClass().getSimpleName() );
