@@ -4,14 +4,9 @@
         <title>Index</title>
         <meta charset="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <script src="../libs/jquery-2.2.2.min.js" type="text/javascript"></script>        
-        <script src="../libs/JsHelp.js" type="text/javascript"></script> 
+
         <link rel="stylesheet" href="../libs/StyleHelp.css">
-        <script>
-            function returnHTML(fileName) {
-                document.getElementById("content").innerHTML = '<object width="1200" height="850"   type="text/html" data="' + fileName + '.html" ></object>';
-            }
-        </script>
+       
     </head>
 
     <body id="box">
@@ -22,55 +17,49 @@
         <div id="wrapper" style="float: left;">
             <div class="tree">
 
-                <ul>
-                    <li>
-                        <ul>        <!-- Primeiro elemento que não esta visivel -->
-                        </ul>       <!-- Permitindo assim que a árvore se mantenha fechada -->
-                    </li>
 
                     <li><a>Tipo de Dados</a>
                         <ul>
-                            <li><a onclick="returnHTML('define'); return false;" href="#"> Geral </a></li>
-                            <li><a onclick="returnHTML('array'); return false;" href="#"> Vetor </a></li>
-                            <li><a onclick="returnHTML('matrix'); return false;" href="#"> Matriz </a></li>
+                            <li><a  href="define.html"> Geral </a></li>
+                            <li><a  href="array.html"> Vetor </a></li>
+                            <li><a  href="matrix.html"> Matriz </a></li>
                         </ul>
                     </li>
                     <li><a>Entrada / Saída</a>
                         <ul>
-                            <li><a onclick="returnHTML('write'); return false;" href="#">Entrada (Escrever)</a></li>
-                            <li><a onclick="returnHTML('read'); return false;" href="#">Saida (Ler) </a></li>
+                            <li><a  href="write.html">Entrada (Escrever)</a></li>
+                            <li><a  href="read.html">Saida (Ler) </a></li>
                         </ul>
                     </li>
                     <li><a>Computação</a>
                         <ul>
-                            <li><a onclick="returnHTML('arithmeticOperators'); return false;" href="#">Operadores Aritméticos</a></li>
-                            <li><a onclick="returnHTML('logicalOperators'); return false;" href="#">Operadores Lógicos</a></li>
-                            <li><a onclick="returnHTML('relationalOperators'); return false;" href="#">Operadores Relacionais</a></li>
+                            <li><a  href="arithmeticOperators.html">Operadores Aritméticos</a></li>
+                            <li><a  href="logicalOperators.html">Operadores Lógicos</a></li>
+                            <li><a  href="relationalOperators.html">Operadores Relacionais</a></li>
 
 
                         </ul>
                     </li>
                     <li><a>Seleção</a>
                         <ul>
-                            <li><a onclick="returnHTML('if'); return false;" href="#">if (se)</a></li>
+                            <li><a  href="if.html">if (se)</a></li>
                         </ul>
                     </li>
                     <li><a>Repetição</a>
                         <ul>
-                            <li><a onclick="returnHTML('do_while'); return false;" href="#">Repete ( Do .. While )</a></li>
-                            <li><a onclick="returnHTML('for'); return false;" href="#">Para ( for ) </a></li>
-                            <li><a onclick="returnHTML('while'); return false;" href="#">Enquanto ( while ) </a></li>
-                            <li><a onclick="returnHTML('jump'); return false;" href="#">Saltos incondincionais</a></li>
-                            <li><a onclick="returnHTML('return'); return false;" href="#">Return</a></li>
+                            <li><a href="do_while.html">Repete ( Do .. While )</a></li>
+                            <li><a href="for.html">Para ( for ) </a></li>
+                            <li><a  href="while.html">Enquanto ( while ) </a></li>
+                            <li><a  href="jump.html">Saltos incondincionais</a></li>
+                            <li><a  href="return.html">Return</a></li>
 
 
                         </ul>
                     </li>
                     <li><a>Funções</a>
                         <ul>
-                            <li><a>Second Level</a></li>
-                            <li><a>Second Level</a></li>
-                            <li><a>Second Level</a></li>
+                            <li><a  href="funtion.html"> Geral </a></li>
+
                         </ul>
                     </li>
                 </ul>
