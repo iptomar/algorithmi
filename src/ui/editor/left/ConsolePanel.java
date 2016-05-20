@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 import ui.dialogs.FMessages;
 import ui.editor.Fluxograma;
 import ui.editor.run.RunProgram;
+import ui.flowchart.console.Console;
+
+import ui.editor.center.ProblemPanel;
 
 /**
  *
@@ -133,12 +136,50 @@ public class ConsolePanel extends javax.swing.JPanel {
     private void btConsoleEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConsoleEvaluateActionPerformed
         // TODO add your handling code here:
         
-        // 1st student myFluxograma
+        // myFluxogram.myProgram.myProblem.input;
+        String myProblemResult=null;
+
          
         // 2nd solver professor
+        //myFluxogram.myProgram.myProblem.solver.fileName.;
+        //myFluxogram.myProgram.myProblem.solver.myProblem.input
+        String mySolverResult=null;
         
+        // 3rd processing input & save output
+        // for student solution
+
+//        if (ProblemPanel.lstInput.getSelectedIndex() >= 0) {
+//            try {
+//                Console consoleMyProblem = new Console();
+//                consoleMyProblem.setInput(myFluxogram.myProgram.myProblem.input.get(ProblemPanel.lstInput.getSelectedIndex()));
+//                GraphExecutor run = new GraphExecutor(myFluxogram.myProgram, consoleMyProblem);
+//                while (!run.isDone()) {
+//                    run.executeFast();
+//                }
+//                myProblemResult=ProblemPanel.txtOutput.setText(consoleMyProblem.getOutput());
+//            } catch (FlowchartException ex) {
+//                FMessages.dialog(FMessages.ERROR, EditorI18N.get("CONSOLE.runtime.error") + "\n" + ex.getMessage());
+//            }
+//        }      
+//        
+        // 3rd processing input & save output
+        // for professor solution
+        
+//        if (lstInput.getSelectedIndex() >= 0) {
+//            try {
+//                Console console = new Console();
+//                console.setInput(solver.myProblem.input.get(lstInput.getSelectedIndex()));
+//                GraphExecutor run = new GraphExecutor(solver, console);
+//                while (!run.isDone()) {
+//                    run.executeFast();
+//                }
+//                mySolverResult=txtOutput.setText(console.getOutput());
+//            } catch (FlowchartException ex) {
+//                FMessages.dialog(FMessages.ERROR, EditorI18N.get("CONSOLE.runtime.error") + "\n" + ex.getMessage());
+//            }
+//        }        
+               
         // 3rd compare output evaluate
-        
         
         
     }//GEN-LAST:event_btConsoleEvaluateActionPerformed
@@ -195,4 +236,12 @@ public class ConsolePanel extends javax.swing.JPanel {
     public void setMyFluxogram(Fluxograma myFluxogram) {
         this.myFluxogram = myFluxogram;
     }
+    
+//    /**
+//     * @param myFluxogram the myFluxogram to get
+//     */
+//    public Fluxograma getMyFluxogram() {
+//        return myFluxogram;
+//    }
+  
 }

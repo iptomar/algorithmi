@@ -105,7 +105,7 @@ public class ProblemPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtOutput = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstInput = new javax.swing.JList<>();
+        lstInput = new javax.swing.JList<String>();
         jPanel1 = new javax.swing.JPanel();
         btAddInput = new javax.swing.JButton();
         btRemoveInput = new javax.swing.JButton();
@@ -150,10 +150,10 @@ public class ProblemPanel extends javax.swing.JPanel {
         pnOutput.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         lstInput.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        lstInput.setModel(new javax.swing.AbstractListModel<String>() {
+        lstInput.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
         lstInput.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
