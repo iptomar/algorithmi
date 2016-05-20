@@ -135,17 +135,19 @@ public class ConsolePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btConsoleDebugActionPerformed
 
     private void btConsoleEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConsoleEvaluateActionPerformed
-        // TODO add your handling code here:
 
-        // myFluxogram.myProgram.myProblem.input;
         String myProblemResult = null;
         String mySolverResult = null;
 
         for (String input : myFluxogram.myProgram.myProblem.input) {
             AutoExecute student = new AutoExecute(input, myFluxogram.myProgram);
             AutoExecute teacher = new AutoExecute(input, myFluxogram.myProgram.myProblem.solver);
+            
+            // 
             if( student.output.equals(teacher.output)){
-                //all ok
+                System.out.println("dgdrgvvvvvvvvvvvvvvvvvvvvvvvvv");
+            }else{
+                //contar sililaridades
             }
             
     }
