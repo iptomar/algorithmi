@@ -75,7 +75,6 @@ public class FarrayTest extends TestCase {
         index.add(new Expression(new Finteger(v[0].length)));
         Farray a1 = new Farray("v", lst, index, Memory.constants);
         System.out.println(a1.toString());
-                
 
         for (int i = 0; i < v.length; i++) {
             for (int j = 0; j < v[i].length; j++) {
@@ -194,15 +193,15 @@ public class FarrayTest extends TestCase {
             for (int k = 0; k < v[x].length; k++) {
                 for (int i = 0; i < v[x][k].length; i++) {
 
-//                    for (int j = 0; j < v[x][k][i].length; j++) {
-                    ArrayList<Expression> indexA = new ArrayList<>();
-                    indexA.add(new Expression(new Finteger(x)));
-                    indexA.add(new Expression(new Finteger(k)));
-                    indexA.add(new Expression(new Finteger(i)));
-                    // indexA.add(new Expression(new Finteger(j)));
-                    Farray array = (Farray) a1.getElement(indexA, Memory.constants);
-                    System.out.println(array.toString() + " " + array.toTextValue());
-                    assertEquals(array.getElements().size(), v[0][0][0].length);
+//                    for (int j = 0; j < v[x][k][i].length; j++) { // REMOVE LAST DIMENSION
+                        ArrayList<Expression> indexA = new ArrayList<>();
+                        indexA.add(new Expression(new Finteger(x)));
+                        indexA.add(new Expression(new Finteger(k)));
+                        indexA.add(new Expression(new Finteger(i)));
+//                        indexA.add(new Expression(new Finteger(j)));
+                        Farray array = (Farray) a1.getElement(indexA, Memory.constants); // GET 1D Array
+                        System.out.println(array.toString() + " " + array.toTextValue());
+                        assertEquals(array.getElements().size(), v[0][0][0].length);
 //                    }
                 }
                 System.out.println("-------------------");
@@ -210,35 +209,36 @@ public class FarrayTest extends TestCase {
         }
         for (int x = 0; x < v.length; x++) {
             for (int k = 0; k < v[x].length; k++) {
-//                for (int i = 0; i < v[x][k].length; i++) {
-
-//                    for (int j = 0; j < v[x][k][i].length; j++) {
+//                for (int i = 0; i < v[x][k].length; i++) { // REMOVE DIMENSION
+//                    for (int j = 0; j < v[x][k][i].length; j++) { // REMOVE DIMENSION
                 ArrayList<Expression> indexA = new ArrayList<>();
                 indexA.add(new Expression(new Finteger(x)));
                 indexA.add(new Expression(new Finteger(k)));
 //                        indexA.add(new Expression(new Finteger(i)));
                 // indexA.add(new Expression(new Finteger(j)));
-                Farray array = (Farray) a1.getElement(indexA, Memory.constants);
+                Farray array = (Farray) a1.getElement(indexA, Memory.constants); // GET 2D array
                 System.out.println(array.toString() + " " + array.toTextValue());
                 assertEquals(array.getElements().size(), v[0][0][0].length * v[0][0].length);
 //                    }
             }
             System.out.println("-------------------");
         }
-          for (int x = 0; x < v.length; x++) {
+        for (int x = 0; x < v.length; x++) {
 //            for (int k = 0; k < v[x].length; k++) {
 //                for (int i = 0; i < v[x][k].length; i++) {
-
+//
 //                    for (int j = 0; j < v[x][k][i].length; j++) {
-                ArrayList<Expression> indexA = new ArrayList<>();
-                indexA.add(new Expression(new Finteger(x)));
-//                indexA.add(new Expression(new Finteger(k)));
+                        ArrayList<Expression> indexA = new ArrayList<>();
+                        indexA.add(new Expression(new Finteger(x)));
+//                        indexA.add(new Expression(new Finteger(k)));
 //                        indexA.add(new Expression(new Finteger(i)));
-                // indexA.add(new Expression(new Finteger(j)));
-                Farray array = (Farray) a1.getElement(indexA, Memory.constants);
-                System.out.println(array.toString() + " " + array.toTextValue());
-                assertEquals(array.getElements(), v[0][0][0].length * v[0][0].length* v[0].length);
+//                        indexA.add(new Expression(new Finteger(j)));
+                        Farray array = (Farray) a1.getElement(indexA, Memory.constants);
+                        System.out.println(array.toString() + " " + array.toTextValue());
+                        assertEquals(array.getElements().size(), v[0][0][0].length * v[0][0].length * v[0].length);
 //                    }
+//                }
+//            }
         }
     }
 
