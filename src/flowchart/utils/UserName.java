@@ -72,8 +72,13 @@ public class UserName implements Serializable {
         this.country = country;
     }
 
+    @Override
     public String toString() {
         return name;
+    }
+    
+    public static UserName defaultUser() {
+        return new UserName();
     }
 
     public static UserName createUser(String digitalSignature) {

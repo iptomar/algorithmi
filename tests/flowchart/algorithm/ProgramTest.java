@@ -6,6 +6,7 @@
 package flowchart.algorithm;
 
 import flowchart.utils.ProgramFile;
+import flowchart.utils.UserName;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -27,7 +28,7 @@ public class ProgramTest extends TestCase {
     public void testGetFileName() {
         try {
             System.out.println(this.getClass().getSimpleName() + " SAVE");
-            Program prog = new Program();
+            Program prog = new Program(UserName.defaultUser());
             
             prog.setMain(new AlgorithmGraph(new JPanel(), prog));
 //            System.out.println(prog.getTokens());

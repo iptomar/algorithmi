@@ -13,6 +13,7 @@ import i18n.EditorI18N;
 import java.util.List;
 import javax.swing.JOptionPane;
 import ui.dialogs.FMessages;
+import ui.editor.Editor;
 import ui.editor.Fluxograma;
 import ui.editor.run.RunProgram;
 
@@ -20,14 +21,14 @@ import ui.editor.run.RunProgram;
  *
  * @author zulu
  */
-public class ConsolePanel extends javax.swing.JPanel {
+public class ConsoleRun extends javax.swing.JPanel {
 
-    private Fluxograma myFluxogram;
+    private Editor myFluxogram;
 
     /**
      * Creates new form ConsolePanel
      */
-    public ConsolePanel() {
+    public ConsoleRun() {
         initComponents();
         console.setVerticalOrientation();
         I18N();
@@ -38,7 +39,7 @@ public class ConsolePanel extends javax.swing.JPanel {
         try {
             EditorI18N.loadResource(btConsoleRun, "CONSOLE.run");
             EditorI18N.loadResource(btConsoleDebug, "CONSOLE.debug");
-
+            EditorI18N.loadResource(evaluate, "CONSOLE.evaluate");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Consola Erro na leitura da internacionalização");
         }
@@ -56,7 +57,7 @@ public class ConsolePanel extends javax.swing.JPanel {
         pnLeftPanelConsoleToolBar = new javax.swing.JPanel();
         btConsoleRun = new javax.swing.JButton();
         btConsoleDebug = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        evaluate = new javax.swing.JButton();
         console = new ui.flowchart.console.Console();
         lblConsoleTab = new javax.swing.JLabel();
 
@@ -76,7 +77,7 @@ public class ConsolePanel extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("evaluate");
+        evaluate.setText("jButton4");
 
         javax.swing.GroupLayout pnLeftPanelConsoleToolBarLayout = new javax.swing.GroupLayout(pnLeftPanelConsoleToolBar);
         pnLeftPanelConsoleToolBar.setLayout(pnLeftPanelConsoleToolBarLayout);
@@ -88,7 +89,7 @@ public class ConsolePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btConsoleDebug)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
+                .addComponent(evaluate)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnLeftPanelConsoleToolBarLayout.setVerticalGroup(
@@ -98,7 +99,7 @@ public class ConsolePanel extends javax.swing.JPanel {
                 .addGroup(pnLeftPanelConsoleToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btConsoleRun)
                     .addComponent(btConsoleDebug)
-                    .addComponent(jButton4))
+                    .addComponent(evaluate))
                 .addContainerGap())
         );
 
@@ -163,7 +164,7 @@ public class ConsolePanel extends javax.swing.JPanel {
     private javax.swing.JButton btConsoleDebug;
     private javax.swing.JButton btConsoleRun;
     private ui.flowchart.console.Console console;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton evaluate;
     private javax.swing.JLabel lblConsoleTab;
     private javax.swing.JPanel pnLeftPanelConsoleToolBar;
     // End of variables declaration//GEN-END:variables
@@ -171,7 +172,7 @@ public class ConsolePanel extends javax.swing.JPanel {
     /**
      * @param myFluxogram the myFluxogram to set
      */
-    public void setMyFluxogram(Fluxograma myFluxogram) {
+    public void setMyFluxogram(Editor myFluxogram) {
         this.myFluxogram = myFluxogram;
     }
 }

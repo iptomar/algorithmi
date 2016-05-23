@@ -13,6 +13,7 @@ import core.data.complexData.Farray;
 import core.evaluate.aritmetic.Sum;
 import core.evaluate.function.lang.ElementsOf;
 import flowchart.algorithm.Program;
+import flowchart.utils.UserName;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -38,7 +39,7 @@ public class ExpressionArrayTest extends TestCase {
         String strExp = x + add + y;
         Finteger expected = new Finteger(x + y + "");
 
-        Program prog = new Program();
+        Program prog = new Program(UserName.defaultUser());
         Memory mem = new Memory("mainMemory");
         mem.add(new Finteger("x", "" + x));
         mem.add(new Finteger("y", "" + y));
@@ -53,7 +54,7 @@ public class ExpressionArrayTest extends TestCase {
      */
     public void testArrays() throws Exception {
         System.out.println("Expression Array 1D");
-        Program prog = new Program();
+        Program prog = new Program(UserName.defaultUser());
         Memory mem = new Memory("mainMemory");
         int size = 10;
         String def = Freal.TYPE_REAL_NAME + " v" + Mark.SQUARE_OPEN + size + Mark.SQUARE_CLOSE;
@@ -94,7 +95,7 @@ public class ExpressionArrayTest extends TestCase {
      */
     public void testArrays2D() throws Exception {
         System.out.println("Expression Array 2D");
-        Program prog = new Program();
+        Program prog = new Program(UserName.defaultUser());
         Memory mem = new Memory("mainMemory");
         int size1 = 5;
         int size2 = 10;
@@ -168,7 +169,7 @@ public class ExpressionArrayTest extends TestCase {
      */
     public void testArrays3D() throws Exception {
         System.out.println("Expression Array 3D");
-        Program prog = new Program();
+        Program prog = new Program(UserName.defaultUser());
         Memory mem = new Memory("mainMemory");
         int size1 = 3;
         int size2 = 5;
