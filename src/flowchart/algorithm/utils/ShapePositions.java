@@ -46,6 +46,7 @@ import flowchart.decide.IfElse.IfThenElse;
 import flowchart.decide.While_Do;
 import flowchart.function.FunctionParameter;
 import flowchart.shape.Fshape;
+import flowchart.terminator.Begin;
 import flowchart.terminator.End;
 import ui.FLog;
 import java.awt.Component;
@@ -271,14 +272,16 @@ public class ShapePositions implements Serializable {
         node.updateSize();
         //create ID
         if (IDSize.get(node.POSITION_LEVEL) == null) {
-            //IDSize.put(node.POSITION_LEVEL, FProperties.LINE_LENGHT * BorderFlowChart.getThickness());
-            IDSize.put(node.POSITION_LEVEL, node.getWidth());
-        } else //update size of the ID
-        {
-            if (IDSize.get(node.POSITION_LEVEL) < node.getWidth()) {
+            if (node instanceof Begin) { // ignore size of Function definition
+                // funtion definition my be very big and 
+                IDSize.put(node.POSITION_LEVEL, 100);
+            } else {
                 IDSize.put(node.POSITION_LEVEL, node.getWidth());
             }
-        }
+        } else //update size of the ID
+         if (IDSize.get(node.POSITION_LEVEL) < node.getWidth()) {
+                IDSize.put(node.POSITION_LEVEL, node.getWidth());
+            }
         //stop recursivity
         if (node == end) {
             return;
@@ -314,7 +317,7 @@ public class ShapePositions implements Serializable {
             //add center
             IDCenter.put(key, center);
             //add half
-            center +=  value / 2; 
+            center += value / 2;
         }
     }
 

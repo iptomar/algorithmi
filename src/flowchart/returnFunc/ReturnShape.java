@@ -93,9 +93,9 @@ public class ReturnShape extends BorderFlowChart {
         p.addPoint(x + SIZE, y);
         p.addPoint(x, y + height / 2);
         p.addPoint(x + SIZE, y + height);
-        p.addPoint(x + width, y + height);
-       // p.addPoint(x + width - SIZE / 2, y + height / 2);
-        p.addPoint(x + width, y);
+        p.addPoint(x + width-SIZE, y + height);
+        p.addPoint(x + width , y + height / 2);
+        p.addPoint(x + width-SIZE, y);
         p.addPoint(x + SIZE, y);
 
         g2.setColor(fillColor);

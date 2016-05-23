@@ -445,7 +445,7 @@
                         </Container>
                       </SubComponents>
                     </Container>
-                    <Component class="ui.editor.left.ConsolePanel" name="consolePanel">
+                    <Component class="ui.editor.left.ConsoleRun" name="consolePanel">
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                           <JTabbedPaneConstraints tabName="tab2">

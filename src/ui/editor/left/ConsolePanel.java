@@ -10,10 +10,7 @@ import flowchart.algorithm.Program;
 import flowchart.algorithm.run.GraphExecutor;
 import flowchart.shape.Fshape;
 import i18n.EditorI18N;
-import i18n.Fi18N;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import ui.dialogs.FMessages;
 import ui.editor.Fluxograma;
@@ -79,7 +76,7 @@ public class ConsolePanel extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("jButton4");
+        jButton4.setText("evaluate");
 
         javax.swing.GroupLayout pnLeftPanelConsoleToolBarLayout = new javax.swing.GroupLayout(pnLeftPanelConsoleToolBar);
         pnLeftPanelConsoleToolBar.setLayout(pnLeftPanelConsoleToolBarLayout);

@@ -76,7 +76,7 @@ import ui.flowchart.dialogs.NewProgram;
  *
  * @author
  */
-public class Fluxograma extends javax.swing.JFrame {
+public class Editor extends javax.swing.JFrame {
 
     boolean showAboutBox = false;
     public Program myProgram;
@@ -87,7 +87,7 @@ public class Fluxograma extends javax.swing.JFrame {
     /**
      * Creates new form Fluxograma to the user
      */
-    public Fluxograma(UserName user) {
+    public Editor(UserName user) {
         initComponents();
         this.user = user;
         I18N();
@@ -182,8 +182,11 @@ public class Fluxograma extends javax.swing.JFrame {
                     Thread.sleep(5000);
                     tbProgram.remove(lb);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Fluxograma.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
                 }
+//                if (tbProgram.getTabCount() == 0) {
+//                    btNewFluxActionPerformed(null);
+//                }
 //                if (tbProgram.getTabCount() == 0) {
 //                    btNewFluxActionPerformed(null);
 //                }
@@ -218,7 +221,7 @@ public class Fluxograma extends javax.swing.JFrame {
         txtPath = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstProgramFiles = new javax.swing.JList();
-        consolePanel = new ui.editor.left.ConsolePanel();
+        consolePanel = new ui.editor.left.ConsoleRun();
         jPanel5 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         btGlobalMemory = new javax.swing.JButton();
@@ -1123,7 +1126,7 @@ public class Fluxograma extends javax.swing.JFrame {
     private javax.swing.JButton btSaveFileAs;
     private javax.swing.JButton btZoomIn;
     private javax.swing.JButton btZoomOut;
-    private ui.editor.left.ConsolePanel consolePanel;
+    private ui.editor.left.ConsoleRun consolePanel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1246,24 +1249,25 @@ public class Fluxograma extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
+            java.util.logging.Logger.getLogger(Editor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
+            java.util.logging.Logger.getLogger(Editor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
+            java.util.logging.Logger.getLogger(Editor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Fluxograma.class
+            java.util.logging.Logger.getLogger(Editor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Fluxograma(new UserName()).setVisible(true);
+                new Editor(new UserName()).setVisible(true);
             }
         });
     }
