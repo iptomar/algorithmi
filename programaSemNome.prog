@@ -1,0 +1,16 @@
+// ID        PROBLEM
+// CODE      0
+// USER      Algorithmi
+// NAME      Utilizador anónimo
+// DATE      2016/05/24 19:32:29:195
+// VERSION   Algorithmi 4.22 (PSI)
+
+
+    BEGIN MAIN_PROGRAM_NAME
+        IF 1 EQUAL 1 
+            IF 1 EQUAL 1 
+            END IF
+
+        END IF
+
+    END MAIN_PROGRAM_NAME

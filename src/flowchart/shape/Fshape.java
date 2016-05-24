@@ -70,7 +70,7 @@ import languages.PseudoLanguage;
  */
 public abstract class Fshape extends JPanel implements MouseListener, Serializable, Cloneable, Comparable<Fshape> {
 
-    public static boolean TOOLTIP_DEBUG = false;
+    public static boolean TOOLTIP_DEBUG = true;
 
     //change tooltips behaviour int he application
     // in the furure this is moved to another place
