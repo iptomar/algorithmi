@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.ListModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import ui.dialogs.FMessages;
-import ui.editor.Fluxograma;
+import ui.editor.Editor;
 import ui.flowchart.dialogs.Fdialog;
 import ui.utils.Crypt;
 
@@ -30,7 +30,6 @@ import ui.utils.Crypt;
  */
 public class Launcher extends javax.swing.JFrame implements Runnable {
 
-    Fluxograma flux = new Fluxograma(new UserName());
     UserName user;
 
     /**
@@ -71,7 +70,6 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
         Fi18N.loadLabel(lblLangDisplay, "LAUNCHER.language");
 
         pnInformationNewUser.setBorder(BorderFactory.createTitledBorder(Fi18N.get("LAUNCHER.users.info")));
-
 
     }
 
@@ -539,7 +537,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 user.setName(txtUserNameNew.getText());
                 user.setCode(txtUserNumberNew.getText());
                 user.setPassword(txtPassword1.getPassword());
-                LanguageCode lang = (LanguageCode)cbSelectLang.getSelectedItem();
+                LanguageCode lang = (LanguageCode) cbSelectLang.getSelectedItem();
                 user.setLanguage(lang.getLanguage());
                 user.setCountry(lang.getCountry());
                 //default properties
@@ -564,8 +562,8 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 return;
             }
         }
-
-        flux.setUser(user);
+        Editor flux = new Editor(user);
+        //flux.setUser(user);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

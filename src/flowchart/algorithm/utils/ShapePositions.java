@@ -274,7 +274,7 @@ public class ShapePositions implements Serializable {
         if (IDSize.get(node.POSITION_LEVEL) == null) {
             if (node instanceof Begin) { // ignore size of Function definition
                 // funtion definition my be very big and 
-                IDSize.put(node.POSITION_LEVEL, 100);
+                IDSize.put(node.POSITION_LEVEL, 150);
             } else {
                 IDSize.put(node.POSITION_LEVEL, node.getWidth());
             }

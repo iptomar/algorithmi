@@ -20,14 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////
 package flowchart.algorithm;
 
+import flowchart.algorithm.run.AutoRunProgram;
 import flowchart.utils.Base64;
 import flowchart.utils.UserName;
-import i18n.FkeyWord;
+import flowchart.utils.image.ImageUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import ui.FLog;
 
 /**
@@ -47,6 +49,7 @@ public class Problem implements Serializable {
     public String description = "";
     public Program solver = null;
     public List<String> input = new ArrayList<>();
+    public List<String> output = new ArrayList<>();
     public byte[] image = {};
     public long creationDate = (new Date()).getTime(); // clock date of creation
     public long updtateDate = (new Date()).getTime(); // clock date of update
@@ -55,17 +58,24 @@ public class Problem implements Serializable {
         this.user = user;
     }
 
+    public ImageIcon getImage() {
+        return ImageUtils.getByteArrayJpeg(image);
+    }
+
+    public boolean isEmpty() {
+        return title.isEmpty();
+    }
+
     public String serialize() {
         //empty problem
-        if (description.isEmpty()) {
+        if (isEmpty()) {
             return PROBLEM_TAG;
         }
-
         try {
             return Base64.encodeObject(this, Base64.GZIP);
         } catch (IOException ex) {
             FLog.printLn("User diditalSignature() " + ex.getMessage());
-            return "NOT SIGNED";
+            return PROBLEM_TAG;
         }
     }
 
@@ -88,6 +98,17 @@ public class Problem implements Serializable {
     public void setProgramSolver(Program prog) {
         this.solver = prog.getClone();
         this.solver.cleanNonExecutableElements();
+        calculateOutput(prog);
+        System.out.println("TITLE : " + title);
+        for (int i = 0; i < input.size(); i++) {
+            System.out.println("INPUT  : " + input.get(i));
+            System.out.println("OUTPUT : " + output.get(i));
+        }
+    }
+
+    public void calculateOutput(Program prog) {
+        AutoRunProgram exe = new AutoRunProgram(prog);
+        exe.buildOutput();
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

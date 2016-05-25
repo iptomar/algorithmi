@@ -48,6 +48,7 @@ public class UserName implements Serializable {
     private String password; // encrypted password
     private String language = "pt"; // language
     private String country = "PT"; // country
+    public String filename; // file
 
     public UserName() {
         name = Fi18N.get("PROPERTIES.userName.default");
@@ -76,7 +77,7 @@ public class UserName implements Serializable {
     public String toString() {
         return name;
     }
-    
+
     public static UserName defaultUser() {
         return new UserName();
     }
@@ -197,6 +198,10 @@ public class UserName implements Serializable {
         return l.getDisplayLanguage(l);
     }
 
+    public String getLanguageCode() {
+        return language;
+    }
+
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -204,6 +209,10 @@ public class UserName implements Serializable {
     public String getCountry() {
         Locale l = new Locale(language, country);
         return l.getDisplayCountry(l);
+    }
+
+    public String getCountryCode() {
+        return country;
     }
 
     public void setCountry(String country) {
@@ -222,7 +231,9 @@ public class UserName implements Serializable {
             return createUser(props.getProperty("keyDigitalSignature"));
         } catch (Exception e) {
         }
-        return new UserName();
+        UserName user = new UserName();
+        user.filename = fileName;
+        return user;
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

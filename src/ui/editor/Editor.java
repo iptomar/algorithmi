@@ -68,7 +68,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import ui.FLog;
-import ui.editor.center.ProblemPanel;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
 
@@ -81,7 +80,6 @@ public class Editor extends javax.swing.JFrame {
     boolean showAboutBox = false;
     public Program myProgram;
     public UserName user;
-    ProblemPanel programDisplay;
 
 //    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
     /**
@@ -117,18 +115,16 @@ public class Editor extends javax.swing.JFrame {
         }
         updateFileList(myProgram.getFileName());
         //link this fluxogram with console
-        consolePanel.setMyFluxogram(this);
+        consolePanel.setMyFluxogram(this.myProgram);
 
     }
 
     public final void I18N() {
 
         try {
-
+            FProperties.load(user);
             setIconImage(EditorI18N.loadIcon("APPLICATION.icon", 24).getImage());
-
             EditorI18N.loadResource(mnFile, "MENU.file");
-
             EditorI18N.loadResource(mnNewFlux, btNewFlux, "FILE.new");
 
             EditorI18N.loadResource(mnOpenFile, btOpenFile, "FILE.open");
@@ -158,6 +154,8 @@ public class Editor extends javax.swing.JFrame {
 
             EditorI18N.loadTab(leftPanel, 0, "LEFTPANEL.tab.files");
             EditorI18N.loadTab(leftPanel, 1, "LEFTPANEL.tab.console");
+
+            EditorI18N.loadTab(leftPanel, 2, "LEFTPANEL.tab.problem");
 
             setTitle(Fi18N.get("FLOWCHART.application.title"));
         } catch (Exception e) {
@@ -222,6 +220,7 @@ public class Editor extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstProgramFiles = new javax.swing.JList();
         consolePanel = new ui.editor.left.ConsoleRun();
+        problemInfo = new ui.editor.left.ProblemDisplay();
         jPanel5 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         btGlobalMemory = new javax.swing.JButton();
@@ -380,6 +379,7 @@ public class Editor extends javax.swing.JFrame {
 
         leftPanel.addTab("tab1", jPanel6);
         leftPanel.addTab("tab2", consolePanel);
+        leftPanel.addTab("tab3", problemInfo);
 
         jPanel3.add(leftPanel, java.awt.BorderLayout.CENTER);
 
@@ -698,14 +698,14 @@ public class Editor extends javax.swing.JFrame {
 
     }
 
-    private FeditorScrool getCurrentFlux() {
-        int index = tbProgram.getSelectedIndex();
-        if (tbProgram.getComponentAt(index) instanceof FeditorScrool) {
-            return ((FeditorScrool) tbProgram.getComponentAt(index));
-        }
-        return null;
-
-    }
+//    private FeditorScrool getCurrentFlux() {
+//        int index = tbProgram.getSelectedIndex();
+//        if (tbProgram.getComponentAt(index) instanceof FeditorScrool) {
+//            return ((FeditorScrool) tbProgram.getComponentAt(index));
+//        }
+//        return null;
+//
+//    }
     private void btZoomOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btZoomOutActionPerformed
         myProgram.tryToSave();
         myProgram.zoomOut();
@@ -782,28 +782,37 @@ public class Editor extends javax.swing.JFrame {
             myProgram.updateProgramOfAlgorithms();
             createDisplaytoProgram();
             FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.opened", myProgram.getFileName());
-            showProgramInfo();
+            //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            // PROBLEM DISPLAY
+            if (myProgram.myProblem.isEmpty()) {
+//               leftPanel.setEnabledAt(2, false);
+                problemInfo.setProgram(myProgram);
+            } else {
+                leftPanel.setEnabledAt(2, true);
+                problemInfo.setProgram(myProgram);
+
+            }
+            //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         }
     }
 
     public void updateFileList(String path) {
         File[] progs;
-        if (!path.isEmpty()) {
+        if (!path.isEmpty()) { // list path
             txtPath.setText(FileUtils.getPath(path));
             progs = FileUtils.getProgramsInPath(path);
-//            txtPath.setText(FileUtils.getPath(myProgram.getFileName()));
-//            progs = FileUtils.getProgramsInPath(myProgram.getFileName());
 
-        } else {
+        } else { //create path in current user dir
             txtPath.setText(System.getProperty("user.dir"));
             progs = FileUtils.getProgramsInPath(System.getProperty("user.dir"));
         }
+        //display files
         DefaultListModel model = new DefaultListModel();
         for (File file : progs) {
             model.addElement(file.getName());
         }
         lstProgramFiles.setModel(model);
-//
+        //something to show
         if (myProgram != null) {
             lstProgramFiles.setSelectedValue(FileUtils.getFileFromPath(myProgram.getFileName()), true);
         }
@@ -833,9 +842,7 @@ public class Editor extends javax.swing.JFrame {
 
     private void mnSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveAsActionPerformed
         try {
-            this.programDisplay.updateProblem(myProgram);
             FileUtils.saveProgramAs(myProgram);
-
             FMessages.status(lbblStatus, FMessages.INFO, "FILES.prog.success.message", myProgram.getFileName());
             updateGUI();
             updateFileList(myProgram.getFileName());
@@ -897,26 +904,19 @@ public class Editor extends javax.swing.JFrame {
         //clear all
         tbProgram.removeAll();
         //create elements of the tab
-
         FeditorScrool mainProg = new FeditorScrool(alg);
         String title = EditorI18N.get("APPLICATION.tabedPane.main.title");
         String toolTip = EditorI18N.get("APPLICATION.tabedPane.main.help");
         ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.main.icon", 16);
         tbProgram.insertTab(title, icon, mainProg, toolTip, 0);
         tbProgram.setSelectedComponent(mainProg);
-        createProblemDisplay();
+
+        //:::::::::: DISPLAY PROBLEM ::::::::::::::::
+        problemInfo.setProgram(this.myProgram);
+
         updateGUI();
     }
 
-    private void createProblemDisplay() {
-        String title = EditorI18N.get("APPLICATION.tabedPane.problem.title");
-        String toolTip = EditorI18N.get("APPLICATION.tabedPane.problem.help");
-        ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.problem.icon", 16);
-        this.programDisplay = new ProblemPanel();
-        programDisplay.setProblem(myProgram);
-        tbProgram.insertTab(title, icon, programDisplay, toolTip, 0);
-        tbProgram.setSelectedComponent(programDisplay);
-    }
 
     private void btGlobalMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGlobalMemoryActionPerformed
         myProgram.tryToSave();
@@ -1066,9 +1066,7 @@ public class Editor extends javax.swing.JFrame {
     private void lstProgramFilesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstProgramFilesValueChanged
         if (lstProgramFiles.getSelectedIndex() >= 0) {
             if (myProgram != null) { // save if not null ( deleted file )
-                this.programDisplay.updateProblem(myProgram);
                 myProgram.tryToSave();
-                //                displayFile(FileUtils.getPath(myProgram.getFileName()) + lstProgramFiles.getSelectedValue().toString());
             }
             displayFile(txtPath.getText() + lstProgramFiles.getSelectedValue().toString());
 
@@ -1097,7 +1095,7 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_lstProgramFilesMouseClicked
 
     private void btSaveFileAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveFileAsActionPerformed
-        mnSaveAsActionPerformed(evt);        
+        mnSaveAsActionPerformed(evt);
     }//GEN-LAST:event_btSaveFileAsActionPerformed
 
     private void btOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOpenFileActionPerformed
@@ -1176,6 +1174,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenu mnView;
     private javax.swing.JMenuItem mnZoomIn;
     private javax.swing.JMenuItem mnZoomOut;
+    private ui.editor.left.ProblemDisplay problemInfo;
     private javax.swing.JTabbedPane tbProgram;
     private javax.swing.JTextArea txtPath;
     // End of variables declaration//GEN-END:variables
@@ -1196,8 +1195,9 @@ public class Editor extends javax.swing.JFrame {
      */
     public void setUser(UserName user) {
         try {
-
-            this.user = user;
+              
+            this.user = user;            
+            I18N();
             this.setIconImage(user.getAvatar(32).getImage());
             lblUser.setText(user.getName() + " [" + user.getCode() + "]" + user.getFullName());
             lblUser.setIcon(ImageUtils.resize(user.getAvatar(), 24, 24));
@@ -1212,22 +1212,9 @@ public class Editor extends javax.swing.JFrame {
         } catch (Exception ex) {
             newProgram(false);
         }
-        showProgramInfo();
         updateFileList(myProgram.fileName);
         lstProgramFiles.setSelectedValue(FileUtils.getFileFromPath(myProgram.getFileName()), true);
         FLog.printLn("User :" + user.getCode() + " - " + user.getName() + " - " + user.getFullName());
-    }
-
-    public void showProgramInfo() {
-        if (myProgram == null) {
-            return;
-        }
-//        UserName user1 = UserName.createUser(myProgram.digitalSignature);
-//        pnProgramInfo.setBorder(BorderFactory.createTitledBorder(user1.getFullName()));
-//        lblUserAvatar.setIcon(user1.getAvatar());
-//        lblUserAvatar.setText("");
-//        lblUserFullName.setText(FileUtils.getFileFromPath(myProgram.getFileName()));
-//        lblUserAvatar.setToolTipText("[" + user1.getCode() + "] " + user1.getFullName());
     }
 
     /**

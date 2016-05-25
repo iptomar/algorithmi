@@ -57,7 +57,7 @@ public class LanguageCode implements Comparable<Object> {
         Locale l = new Locale(language, country);
         return l.getDisplayLanguage(l) + " " + l.getDisplayCountry(l);
     }
-
+    
     public String toString() {
         return getLanguageCountry();
     }

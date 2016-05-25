@@ -46,7 +46,8 @@ import ui.utils.Crypt;
  * @author zulu - computer
  */
 public class FProperties {
-    public static void init(){
+
+    public static void init() {
         FkeyWord.init();
         Fi18N.init();
         FkeyWord.init();
@@ -181,8 +182,18 @@ public class FProperties {
         return loadFromFile(PROPERTIES_PATH.getAbsolutePath() + File.separator + fileName);
     }
 
+    public static void load(UserName user) {
+        props = new Properties();
+        language = user.getLanguageCode();
+        country =  user.getCountryCode();
+        props.setProperty(languageKey, user.getLanguage());
+        props.setProperty(countryKey, user.getCountry());
+        //load core    
+        updateSystemProperties();
+    }
+
     public static UserName loadFromFile(String fileName) {
-        try {            
+        try {
             props = new Properties();
             FileInputStream file = new FileInputStream(fileName);
             props.load(file); // load file                 
@@ -195,18 +206,7 @@ public class FProperties {
         return UserName.createUser(digitalSignature);
     }
 
-    /**
-     * open file of properties
-     */
-    public static void loadCrypt(String fileUser) {
-        fileUser = fileUser.trim();
-        String fileName = fileUser + "." + PROPERTIES_USER_EXTENSION;
-        File f = new File(fileName);
-        if (!f.exists() || f.isDirectory()) {
-            fileName = Crypt.getCryptFileName(fileUser) + "." + PROPERTIES_USER_EXTENSION;
-        }
-        load(fileName);
-    }
+  
 
     public static void loadDefaults() {
         FLog.printLn("FPROPERTIES loadDefaults ");
@@ -257,7 +257,7 @@ public class FProperties {
         setColor(keySintaxOperator, colorSintaxOperator);
         setColor(keySintaxFunction, colorSintaxFunction);
         setColor(keySintaxComments, colorSintaxComments);
-        
+
         props.setProperty(keyDigitalSignature, new UserName().digitalSignature());
     }
 
@@ -370,7 +370,7 @@ public class FProperties {
 
             digitalSignature = get(keyDigitalSignature);
             lastProgram = get("keyLastProgramOpened");
-            
+
             Fi18N.load(language, country);
 
             UIManager.put("ComboBox.background", new ColorUIResource(getColor(keySintaxBackground)));
@@ -452,7 +452,6 @@ public class FProperties {
         return language + "_" + country;
     }
 
-
     public static void setSPACE_BETWEEN_LEVELS(int value) {
         props.setProperty(SPACE_BETWEEN_LEVELS_key, value + "");
     }
@@ -464,7 +463,6 @@ public class FProperties {
     public static void setArrowLength(double ratio) {
         props.setProperty(ARROW_LENGHT_RATIO_key, ratio + "");
     }
-
 
     public static void setUser(UserName user) {
         digitalSignature = user.digitalSignature();
