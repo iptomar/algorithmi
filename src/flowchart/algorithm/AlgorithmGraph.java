@@ -405,19 +405,30 @@ public class AlgorithmGraph implements Cloneable, Serializable {
      */
     private void removeSimpleNode(Fshape node) {
         //REMOVE next-next
-        Arrow arrowTop = (Arrow) node.parent;
-        Arrow arrowBottom = (Arrow) node.next;
+        //Arrow arrowTop = (Arrow) node.parent;
+        //Arrow arrowBottom = (Arrow) node.next;
 
+        Arrow arrowTop = (Arrow)node.parent;
+        Arrow arrowBottom;
+        
+        if(arrowTop.parent instanceof IfThenElse){
+            arrowBottom = (Arrow)node.next.next;
+        }
+        else{
+            arrowBottom = (Arrow) node.next;
+        }
+        
+        
         //delete simple arrow in TOP
         if (arrowTop instanceof ArrowNext) {
-            arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
+            //arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
             remove(node);
-            remove(arrowTop);
+            //remove(arrowTop);
         } //delete simple arrow in bottom
         else if (arrowBottom instanceof ArrowNext) {
-            arrowTop.setLink(arrowTop.parent, arrowBottom.next);
+            //arrowTop.setLink(arrowTop.parent, arrowBottom.next);
             remove(node);
-            remove(arrowBottom);
+            //remove(arrowBottom);
         } //build empty if-ele
         else if (arrowTop.parent instanceof IfThenElse && arrowBottom.next instanceof IF_Connector) {
             //is the left
@@ -428,8 +439,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
                 add(new Arrow_RR_IF(arrowTop.parent, arrowBottom.next));
             }
             remove(node);
-            remove(arrowTop);
-            remove(arrowBottom);
+            //remove(arrowTop);
+            //remove(arrowBottom);
         } else if (arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While) {
             add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
             remove(node);
@@ -520,20 +531,16 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 //        removeAllNodesBetween(ifElse.right, ifElse.next);
         Fshape conector = ifElse.next;
         Fshape parent = ifElse.parent.parent;
+        
+        ((Arrow) ifElse.parent).setLink(ifElse.parent.parent, conector.next.next);
+        removeSimpleNode(ifElse);
+        
         //redirect parent
         //((Arrow) conector.next).setLink(ifElse.parent.parent, conector.next.next);
-        ((Arrow) ifElse.parent).setLink(ifElse.parent.parent, conector.next.next);
-       
-        
-        //remove(ifElse.parent);
-        //remove(conector.next);
-        remove(ifElse);
         
         //ifElse.parent.parent = null;
         //conector.next = null;
-        
-        
-        
+
         //deleter other
         //removeSimpleNode(ifElse);
         //remove(conector);
