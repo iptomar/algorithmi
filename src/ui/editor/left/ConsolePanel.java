@@ -23,6 +23,9 @@ import ui.flowchart.console.Console;
 
 import ui.editor.center.ProblemPanel;
 
+import core.autoEvaluate.StringSimilitudeTestDrive;
+import core.autoEvaluate.StringCompare;
+
 /**
  *
  * @author zulu
@@ -138,19 +141,27 @@ public class ConsolePanel extends javax.swing.JPanel {
 
         String myProblemResult = null;
         String mySolverResult = null;
-
-        for (String input : myFluxogram.myProgram.myProblem.input) {
-            AutoExecute student = new AutoExecute(input, myFluxogram.myProgram);
-            AutoExecute teacher = new AutoExecute(input, myFluxogram.myProgram.myProblem.solver);
+        
+        StringCompare valor = new StringCompare();
             
-            // 
-            if( student.output.equals(teacher.output)){
-                System.out.println("dgdrgvvvvvvvvvvvvvvvvvvvvvvvvv");
-            }else{
-                //contar sililaridades
-            }
-            
-    }
+        System.out.println(valor.showMySimilarity("O rato roeu a rolha do garraf?o", "O rato roeu a rolha do garraf?o do rei da russia"));
+        
+//        for (String input : myFluxogram.myProgram.myProblem.input) {
+//            
+//            AutoExecute student = new AutoExecute(input, myFluxogram.myProgram);
+//            AutoExecute teacher = new AutoExecute(input, myFluxogram.myProgram.myProblem.solver);
+//            
+//            StringCompare valor = new StringCompare();
+//            
+//            System.out.println(valor.showMySimilarity(student.output, teacher.output));
+//            
+////            if( student.output.equals(teacher.output)){
+////                System.out.println(" 100% IGUAIS ");
+////            }else{
+////                // apurar similaridade
+////            }
+//            
+//    }
 
     }//GEN-LAST:event_btConsoleEvaluateActionPerformed
 
@@ -215,4 +226,5 @@ public class ConsolePanel extends javax.swing.JPanel {
 //    public Fluxograma getMyFluxogram() {
 //        return myFluxogram;
 //    }
+
 }
