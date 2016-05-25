@@ -107,7 +107,7 @@ public class End extends Fshape {
 
         } else {
             //  exe.getRuntimeMemory().clearLevel(level);
-            exe.getConsole().write(MESSAGE);
+           // exe.getConsole().write(MESSAGE);
             exe.getConsole().end();
             return null;
         }

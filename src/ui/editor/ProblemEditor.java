@@ -75,7 +75,7 @@ import ui.flowchart.dialogs.NewProgram;
  *
  * @author
  */
-public class Editor extends javax.swing.JFrame {
+public class ProblemEditor extends javax.swing.JFrame {
 
     boolean showAboutBox = false;
     public Program myProgram;
@@ -85,7 +85,7 @@ public class Editor extends javax.swing.JFrame {
     /**
      * Creates new form Fluxograma to the user
      */
-    public Editor(UserName user) {
+    public ProblemEditor(UserName user) {
         initComponents();
         this.user = user;
         I18N();
@@ -180,8 +180,14 @@ public class Editor extends javax.swing.JFrame {
                     Thread.sleep(5000);
                     tbProgram.remove(lb);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ProblemEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
+//                if (tbProgram.getTabCount() == 0) {
+//                    btNewFluxActionPerformed(null);
+//                }
+//                if (tbProgram.getTabCount() == 0) {
+//                    btNewFluxActionPerformed(null);
+//                }
 //                if (tbProgram.getTabCount() == 0) {
 //                    btNewFluxActionPerformed(null);
 //                }
@@ -1236,25 +1242,27 @@ public class Editor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Editor.class
+            java.util.logging.Logger.getLogger(ProblemEditor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Editor.class
+            java.util.logging.Logger.getLogger(ProblemEditor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Editor.class
+            java.util.logging.Logger.getLogger(ProblemEditor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Editor.class
+            java.util.logging.Logger.getLogger(ProblemEditor.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Editor(new UserName()).setVisible(true);
+                new ProblemEditor(new UserName()).setVisible(true);
             }
         });
     }

@@ -106,7 +106,7 @@ public class Begin extends Fshape {
     @Override
     public Fshape execute(GraphExecutor exe) throws FlowchartException {
         exe.createFunctionToProgram(algorithm);
-        exe.getConsole().write(MESSAGE);
+        //exe.getConsole().write(MESSAGE);
         return next;
     }
 

@@ -9,8 +9,12 @@ import core.data.exception.FlowchartException;
 import flowchart.algorithm.Problem;
 import flowchart.algorithm.Program;
 import flowchart.algorithm.run.GraphExecutor;
+import flowchart.utils.FileUtils;
 import flowchart.utils.image.ImageUtils;
 import i18n.EditorI18N;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
@@ -24,7 +28,7 @@ import ui.flowchart.console.Console;
 public class ProblemPanel extends javax.swing.JPanel {
 
     Program myProgram; // editor source code
-    Problem myProblem; // editor problem
+
 
     /**
      * Creates new form ProblemPanel
@@ -36,7 +40,7 @@ public class ProblemPanel extends javax.swing.JPanel {
 
     private void I18n() {
 
-        ((TitledBorder) pnTitle.getBorder()).setTitle(EditorI18N.get("PROBLEM_EDITOR.problem.title"));
+        //((TitledBorder) pnTitle.getBorder()).setTitle(EditorI18N.get("PROBLEM_EDITOR.problem.title"));
         ((TitledBorder) pnDescription.getBorder()).setTitle(EditorI18N.get("PROBLEM_EDITOR.problem.description"));
         ((TitledBorder) pnIO.getBorder()).setTitle(EditorI18N.get("PROBLEM_EDITOR.problem.io"));
         ((TitledBorder) pnInput.getBorder()).setTitle(EditorI18N.get("PROBLEM_EDITOR.problem.input"));
@@ -50,22 +54,21 @@ public class ProblemPanel extends javax.swing.JPanel {
 
     public void updateProblem(Program program) {
         myProgram = program; //editor program
-        myProblem = myProgram.myProblem; //editor problem
+        myProgram.myProblem = myProgram.myProblem; //editor problem
         //update data
-        myProblem.title = txtTitle.getText();
-        myProblem.description = txtDescrption.getText();
-        myProblem.image = ImageUtils.getJpegByteArray(btImage.getIcon());
+        myProgram.myProblem.title = txtTitle.getText();
+        myProgram.myProblem.description = txtDescription.getText();
+        myProgram.myProblem.image = ImageUtils.getJpegByteArray(btImage.getIcon());
         
     }
 
     public void setProblem(Program program) {
         myProgram = program;
-        myProblem = myProgram.myProblem;
-        txtTitle.setText(myProblem.title);
-        txtDescrption.setText(myProblem.description);
+        txtTitle.setText(myProgram.myProblem.title);
+        txtDescription.setText(myProgram.myProblem.description);
         ImageIcon img;
         try {
-            img = ImageUtils.getByteArrayJpeg(myProblem.image);
+            img = ImageUtils.getByteArrayJpeg(myProgram.myProblem.image);
         } catch (Exception e) {
             img = EditorI18N.loadIcon("APPLICATION.icon", 200);
         }
@@ -78,7 +81,7 @@ public class ProblemPanel extends javax.swing.JPanel {
     private void updateList() {
         DefaultListModel<String> model = new DefaultListModel<>();
         String label = EditorI18N.get("PROBLEM_EDITOR.problem.input.list");
-        for (int i = 0; i < myProblem.input.size(); i++) {
+        for (int i = 0; i < myProgram.myProblem.input.size(); i++) {
             model.addElement(label + " " + i);
         }
         lstInput.setModel(model);
@@ -110,17 +113,16 @@ public class ProblemPanel extends javax.swing.JPanel {
         btAddInput = new javax.swing.JButton();
         btRemoveInput = new javax.swing.JButton();
         btTestInput = new javax.swing.JButton();
-        pnTitle = new javax.swing.JPanel();
-        txtTitle = new javax.swing.JTextField();
         pnDescription = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        txtDescrption = new javax.swing.JTextPane();
+        txtDescription = new javax.swing.JTextPane();
         btImage = new javax.swing.JButton();
+        txtTitle = new javax.swing.JTextField();
         pnHeader = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        btSaveAS = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -199,7 +201,7 @@ public class ProblemPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnInput, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
+                .addComponent(pnOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
         );
         pnIOLayout.setVerticalGroup(
             pnIOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,22 +209,21 @@ public class ProblemPanel extends javax.swing.JPanel {
                 .addGap(4, 4, 4)
                 .addGroup(pnIOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnOutput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        pnTitle.setBorder(javax.swing.BorderFactory.createTitledBorder("Title"));
-        pnTitle.setLayout(new java.awt.BorderLayout());
-
-        txtTitle.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
-        pnTitle.add(txtTitle, java.awt.BorderLayout.CENTER);
-
-        pnDescription.setBorder(javax.swing.BorderFactory.createTitledBorder("description"));
+        pnDescription.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         pnDescription.setLayout(new java.awt.GridLayout(1, 0));
 
-        txtDescrption.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        jScrollPane6.setViewportView(txtDescrption);
+        txtDescription.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        txtDescription.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDescriptionFocusLost(evt);
+            }
+        });
+        jScrollPane6.setViewportView(txtDescription);
 
         pnDescription.add(jScrollPane6);
 
@@ -233,22 +234,36 @@ public class ProblemPanel extends javax.swing.JPanel {
         });
         pnDescription.add(btImage);
 
+        txtTitle.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
+        txtTitle.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTitleFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnProblemLayout = new javax.swing.GroupLayout(pnProblem);
         pnProblem.setLayout(pnProblemLayout);
         pnProblemLayout.setHorizontalGroup(
             pnProblemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnIO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(pnProblemLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnProblemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnProblemLayout.createSequentialGroup()
+                        .addComponent(pnIO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(pnDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtTitle, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         pnProblemLayout.setVerticalGroup(
             pnProblemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnProblemLayout.createSequentialGroup()
-                .addComponent(pnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnIO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(pnProblem, java.awt.BorderLayout.CENTER);
@@ -262,12 +277,21 @@ public class ProblemPanel extends javax.swing.JPanel {
             }
         });
 
+        btSaveAS.setText("Save");
+        btSaveAS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveASActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btSaveAS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 27, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -275,6 +299,8 @@ public class ProblemPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btSaveAS)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -284,24 +310,11 @@ public class ProblemPanel extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 537, Short.MAX_VALUE)
+            .addGap(0, 690, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("userinfo"));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 111, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 88, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnHeaderLayout = new javax.swing.GroupLayout(pnHeader);
@@ -309,17 +322,14 @@ public class ProblemPanel extends javax.swing.JPanel {
         pnHeaderLayout.setHorizontalGroup(
             pnHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnHeaderLayout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnHeaderLayout.setVerticalGroup(
             pnHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         add(pnHeader, java.awt.BorderLayout.PAGE_START);
@@ -330,26 +340,27 @@ public class ProblemPanel extends javax.swing.JPanel {
         if (img != null) {
             img = ImageUtils.resizeProportional(img, 300, 200);
             btImage.setIcon(img);
+            myProgram.myProblem.image = ImageUtils.getJpegByteArray(img);
         }
     }//GEN-LAST:event_btImageActionPerformed
 
     private void btAddInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddInputActionPerformed
-        if (!txtInput.getText().isEmpty()) {
-            myProblem.input.add(txtInput.getText());
+        if (!myProgram.myProblem.input.contains(txtInput.getText())) {
+            myProgram.myProblem.input.add(txtInput.getText());
             updateList();
         }
     }//GEN-LAST:event_btAddInputActionPerformed
 
     private void btRemoveInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveInputActionPerformed
         if (lstInput.getSelectedIndex() >= 0) {
-           myProblem.input.remove(lstInput.getSelectedIndex());
+           myProgram.myProblem.input.remove(lstInput.getSelectedIndex());
             updateList();
         }
     }//GEN-LAST:event_btRemoveInputActionPerformed
 
     private void lstInputValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstInputValueChanged
         if (lstInput.getSelectedIndex() >= 0) {
-            txtInput.setText(myProblem.input.get(lstInput.getSelectedIndex()));
+            txtInput.setText(myProgram.myProblem.input.get(lstInput.getSelectedIndex()));
         } else {
             txtInput.setText("");
         }
@@ -376,17 +387,37 @@ public class ProblemPanel extends javax.swing.JPanel {
         myProgram.myProblem.setProgramSolver(myProgram);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btSaveASActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveASActionPerformed
+          
+        try {
+            myProgram.myProblem.setProgramSolver(myProgram);
+            FileUtils.saveProgramAs(myProgram);
+        } catch (IOException ex) {
+            Logger.getLogger(ProblemPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_btSaveASActionPerformed
+
+    private void txtTitleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTitleFocusLost
+        myProgram.myProblem.title = txtTitle.getText().trim();
+    }//GEN-LAST:event_txtTitleFocusLost
+
+    private void txtDescriptionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDescriptionFocusLost
+         myProgram.myProblem.description = txtDescription.getText().trim();
+    }//GEN-LAST:event_txtDescriptionFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddInput;
     private javax.swing.JButton btImage;
     private javax.swing.JButton btRemoveInput;
+    private javax.swing.JButton btSaveAS;
     private javax.swing.JButton btTestInput;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
@@ -398,8 +429,7 @@ public class ProblemPanel extends javax.swing.JPanel {
     private javax.swing.JPanel pnInput;
     private javax.swing.JPanel pnOutput;
     private javax.swing.JPanel pnProblem;
-    private javax.swing.JPanel pnTitle;
-    private javax.swing.JTextPane txtDescrption;
+    private javax.swing.JTextPane txtDescription;
     private javax.swing.JTextPane txtInput;
     private javax.swing.JTextArea txtOutput;
     private javax.swing.JTextField txtTitle;

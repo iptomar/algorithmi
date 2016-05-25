@@ -13,8 +13,6 @@ import i18n.EditorI18N;
 import java.util.List;
 import javax.swing.JOptionPane;
 import ui.dialogs.FMessages;
-import ui.editor.Editor;
-import ui.editor.Fluxograma;
 import ui.editor.run.RunProgram;
 
 /**
@@ -23,7 +21,7 @@ import ui.editor.run.RunProgram;
  */
 public class ConsoleRun extends javax.swing.JPanel {
 
-    private Editor myFluxogram;
+    private Program myProgram;
 
     /**
      * Creates new form ConsolePanel
@@ -37,9 +35,8 @@ public class ConsoleRun extends javax.swing.JPanel {
     public final void I18N() {
 
         try {
-            EditorI18N.loadResource(btConsoleRun, "CONSOLE.run");
-            EditorI18N.loadResource(btConsoleDebug, "CONSOLE.debug");
-            EditorI18N.loadResource(evaluate, "CONSOLE.evaluate");
+            EditorI18N.loadResource(btConsoleRun, "CONSOLE.run",32);
+            EditorI18N.loadResource(btConsoleDebug, "CONSOLE.debug",32);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Consola Erro na leitura da internacionalização");
         }
@@ -57,11 +54,12 @@ public class ConsoleRun extends javax.swing.JPanel {
         pnLeftPanelConsoleToolBar = new javax.swing.JPanel();
         btConsoleRun = new javax.swing.JButton();
         btConsoleDebug = new javax.swing.JButton();
-        evaluate = new javax.swing.JButton();
         console = new ui.flowchart.console.Console();
         lblConsoleTab = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
+
+        pnLeftPanelConsoleToolBar.setLayout(new java.awt.GridLayout());
 
         btConsoleRun.setText("run");
         btConsoleRun.addActionListener(new java.awt.event.ActionListener() {
@@ -69,6 +67,7 @@ public class ConsoleRun extends javax.swing.JPanel {
                 btConsoleRunActionPerformed(evt);
             }
         });
+        pnLeftPanelConsoleToolBar.add(btConsoleRun);
 
         btConsoleDebug.setText("debug");
         btConsoleDebug.addActionListener(new java.awt.event.ActionListener() {
@@ -76,32 +75,7 @@ public class ConsoleRun extends javax.swing.JPanel {
                 btConsoleDebugActionPerformed(evt);
             }
         });
-
-        evaluate.setText("jButton4");
-
-        javax.swing.GroupLayout pnLeftPanelConsoleToolBarLayout = new javax.swing.GroupLayout(pnLeftPanelConsoleToolBar);
-        pnLeftPanelConsoleToolBar.setLayout(pnLeftPanelConsoleToolBarLayout);
-        pnLeftPanelConsoleToolBarLayout.setHorizontalGroup(
-            pnLeftPanelConsoleToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnLeftPanelConsoleToolBarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btConsoleRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btConsoleDebug)
-                .addGap(18, 18, 18)
-                .addComponent(evaluate)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnLeftPanelConsoleToolBarLayout.setVerticalGroup(
-            pnLeftPanelConsoleToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnLeftPanelConsoleToolBarLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnLeftPanelConsoleToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btConsoleRun)
-                    .addComponent(btConsoleDebug)
-                    .addComponent(evaluate))
-                .addContainerGap())
-        );
+        pnLeftPanelConsoleToolBar.add(btConsoleDebug);
 
         add(pnLeftPanelConsoleToolBar, java.awt.BorderLayout.NORTH);
         add(console, java.awt.BorderLayout.CENTER);
@@ -119,7 +93,7 @@ public class ConsoleRun extends javax.swing.JPanel {
             FMessages.dialog(FMessages.ERROR, EditorI18N.get("CONSOLE.compile.error"));
             return;
         }
-        Program toRun = myFluxogram.myProgram.getClone();
+        Program toRun = myProgram.getClone();
         new RunProgram(toRun);
     }//GEN-LAST:event_btConsoleDebugActionPerformed
 
@@ -133,7 +107,7 @@ public class ConsoleRun extends javax.swing.JPanel {
 
     public boolean compile() {
         console.clear();
-        List<Fshape> errors = myFluxogram.myProgram.compile();
+        List<Fshape> errors = myProgram.compile();
         if (errors.isEmpty()) {
             return true;
         } else {
@@ -150,7 +124,7 @@ public class ConsoleRun extends javax.swing.JPanel {
 
     public void execute() {
         try {
-            GraphExecutor run = new GraphExecutor(myFluxogram.myProgram, console);
+            GraphExecutor run = new GraphExecutor(myProgram, console);
             while (!run.isDone()) {
                 run.executeFast();
             }
@@ -164,7 +138,6 @@ public class ConsoleRun extends javax.swing.JPanel {
     private javax.swing.JButton btConsoleDebug;
     private javax.swing.JButton btConsoleRun;
     private ui.flowchart.console.Console console;
-    private javax.swing.JButton evaluate;
     private javax.swing.JLabel lblConsoleTab;
     private javax.swing.JPanel pnLeftPanelConsoleToolBar;
     // End of variables declaration//GEN-END:variables
@@ -172,7 +145,7 @@ public class ConsoleRun extends javax.swing.JPanel {
     /**
      * @param myFluxogram the myFluxogram to set
      */
-    public void setMyFluxogram(Editor myFluxogram) {
-        this.myFluxogram = myFluxogram;
+    public void setMyFluxogram(Program myFluxogram) {
+        this.myProgram = myFluxogram;
     }
 }
