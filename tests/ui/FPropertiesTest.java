@@ -22,7 +22,7 @@ public class FPropertiesTest extends TestCase {
      */
     public void testReLoad() {
 //        FProperties.loadDefaults();
-        FProperties.load("Algorithmi");
+        FProperties.getUser("Algorithmi");
         System.out.println(FProperties.lastProgram);
         
     }

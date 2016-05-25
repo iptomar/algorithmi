@@ -99,7 +99,7 @@ public class Fluxograma extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         myProgram = new Program(user);
 
-        user = FProperties.load(user.getName());
+        user = FProperties.getUser(user.getName());
 
         myProgram.setFileName(FProperties.get(FProperties.keyLastProgram));
         try {
@@ -970,7 +970,7 @@ public class Fluxograma extends javax.swing.JFrame {
     }//GEN-LAST:event_btOpenFunctionActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        //save current program to load in the next execution
+        //save current program to getUser in the next execution
         try {
             myProgram.tryToSave();
             FProperties.set(FProperties.keyLastProgram, myProgram.getFileName());

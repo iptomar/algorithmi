@@ -165,48 +165,47 @@ public class FProperties {
 
     static {
         PROPERTIES_PATH.mkdirs();
-        loadDefaults(); // load defaults
+        loadDefaults(); // getUser defaults
     }
 
     public static void reLoad() {
-        load(getUser().getName());
+        getUser(FProperties.getUser().getName());
     }
 
     /**
      * open file of properties
      */
-    public static UserName load(String fileName) {
-        if (!fileName.endsWith("." + PROPERTIES_USER_EXTENSION)) {
-            fileName += "." + PROPERTIES_USER_EXTENSION;
-        }
+    public static UserName getUser(String fileName) {
         return loadFromFile(PROPERTIES_PATH.getAbsolutePath() + File.separator + fileName);
     }
 
-    public static void load(UserName user) {
-        props = new Properties();
-        language = user.getLanguageCode();
-        country =  user.getCountryCode();
-        props.setProperty(languageKey, user.getLanguage());
-        props.setProperty(countryKey, user.getCountry());
+    public static void loadProperties(UserName user) {
         //load core    
-        updateSystemProperties();
+        loadFromFile(PROPERTIES_PATH.getAbsolutePath() + File.separator + user.getName());
+//        props = new Properties();
+//        language = user.getLanguageCode();
+//        country = user.getCountryCode();
+//        props.setProperty(languageKey, user.getLanguage());
+//        props.setProperty(countryKey, user.getCountry());
+        
     }
 
     public static UserName loadFromFile(String fileName) {
+        if (!fileName.endsWith("." + PROPERTIES_USER_EXTENSION)) {
+            fileName += "." + PROPERTIES_USER_EXTENSION;
+        }
         try {
             props = new Properties();
             FileInputStream file = new FileInputStream(fileName);
-            props.load(file); // load file                 
+            props.load(file); // getUser file                 
             file.close();
         } catch (IOException ex) {
             FLog.printLn("FPROPERTIES LOAD FILE ERROR : " + fileName);
-            loadDefaults(); // load defaults
+            loadDefaults(); // getUser defaults
         }
         updateSystemProperties();
         return UserName.createUser(digitalSignature);
     }
-
-  
 
     public static void loadDefaults() {
         FLog.printLn("FPROPERTIES loadDefaults ");
@@ -477,14 +476,14 @@ public class FProperties {
         try {
 
             String file = PROPERTIES_PATH.getAbsolutePath() + File.separator
-                    + getUser().getName() + "." + PROPERTIES_USER_EXTENSION;
+                    + FProperties.getUser().getName() + "." + PROPERTIES_USER_EXTENSION;
             File f = new File(file);
             f.deleteOnExit();
             Files.delete(f.toPath());
             FLog.printLn("FProperties deleteFile " + file);
             return true;
         } catch (IOException ex) {
-            FLog.printLn("FProperties deleteFile  ERROR" + getUser().getName() + " " + ex.getMessage());
+            FLog.printLn("FProperties deleteFile  ERROR" + FProperties.getUser().getName() + " " + ex.getMessage());
         }
         return false;
     }

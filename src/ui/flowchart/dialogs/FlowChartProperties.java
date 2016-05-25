@@ -1017,7 +1017,7 @@ public class FlowChartProperties extends MenuDialog {
     }//GEN-LAST:event_btOkActionPerformed
 
     private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
-        FProperties.reLoad(); // load old values
+        FProperties.reLoad(); // getUser old values
         isCanceled = true;
         setVisible(false);
     }//GEN-LAST:event_btCancelActionPerformed

@@ -68,6 +68,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import ui.FLog;
+import ui.editor.center.ProblemPanel;
 import ui.flowchart.dialogs.Fdialog;
 import ui.flowchart.dialogs.NewProgram;
 
@@ -80,6 +81,8 @@ public class ProblemEditor extends javax.swing.JFrame {
     boolean showAboutBox = false;
     public Program myProgram;
     public UserName user;
+    
+    ProblemPanel programDisplay;
 
 //    ListProgramsPopupMenu popupListPrograms = new ListProgramsPopupMenu();
     /**
@@ -88,6 +91,7 @@ public class ProblemEditor extends javax.swing.JFrame {
     public ProblemEditor(UserName user) {
         initComponents();
         this.user = user;
+        FProperties.loadProperties(user);
         I18N();
         initMyComponents();
 
@@ -97,7 +101,7 @@ public class ProblemEditor extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         myProgram = new Program(user);
 
-        user = FProperties.load(user.getName());
+        user = FProperties.getUser(user.getName());
 
         myProgram.setFileName(FProperties.get(FProperties.keyLastProgram));
         try {
@@ -105,7 +109,7 @@ public class ProblemEditor extends javax.swing.JFrame {
             if (file.exists()) {
                 myProgram = Program.loadProgram(file.getAbsolutePath());
                 FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.opened", myProgram.getFileName());
-                // createDisplayToProgram(FileUtils.chooseProgramFromFile(myProgram.getFileName()));
+                // createDisplayToNewProgram(FileUtils.chooseProgramFromFile(myProgram.getFileName()));
                 createDisplaytoProgram();
             } else {
             }
@@ -122,7 +126,7 @@ public class ProblemEditor extends javax.swing.JFrame {
     public final void I18N() {
 
         try {
-            FProperties.load(user);
+            FProperties.loadProperties(user);
             setIconImage(EditorI18N.loadIcon("APPLICATION.icon", 24).getImage());
             EditorI18N.loadResource(mnFile, "MENU.file");
             EditorI18N.loadResource(mnNewFlux, btNewFlux, "FILE.new");
@@ -161,6 +165,16 @@ public class ProblemEditor extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro na leitura da internacionalização");
         }
+    }
+    
+    private void createProblemEditor() {
+        String title = EditorI18N.get("APPLICATION.tabedPane.problem.title");
+        String toolTip = EditorI18N.get("APPLICATION.tabedPane.problem.help");
+        ImageIcon icon = EditorI18N.loadIcon("APPLICATION.tabedPane.problem.icon", 16);
+        this.programDisplay = new ProblemPanel();
+        programDisplay.setProblem(myProgram);
+        tbProgram.insertTab(title, icon, programDisplay, toolTip, 0);
+        tbProgram.setSelectedComponent(programDisplay);
     }
 
     public void showAbout() {
@@ -692,7 +706,7 @@ public class ProblemEditor extends javax.swing.JFrame {
             myProgram.setFileName(NewProgram.fileName);
             myProgram.setMain(new AlgorithmGraph(new JPanel(), myProgram));
 
-            createDisplayToProgram(myProgram);
+            createDisplayToNewProgram(myProgram);
             FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName());
             if (!firstTime) {//save the program if is not the first time
                 mnSaveFileActionPerformed(null);
@@ -773,15 +787,18 @@ public class ProblemEditor extends javax.swing.JFrame {
             createFunctionEditor(func);
         }
         tbProgram.setSelectedIndex(0);
-        FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName());
+        FMessages.status(lbblStatus, FMessages.INFO, "PROGRAM.newProgram.created", myProgram.getFileName()); 
+        createProblemEditor();
     }
+    
+    
 
     private void mnOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnOpenFileActionPerformed
         myProgram.tryToSave();
-        createDisplayToProgram(FileUtils.chooseProgramFromFile(myProgram.getFileName()));
+        createDisplayToNewProgram(FileUtils.chooseProgramFromFile(myProgram.getFileName()));
     }//GEN-LAST:event_mnOpenFileActionPerformed
 
-    public void createDisplayToProgram(Program newProg) {
+    public void createDisplayToNewProgram(Program newProg) {
         if (newProg != null) {
             myProgram.tryToSave();
             myProgram = newProg;
@@ -979,7 +996,7 @@ public class ProblemEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_btOpenFunctionActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        //save current program to load in the next execution
+        //save current program to getUser in the next execution
         try {
             myProgram.tryToSave();
             FProperties.set(FProperties.keyLastProgram, myProgram.getFileName());
@@ -1033,7 +1050,7 @@ public class ProblemEditor extends javax.swing.JFrame {
     private void displayFile(String fileName) {
         try {
             myProgram = Program.loadProgram(fileName);
-            createDisplayToProgram(myProgram);
+            createDisplayToNewProgram(myProgram);
         } catch (Exception ex) {
             FLog.printLn("lstProgramFilesValueChanged " + fileName + " " + ex.getMessage());
         }

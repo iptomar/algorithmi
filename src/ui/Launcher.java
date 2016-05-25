@@ -576,7 +576,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
     private void lstUsersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstUsersValueChanged
         if (lstUsers.getSelectedIndex() >= 0) {
             user = (UserName) lstUsers.getSelectedValue();
-//            FProperties.load(user.getName());
+//            FProperties.getUser(user.getName());
             txtUserName.setText(user.getName());
             txtUserFullName.setText(user.getFullName());
             txtUserNumber.setText(user.getCode());

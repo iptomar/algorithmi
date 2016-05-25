@@ -97,7 +97,7 @@ public class Editor extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         myProgram = new Program(user);
 
-        user = FProperties.load(user.getName());
+        user = FProperties.getUser(user.getName());
 
         myProgram.setFileName(FProperties.get(FProperties.keyLastProgram));
         try {
@@ -122,7 +122,7 @@ public class Editor extends javax.swing.JFrame {
     public final void I18N() {
 
         try {
-            FProperties.load(user);
+            FProperties.loadProperties(user);
             setIconImage(EditorI18N.loadIcon("APPLICATION.icon", 24).getImage());
             EditorI18N.loadResource(mnFile, "MENU.file");
             EditorI18N.loadResource(mnNewFlux, btNewFlux, "FILE.new");
@@ -973,7 +973,7 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_btOpenFunctionActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        //save current program to load in the next execution
+        //save current program to getUser in the next execution
         try {
             myProgram.tryToSave();
             FProperties.set(FProperties.keyLastProgram, myProgram.getFileName());
