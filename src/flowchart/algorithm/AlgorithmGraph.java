@@ -813,10 +813,11 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             paintChain(shape.left, shape.level);
             paintChain(shape.right, shape.level);
         }
-        else if(shape instanceof While_Do){
+        else if(shape instanceof While_Do || shape instanceof For_Next){
             paintChain(shape.right, shape.level);
         }
         else if(shape instanceof Do_While){
+            add(shape.parent);
             paintChain(shape.parent.parent.right, shape.level);
         }
         
@@ -950,12 +951,14 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(createBottomArrow(arrow, doWhile));
 
         //----------------------------------------
+        /*
         Arrow arrowDowhile = new Arrow_RR_DW(_do, doWhile);
         arrowDowhile.level = arrow.level + 1;
         add(arrowDowhile);
         Arrow arrowWhileDo = new Arrow_Wile_Do(_do, doWhile);
         arrowWhileDo.level = arrow.level;
         add(arrowWhileDo);
+        */
         
         paintChain(doWhile, doWhile.level);
         alignPatterns();
