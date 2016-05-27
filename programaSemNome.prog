@@ -2,9 +2,14 @@
 // CODE      0
 // USER      Algorithmi
 // NAME      Utilizador anónimo
-// DATE      2016/05/25 12:50:53:414
+// DATE      2016/05/27 16:38:11:285
 // VERSION   Algorithmi 4.22 (PSI)
 
 
     BEGIN MAIN_PROGRAM_NAME
+        WRITE "inicio" 
+        DO
+
+        DOWHILE 1 EQUAL 1 
+        WRITE "fim" 
     END MAIN_PROGRAM_NAME
