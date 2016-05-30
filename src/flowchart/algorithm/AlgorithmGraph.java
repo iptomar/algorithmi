@@ -67,7 +67,6 @@ import flowchart.terminator.Begin;
 import flowchart.terminator.End;
 import i18n.FkeyWord;
 import ui.FLog;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -85,10 +84,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
-import ui.FProperties;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -580,9 +577,15 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         Arrow arrowTop = (Arrow)node.parent;
         Arrow arrowBottom = (Arrow)node.next;
-        
+
         //Redirect Link
-        if(node.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(arrowBottom.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
@@ -604,7 +607,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         
         //Redirect Link
-        if(ifElse.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(ifElse.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
@@ -626,7 +635,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         Arrow arrowBottom = (Arrow)doWhile.next;
         
         //Redirect Link
-        if(doWhile.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(doWhile.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         } 
         else{
@@ -662,7 +677,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         Arrow arrowBottom = (Arrow)whileDo.next;
         
         //Redirect Link
-        if(whileDo.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(whileDo.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
