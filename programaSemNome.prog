@@ -1,0 +1,38 @@
+// ID        PROBLEM
+// CODE      0
+// USER      Algorithmi
+// NAME      Utilizador anónimo
+// DATE      2016/05/27 18:29:06:466
+// VERSION   Algorithmi 4.22 (PSI)
+
+
+    BEGIN MAIN_PROGRAM_NAME
+        WRITE "inicio" 
+        IF 1 EQUAL 1 
+            IF 1 EQUAL 1 
+                IF 1 EQUAL 1 
+                ELSE
+                    WRITE "asdasd" 
+                END IF
+
+            ELSE
+                WRITE "asdasdasd" 
+            END IF
+
+        ELSE
+            WRITE "ptara" 
+            WHILE 1 EQUAL 1 
+                WRITE "p" 
+                WRITE "t" 
+                WRITE "a" 
+                WRITE "r" 
+                WRITE "a" 
+            END WHILE
+
+            ITERATE INTEGER i1 FROM 0  TO 5  STEP 1 
+                WRITE "zdfaf" 
+            END ITERATE
+        END IF
+
+        WRITE "fim" 
+    END MAIN_PROGRAM_NAME
