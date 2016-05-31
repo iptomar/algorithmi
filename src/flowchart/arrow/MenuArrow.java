@@ -34,7 +34,6 @@
 //////////////////////////////////////////////////////////////////////////////
 package flowchart.arrow;
 
-import com.esotericsoftware.kryo.Kryo;
 import ui.flowchart.dialogs.ShapeMenuDialog;
 import i18n.Fi18N;
 import flowchart.decide.Do_While;

@@ -330,7 +330,7 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         Fi18N.loadMenuItem(mnCopy, "BUTTON.copy", 32);
         mnCopy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                algorithm.clipboard = obj;
+                algorithm.clipboard = (Fshape)obj.deepClone();
                 //Fdialog.showMessage("Not implemented");
             }
         });
