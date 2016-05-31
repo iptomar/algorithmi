@@ -2,15 +2,27 @@
 // CODE      0
 // USER      Algorithmi
 // NAME      Utilizador anónimo
-// DATE      2016/05/30 19:43:03:737
+// DATE      2016/05/31 02:01:53:726
 // VERSION   Algorithmi 4.22 (PSI)
 
 
     BEGIN MAIN_PROGRAM_NAME
         DEFINE INTEGER var1 SET 5
-        WHILE 1 EQUAL 1 
-            WRITE "sfsfsf" 
-            WRITE "sfsfsfd" 
+        WRITE "outside loop\n\n" 
+        WHILE var1 GREATHER_THAN 0 
+            WRITE "inside loopi\n\n" 
+            EXECUTE var1 SET var1 SUB 1 
+        END WHILE
+
+        EXECUTE var1 SET var1 SUB 1 
+        WHILE var1 GREATHER_THAN 0 
+            WRITE "inside loopi\n\n" 
+            WHILE var1 GREATHER_THAN 0 
+            WRITE "inside loopi\n\n" 
+            EXECUTE var1 SET var1 SUB 1 
+            END WHILE
+
+            EXECUTE var1 SET var1 SUB 1 
         END WHILE
 
     END MAIN_PROGRAM_NAME

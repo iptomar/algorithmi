@@ -36,7 +36,6 @@ package flowchart.shape;
 
 import core.data.exception.FlowchartException;
 import ui.FProperties;
-import ui.flowchart.dialogs.Fdialog;
 import i18n.Fi18N;
 import flowchart.algorithm.AlgorithmGraph;
 import flowchart.algorithm.run.GraphExecutor;
@@ -55,6 +54,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -318,6 +321,7 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         }
     }
 
+    //CopyPaste
     public void popupMenu(int x, int y) {
         final Fshape obj = this;
         JPopupMenu rightMenu = new JPopupMenu();
@@ -326,7 +330,8 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         Fi18N.loadMenuItem(mnCopy, "BUTTON.copy", 32);
         mnCopy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Fdialog.showMessage("Not implemented");
+                algorithm.clipboard = obj;
+                //Fdialog.showMessage("Not implemented");
             }
         });
         //--------------------------------- DELETE --------------
@@ -557,7 +562,27 @@ public abstract class Fshape extends JPanel implements MouseListener, Serializab
         code.append( getPseudoTokens());
         return code.toString();
     }
+    
 
+    /**
+    * This method makes a "deep clone" of any object it is given.
+      * @return 
+    */
+    public Object deepClone() {
+      try {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(this);
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        return ois.readObject();
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2015  :::::::::::::::::::

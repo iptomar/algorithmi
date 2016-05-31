@@ -106,6 +106,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     transient public Program myProgram; // program where the algorithm belongs  ( definition of global memory , other functions, and main )
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     ArrayList<StorableShape> changesList = new ArrayList<>();  //Stores program changes for Undo/Redo
+    public Fshape clipboard = null;
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
 
     //Event Data
@@ -824,22 +825,25 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     //----------------------------------------------------------------------------------------------------
     //------------------      REPAINT SHAPES CHAIN                    --------------------------------------------
     //----------------------------------------------------------------------------------------------------
-    private boolean paintChain(Fshape shape, int endpoint){
+    private boolean paintChain(Fshape shape, int endpoint, AlgorithmGraph algorithm){
      
+        //Set Shape Algorithm
+        shape.algorithm = algorithm;
+        
         //Add Shape
         add(shape);
-        
+                
         //Verify if shape is IfElse
         if(shape instanceof IfThenElse){
-            paintChain(shape.left, shape.level);
-            paintChain(shape.right, shape.level);
+            paintChain(shape.left, shape.level, algorithm);
+            paintChain(shape.right, shape.level, algorithm);
         }
         else if(shape instanceof While_Do || shape instanceof For_Next){
-            paintChain(shape.right, shape.level);
+            paintChain(shape.right, shape.level, algorithm);
         }
         else if(shape instanceof Do_While){
             add(shape.parent);
-            paintChain(shape.parent.parent.right, shape.level);
+            paintChain(shape.parent.parent.right, shape.level, algorithm);
         }
         
         //CHECK ENDPOINT LEVELS
@@ -850,7 +854,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
             return true;
         }
         else{
-            paintChain(shape.next, endpoint);
+            paintChain(shape.next, endpoint, algorithm);
         }
         
         return true;
@@ -912,7 +916,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         
         //Paint Sides
         //paintShape(ifElse);
-        paintChain(ifElse, ifElse.level);
+        
+        paintChain(ifElse, ifElse.level, this);
         
         alignPatterns();
         
@@ -981,7 +986,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(arrowWhileDo);
         */
         
-        paintChain(doWhile, doWhile.level);
+        paintChain(doWhile, doWhile.level, this);
         alignPatterns();
         
         
@@ -1029,7 +1034,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //create loop arrow
         //add(new ArrowRB_While(whileORfor));
 
-        paintChain(whileORfor, whileORfor.level);
+        paintChain(whileORfor, whileORfor.level, this);
         alignPatterns();
     }
 
