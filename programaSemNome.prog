@@ -2,56 +2,27 @@
 // CODE      0
 // USER      Algorithmi
 // NAME      Utilizador anónimo
-// DATE      2016/05/31 02:09:17:930
+// DATE      2016/06/03 21:10:33:992
 // VERSION   Algorithmi 4.22 (PSI)
 
 
     BEGIN MAIN_PROGRAM_NAME
         IF 1 EQUAL 1 
-            DEFINE INTEGER var1 SET 0
-            DO
-
-                WRITE "asdasdsad" 
-                ITERATE var1 FROM 0  TO 5  STEP 1 
-                    READ var1 
-                END ITERATE
-            DOWHILE 1 EQUAL 1 
+            WRITE "asdasdad" 
         ELSE
-            WRITE "asaasd" 
-            WHILE 1 EQUAL 1 
-                IF 1 EQUAL 1 
-                    DEFINE INTEGER var1 SET 0
-                    DO
-
-                        WRITE "asdasdsad" 
-                        ITERATE var1 FROM 0  TO 5  STEP 1 
-                            READ var1 
-                        END ITERATE
-                    DOWHILE 1 EQUAL 1 
-                ELSE
-                    WRITE "asaasd" 
-                    WHILE 1 EQUAL 1 
-                        WRITE "zxczxczxc" 
-                    END WHILE
-
-                    DEFINE INTEGER var1 SET 0
-                    DO
-
-                        EXECUTE var1 SET var1 SUM 1 
-                    DOWHILE 1 EQUAL 1 
-                END IF
-
-            END WHILE
-
-            DEFINE INTEGER var1 SET 0
-            DO
-
-                EXECUTE var1 SET var1 SUM 1 
-            DOWHILE 1 EQUAL 1 
+            WRITE "jkhjkh" 
         END IF
 
         IF 1 EQUAL 1 
             DEFINE INTEGER var1 SET 0
+            IF 1 EQUAL 1 
+                WRITE "sdfsdfsdf" 
+            END IF
+
+            ITERATE var1 FROM 0  TO 5  STEP 1 
+                WRITE "sdfsdfs" 
+                WRITE "sfsdfsdf" 
+            END ITERATE
         ELSE
             WRITE "asaasd" 
             WHILE 1 EQUAL 1 
@@ -59,10 +30,6 @@
             END WHILE
 
             DEFINE INTEGER var1 SET 0
-            DO
-
-                EXECUTE var1 SET var1 SUM 1 
-            DOWHILE 1 EQUAL 1 
         END IF
 
     END MAIN_PROGRAM_NAME

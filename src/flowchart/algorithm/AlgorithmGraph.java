@@ -810,7 +810,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     /**
      * add a shape to the graph replacing one arrow
      *
-     * @param arrow arrow to replace
+     * @param begin
      * @param shape new pattern
      */
     public void addParameterShape(Fshape begin, Fshape shape) {
@@ -823,7 +823,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
     //----------------------------------------------------------------------------------------------------
-    //------------------      REPAINT SHAPES CHAIN                    --------------------------------------------
+    //------------------      REPAINT SHAPES CHAIN            --------------------------------------------
     //----------------------------------------------------------------------------------------------------
     private boolean paintChain(Fshape shape, int endpoint, AlgorithmGraph algorithm){
      
@@ -833,24 +833,34 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //Add Shape
         add(shape);
                 
-        //Verify if shape is IfElse
+        //VERIFY IF LOOP NEEDED
         if(shape instanceof IfThenElse){
+            
+            shape.left.level = shape.level + 1;
+            shape.right.level = shape.level + 1;
+            
             paintChain(shape.left, shape.level, algorithm);
             paintChain(shape.right, shape.level, algorithm);
+            add(shape.next);
         }
         else if(shape instanceof While_Do || shape instanceof For_Next){
+            
+            shape.right.level = shape.level + 1;
+            
             paintChain(shape.right, shape.level, algorithm);
         }
         else if(shape instanceof Do_While){
+            
+            shape.right.level = shape.level + 1;
+            
             add(shape.parent);
             paintChain(shape.parent.parent.right, shape.level, algorithm);
         }
         
+        shape.next.level = shape.next.parent.level;
+        
         //CHECK ENDPOINT LEVELS
-        if(endpoint == shape.level){
-            add(shape.next);
-        }
-        else if(shape.next.level < shape.level){        //If Looped
+        if(shape.next.level < shape.level){        //If Looped
             return true;
         }
         else{
