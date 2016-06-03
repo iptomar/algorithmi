@@ -851,7 +851,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         }
         else if(shape instanceof Do_While){
             
-            shape.right.level = shape.level + 1;
+            shape.parent.level =shape.level;
+            shape.parent.parent.right.level = shape.level + 1;
             
             add(shape.parent);
             paintChain(shape.parent.parent.right, shape.level, algorithm);
