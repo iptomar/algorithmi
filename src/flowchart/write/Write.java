@@ -46,6 +46,10 @@ import flowchart.shape.MenuPattern;
 import flowchart.shape.Fshape;
 import flowchart.utils.ExpressionUtils;
 import i18n.FkeywordToken;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import languages.AbstractLang;
 import languages.PseudoLanguage;
 import ui.FLog;
@@ -166,7 +170,7 @@ public class Write extends Fshape {
     public String getLanguage() throws FlowchartException {
         return AbstractLang.lang.getCommentedString(this.comments,this)+AbstractLang.lang.ident(this) + AbstractLang.lang.getWrite(this);
     }
-
+    
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     private static final long serialVersionUID = 201509071215L;

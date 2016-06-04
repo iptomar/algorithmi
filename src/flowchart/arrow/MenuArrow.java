@@ -36,7 +36,6 @@ package flowchart.arrow;
 
 import ui.flowchart.dialogs.ShapeMenuDialog;
 import i18n.Fi18N;
-import i18n.FkeyWord;
 import flowchart.decide.Do_While;
 import flowchart.define.Define;
 import flowchart.execute.Execute;
@@ -48,15 +47,12 @@ import flowchart.decide.IfElse.IfThenElse;
 import flowchart.decide.While_Do;
 import flowchart.jump.Jump;
 import flowchart.returnFunc.Return;
-import flowchart.utils.Theme;
 import flowchart.write.Write;
-import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -104,6 +100,7 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
         btFor.addKeyListener(escapeListener);
         btDoWhile.addKeyListener(escapeListener);
         btCancel.addKeyListener(escapeListener);
+        btPaste.addKeyListener(escapeListener);
 
     }
 
@@ -125,6 +122,8 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
         Fi18N.loadButton(btJump, "JUMP.instruction", size);
 
         Fi18N.loadButton(btCancel, "BUTTON.cancel", size);
+        
+        Fi18N.loadButton(btPaste, "BUTTON.paste", size);
     }
 
     @Override
@@ -158,6 +157,8 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
         jPanel1 = new javax.swing.JPanel();
         btReturn = new javax.swing.JButton();
         btJump = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btPaste = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBounds(new java.awt.Rectangle(5, 5, 5, 5));
@@ -285,6 +286,15 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
             }
         });
         jPanel1.add(btJump);
+        jPanel1.add(jLabel1);
+
+        btPaste.setText("Paste");
+        btPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPasteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btPaste);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -432,6 +442,34 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
         //System.out.println("Lost Focus");
     }//GEN-LAST:event_formFocusLost
 
+    private void btPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPasteActionPerformed
+
+        Fshape shape = (Fshape)arrow.algorithm.clipboard.deepClone();
+        shape.algorithm = arrow.algorithm;
+        arrow.algorithm.addPattern(arrow, shape);
+        setVisible(false);
+        if (!shape.isOk()) {
+            arrow.algorithm.removePattern(shape);
+        }
+        
+        /*
+        Kryo kryo = new Kryo();
+        kryo.register(Fshape.class);
+        Fshape shape = kryo.copy(arrow.algorithm.clipboard);
+        
+        arrow.algorithm.addPattern(arrow, shape);
+        setVisible(false);
+        
+        
+        
+        /*
+        Fshape shape = new SerializationUtils((Fshape)arrow.algorithm.clipboard);
+        arrow.algorithm.addPattern(arrow, shape);
+        setVisible(false);
+*/
+        
+    }//GEN-LAST:event_btPasteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
@@ -441,10 +479,12 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
     private javax.swing.JButton btFor;
     private javax.swing.JButton btIfElse;
     private javax.swing.JButton btJump;
+    private javax.swing.JButton btPaste;
     private javax.swing.JButton btRead;
     private javax.swing.JButton btReturn;
     private javax.swing.JButton btWhile;
     private javax.swing.JButton btWrite;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel pnComplex;
     private javax.swing.JPanel pnSimple;

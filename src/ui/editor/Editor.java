@@ -155,6 +155,9 @@ public class Editor extends javax.swing.JFrame {
             EditorI18N.loadTab(leftPanel, 0, "LEFTPANEL.tab.files");
             EditorI18N.loadTab(leftPanel, 1, "LEFTPANEL.tab.console");
 
+            EditorI18N.loadResource(mnUndo, btUndo, "PROGRAM.undo");
+            EditorI18N.loadResource(mnRedo, btRedo, "PROGRAM.redo");
+            
             EditorI18N.loadTab(leftPanel, 2, "LEFTPANEL.tab.problem");
 
             setTitle(Fi18N.get("FLOWCHART.application.title"));
@@ -233,6 +236,9 @@ public class Editor extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btZoomOut = new javax.swing.JButton();
         btZoomIn = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        btUndo = new javax.swing.JButton();
+        btRedo = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tbProgram = new javax.swing.JTabbedPane();
         mainMenu = new javax.swing.JMenuBar();
@@ -248,6 +254,9 @@ public class Editor extends javax.swing.JFrame {
         mnAbout = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         mnExitApplication = new javax.swing.JMenuItem();
+        mnEdit = new javax.swing.JMenu();
+        mnUndo = new javax.swing.JMenuItem();
+        mnRedo = new javax.swing.JMenuItem();
         mnView = new javax.swing.JMenu();
         mnZoomOut = new javax.swing.JMenuItem();
         mnZoomIn = new javax.swing.JMenuItem();
@@ -292,7 +301,7 @@ public class Editor extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE))
+                .addComponent(lbblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -477,6 +486,31 @@ public class Editor extends javax.swing.JFrame {
         });
         jToolBar1.add(btZoomIn);
 
+        jLabel5.setText("           ");
+        jToolBar1.add(jLabel5);
+
+        btUndo.setText("Undo");
+        btUndo.setFocusable(false);
+        btUndo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btUndo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btUndoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btUndo);
+
+        btRedo.setText("Redo");
+        btRedo.setFocusable(false);
+        btRedo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btRedo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRedoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btRedo);
+
         jLabel4.setText("        ");
         jToolBar1.add(jLabel4);
 
@@ -554,6 +588,28 @@ public class Editor extends javax.swing.JFrame {
         mnFile.add(mnExitApplication);
 
         mainMenu.add(mnFile);
+
+        mnEdit.setText("Editar");
+
+        mnUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        mnUndo.setText("Undo");
+        mnUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnUndoActionPerformed(evt);
+            }
+        });
+        mnEdit.add(mnUndo);
+
+        mnRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        mnRedo.setText("Redo");
+        mnRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnRedoActionPerformed(evt);
+            }
+        });
+        mnEdit.add(mnRedo);
+
+        mainMenu.add(mnEdit);
 
         mnView.setText("Visualizar");
 
@@ -1106,6 +1162,26 @@ public class Editor extends javax.swing.JFrame {
         mnNewFluxActionPerformed(evt);
     }//GEN-LAST:event_btNewFluxActionPerformed
 
+    private void btUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUndoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().undoChanges();
+    }//GEN-LAST:event_btUndoActionPerformed
+
+    private void btRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRedoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().redoChanges();
+    }//GEN-LAST:event_btRedoActionPerformed
+
+    private void mnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnUndoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().undoChanges();
+    }//GEN-LAST:event_mnUndoActionPerformed
+
+    private void mnRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnRedoActionPerformed
+        FeditorScrool panel = (FeditorScrool)(tbProgram.getComponentAt(tbProgram.getSelectedIndex()));
+        panel.getFluxogramGraph().redoChanges();
+    }//GEN-LAST:event_mnRedoActionPerformed
+
     public void updateGUI() {
         setTitle(EditorI18N.get("APPLICATION.title")
                 + " [" + myProgram.getFileName() + "]");
@@ -1120,8 +1196,10 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JButton btNewFlux;
     private javax.swing.JButton btOpenFile;
     private javax.swing.JButton btOpenFunction;
+    private javax.swing.JButton btRedo;
     private javax.swing.JButton btRunFlux;
     private javax.swing.JButton btSaveFileAs;
+    private javax.swing.JButton btUndo;
     private javax.swing.JButton btZoomIn;
     private javax.swing.JButton btZoomOut;
     private ui.editor.left.ConsoleRun consolePanel;
@@ -1130,6 +1208,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1158,6 +1237,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnCode;
     private javax.swing.JMenuItem mnCompile;
     private javax.swing.JMenuItem mnCopyToClipboard;
+    private javax.swing.JMenu mnEdit;
     private javax.swing.JMenuItem mnExitApplication;
     private javax.swing.JMenu mnFile;
     private javax.swing.JMenuItem mnGlobalMemory;
@@ -1167,10 +1247,12 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnOpenFunction;
     private javax.swing.JMenu mnProgram;
     private javax.swing.JMenuItem mnProperties;
+    private javax.swing.JMenuItem mnRedo;
     private javax.swing.JMenuItem mnRun;
     private javax.swing.JMenuItem mnSaveAs;
     private javax.swing.JMenuItem mnSaveFile;
     private javax.swing.JMenuItem mnSave_Image;
+    private javax.swing.JMenuItem mnUndo;
     private javax.swing.JMenu mnView;
     private javax.swing.JMenuItem mnZoomIn;
     private javax.swing.JMenuItem mnZoomOut;

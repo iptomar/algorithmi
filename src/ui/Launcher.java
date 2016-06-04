@@ -562,7 +562,7 @@ public class Launcher extends javax.swing.JFrame implements Runnable {
                 return;
             }
         }
-        Editor flux = new Editor(user);
+        final Editor flux = new Editor(user);
         //flux.setUser(user);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

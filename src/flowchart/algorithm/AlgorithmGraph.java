@@ -67,7 +67,6 @@ import flowchart.terminator.Begin;
 import flowchart.terminator.End;
 import i18n.FkeyWord;
 import ui.FLog;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -85,10 +84,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
-import ui.FProperties;
 import ui.flowchart.dialogs.Fdialog;
 
 /**
@@ -109,6 +106,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     transient public Program myProgram; // program where the algorithm belongs  ( definition of global memory , other functions, and main )
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     ArrayList<StorableShape> changesList = new ArrayList<>();  //Stores program changes for Undo/Redo
+    public Fshape clipboard = null;
     public Memory myLocalMemory; //local memory of algorithm  (used to display in runtime mode)
 
     //Event Data
@@ -580,9 +578,15 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         Arrow arrowTop = (Arrow)node.parent;
         Arrow arrowBottom = (Arrow)node.next;
-        
+
         //Redirect Link
-        if(node.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(arrowBottom.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
@@ -604,7 +608,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
 
         
         //Redirect Link
-        if(ifElse.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(ifElse.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
@@ -626,7 +636,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         Arrow arrowBottom = (Arrow)doWhile.next;
         
         //Redirect Link
-        if(doWhile.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(doWhile.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         } 
         else{
@@ -662,7 +678,13 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         Arrow arrowBottom = (Arrow)whileDo.next;
         
         //Redirect Link
-        if(whileDo.next.next instanceof IF_Connector){
+        if(arrowTop.parent == arrowBottom.next){
+            add(new ArrowRB_While(arrowTop.parent));
+        }
+        else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
+            add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
+        }
+        else if(whileDo.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{
@@ -788,7 +810,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     /**
      * add a shape to the graph replacing one arrow
      *
-     * @param arrow arrow to replace
+     * @param begin
      * @param shape new pattern
      */
     public void addParameterShape(Fshape begin, Fshape shape) {
@@ -801,35 +823,49 @@ public class AlgorithmGraph implements Cloneable, Serializable {
     }
 
     //----------------------------------------------------------------------------------------------------
-    //------------------      REPAINT SHAPES CHAIN                    --------------------------------------------
+    //------------------      REPAINT SHAPES CHAIN            --------------------------------------------
     //----------------------------------------------------------------------------------------------------
-    private boolean paintChain(Fshape shape, int endpoint){
+    private boolean paintChain(Fshape shape, int endpoint, AlgorithmGraph algorithm){
      
+        //Set Shape Algorithm
+        shape.algorithm = algorithm;
+        
         //Add Shape
         add(shape);
-        
-        //Verify if shape is IfElse
+                
+        //VERIFY IF LOOP NEEDED
         if(shape instanceof IfThenElse){
-            paintChain(shape.left, shape.level);
-            paintChain(shape.right, shape.level);
-        }
-        else if(shape instanceof While_Do || shape instanceof For_Next){
-            paintChain(shape.right, shape.level);
-        }
-        else if(shape instanceof Do_While){
-            add(shape.parent);
-            paintChain(shape.parent.parent.right, shape.level);
-        }
-        
-        //CHECK ENDPOINT LEVELS
-        if(endpoint == shape.level){
+            
+            shape.left.level = shape.level + 1;
+            shape.right.level = shape.level + 1;
+            
+            paintChain(shape.left, shape.level, algorithm);
+            paintChain(shape.right, shape.level, algorithm);
             add(shape.next);
         }
-        else if(shape.next.level < shape.level){        //If Looped
+        else if(shape instanceof While_Do || shape instanceof For_Next){
+            
+            shape.right.level = shape.level + 1;
+            
+            paintChain(shape.right, shape.level, algorithm);
+        }
+        else if(shape instanceof Do_While){
+            
+            shape.parent.level =shape.level;
+            shape.parent.parent.right.level = shape.level + 1;
+            
+            add(shape.parent);
+            paintChain(shape.parent.parent.right, shape.level, algorithm);
+        }
+        
+        shape.next.level = shape.next.parent.level;
+        
+        //CHECK ENDPOINT LEVELS
+        if(shape.next.level < shape.level){        //If Looped
             return true;
         }
         else{
-            paintChain(shape.next, endpoint);
+            paintChain(shape.next, endpoint, algorithm);
         }
         
         return true;
@@ -891,7 +927,8 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         
         //Paint Sides
         //paintShape(ifElse);
-        paintChain(ifElse, ifElse.level);
+        
+        paintChain(ifElse, ifElse.level, this);
         
         alignPatterns();
         
@@ -960,7 +997,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         add(arrowWhileDo);
         */
         
-        paintChain(doWhile, doWhile.level);
+        paintChain(doWhile, doWhile.level, this);
         alignPatterns();
         
         
@@ -1008,7 +1045,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         //create loop arrow
         //add(new ArrowRB_While(whileORfor));
 
-        paintChain(whileORfor, whileORfor.level);
+        paintChain(whileORfor, whileORfor.level, this);
         alignPatterns();
     }
 
