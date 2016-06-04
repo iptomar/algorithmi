@@ -2,21 +2,11 @@
 // CODE      0
 // USER      Algorithmi
 // NAME      Utilizador anónimo
-// DATE      2016/06/03 21:14:08:629
+// DATE      2016/06/04 12:37:54:082
 // VERSION   Algorithmi 4.22 (PSI)
 
 
     BEGIN MAIN_PROGRAM_NAME
-        DO
-
-            WRITE "sdfsf" 
-        DOWHILE 1 EQUAL 1 
-        IF 1 EQUAL 1 
-            WRITE "asdasdad" 
-        ELSE
-            WRITE "jkhjkh" 
-        END IF
-
         IF 1 EQUAL 1 
             DEFINE INTEGER var1 SET 0
             IF 1 EQUAL 1 

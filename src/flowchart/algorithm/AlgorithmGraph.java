@@ -614,7 +614,7 @@ public class AlgorithmGraph implements Cloneable, Serializable {
         else if(arrowTop.parent instanceof Do_Connector && arrowBottom.next instanceof Do_While){
             add(new Arrow_RR_DW(arrowTop.parent, arrowBottom.next));
         }
-        else if(ifElse.next.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
+        else if(arrowBottom.next instanceof IF_Connector || arrowBottom.next instanceof For_Next || arrowBottom.next instanceof While_Do){
             arrowBottom.setLink(arrowTop.parent, arrowBottom.next);
         }
         else{

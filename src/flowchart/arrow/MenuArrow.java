@@ -451,22 +451,9 @@ public class MenuArrow extends ShapeMenuDialog implements MenuPattern {
         if (!shape.isOk()) {
             arrow.algorithm.removePattern(shape);
         }
-        
-        /*
-        Kryo kryo = new Kryo();
-        kryo.register(Fshape.class);
-        Fshape shape = kryo.copy(arrow.algorithm.clipboard);
-        
-        arrow.algorithm.addPattern(arrow, shape);
-        setVisible(false);
-        
-        
-        
-        /*
-        Fshape shape = new SerializationUtils((Fshape)arrow.algorithm.clipboard);
-        arrow.algorithm.addPattern(arrow, shape);
-        setVisible(false);
-*/
+        else{
+            arrow.algorithm.FireEvent(shape, false);
+        }
         
     }//GEN-LAST:event_btPasteActionPerformed
 
