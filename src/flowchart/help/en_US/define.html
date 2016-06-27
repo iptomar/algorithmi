@@ -1,63 +1,126 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<script src="../libs/jquery-2.2.2.min.js" type="text/javascript"></script>        
+        <script src="../libs/JsHelp.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="../libs/StyleHelp.css">
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    	<meta content="width=device-width, initial-scale=1.0" name="viewport" /> 
+        <title>Definir Variáveis</title>
     </head>
     <body>
-        <h1>Definir variaveis</h1>
+        <h1>Definir variáveis</h1>
 
-        <p>As variaveis s&atilde;o o suporte dos dados em programas computacionais. Representam um espa&ccedil;o na mem&oacute;ria do computador que permitem armazer um determinado tipo de dados que varia ao longo da execu&ccedil;&atilde;o do programa.</p>
+        <p>As variáveis são o suporte dos dados em programas computacionais. Representam um espaço na memória do computador que permitem armazenar um determinado tipo de dados que varia ao longo da execução do programa.</p>
 
-        <h2>Variaveis Simples</h2>
+        <h2>Sintax</h2>
 
-        <p>As vari&aacute;veis s&atilde;o compostas por :</p>
+        <p>As variáveis são compostas por:</p>
 
         <ul>
-            <li><strong style="line-height: 20.8px;">Tipo </strong><span style="line-height: 20.8px;">&nbsp;: Tipo de dados que s&atilde;o suportados pela vari&aacute;vel</span>
+            <li><strong style="line-height: 20.8px;">Tipo </strong><span style="line-height: 20.8px;">&nbsp;: Tipo de dados que são suportados pela variável</span>
 
                 <ul>
                     <li><span style="line-height: 20.8px;">​Tipos de dados:</span>
 
                         <ul>
-                            <li><span style="line-height: 20.8px;">​<strong>inteiro </strong>- numero inteiro - exemplo 1234</span></li>
-                            <li><span style="line-height: 20.8px;"><strong>real </strong>- n&uacute;mero real &nbsp;- exemplo 3.14</span></li>
-                            <li><strong>caracter </strong>- um caracter - exemplo &#39;a&#39;</li>
-                            <li><strong>texto </strong>- conjunto de caracteres - exemplo &quot;Ola Mundo&quot;</li>
-                            <li><strong>logico </strong>- valores Verdadeiro ou Falso</li>
+                            <li><span style="line-height: 20.8px;">​<strong>inteiro </strong>- número inteiro - exemplo 1234</span></li>
+                            <li><span style="line-height: 20.8px;"><strong>real </strong>- número real - exemplo 3.14</span></li>
+                            <li><strong>texto </strong>- conjunto de caracteres - exemplo "Olá Mundo"</li>
+                            <li><strong>lógico </strong>- valores Verdadeiro ou Falso</li>
                         </ul>
                     </li>
                 </ul>
             </li>
-            <li><strong>Nome</strong> : nome pelo qual os dados v&atilde;o ser acedidos:
+            
+            <br>
+            
+            <table border="1" align="center">
+            	<tr align="center">
+            		<td>Tipo</td>
+            		<td>Descrição</td>
+            		<td>Valores</td>
+            		<td>Valor por defeito</td>
+            	</tr>
+            	<tr align="center">
+            		<td>Inteiro</td>
+            		<td>Valores ordinais definidos com 4 bytes</td>
+            		<td>-2 147 483 648 <br> 2 147 483 647</td>
+            		<td>0</td>
+            	</tr>
+            	<tr align="center">
+            		<td>Real</td>
+            		<td>Valores com parte decimal definidos com 64 bits</td>
+            		<td>-1.7 E 308 <br> 1.7 E 308</td>
+            		<td>0.0</td>
+            	</tr>
+            	<tr align="center">
+            		<td>Lógico</td>
+            		<td>Valores lógicos de 1 bit</td>
+            		<td>Verdadeiro <br> Falso</td>
+            		<td>Falso</td>
+            	</tr>
+            	<tr align="center">
+            		<td>Texto</td>
+            		<td>Conjunto de caracteres</td>
+            		<td>"Sequências de caracteres" <br> "entre aspas"</td>
+            		<td>"" (vazio)</td>
+            	</tr>
+            </table>
+            
+            <br>
+            
+            <li><strong>Nome</strong> : nome pelo qual os dados vão ser acedidos:
                 <ul>
-                    <li><em>Regras para a defini&ccedil;&atilde;o de nomes</em>:
+                    <li><em>Regras para a definição de nomes</em>:
                         <ul>
-                            <li>S&oacute; pode conter as caracteres [a..z] , [A..Z], [0..9]</li>
-                            <li>N&atilde;o pode come&ccedil;ar por um n&uacute;mero [0..9]</li>
-                            <li>N&atilde;o pode ser uma palavra reservada
+                            <li>Só pode conter os caracteres [a..z] , [A..Z], [0..9]</li>
+                            <li>Não pode começar por um número [0..9]</li>
+                            <li>Não pode ser uma palavra reservada
                                 <ul>
-                                    <li>ler, escrever, etc. (COMPLETE LATER !);</li>
+                                    <li>ler, escrever, se, senão, enquanto, etc.</li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </li>
-            <li><strong>Valor </strong>: conte&uacute;do da vari&aacute;vel. O conte&uacute;do da variavel tem de ser copativel com o tipo.</li>
-            <a href="expression.html"> Expressões </a>
+            <li><strong>Valor </strong>: conteúdo da variável. O conteúdo da variável tem de ser compatível com o tipo.</li>
         </ul>
 
-        <h2>Variaveis compostas</h2>
+        <h2>Variáveis compostas</h2>
+		
+		<ul>
+            <li><a href="array.html"><u><strong>Vector</strong></u></a><span style="line-height: 20.8px;">&nbsp;: É um conjunto de elementos consecutivos, sendo obrigatoriamente todos do mesmo tipo e é possível aceder individualmente a cada elemento do array.</span>
+                <ul>
+                    <li><span style="line-height: 20.8px;">​Sintaxe geral de um Vector:</span>
+                        <ul>
+                            <li><span style="line-height: 20.8px;">​ tipo nome_da_variável [nº de elementos]</span></li>
+                            <ul>
+                            	<li><span style="line-height: 20.8px;"><em>Exemplo Prático: </em></span></li>
+                            	<ul><li><span style="line-height: 20.8px;">int v[10] - v é um vector com 10 inteiros.</span></li></ul>
+                            </ul>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="matrix.html"><u><strong>Matriz</strong></u></a><span style="line-height: 20.8px;">&nbsp;: É um vector de vectores, ou seja, é um vector com mais de uma dimensão.</span>
+                <ul>
+                    <li><span style="line-height: 20.8px;">​Sintaxe geral de uma Matriz:</span>
 
-        <p style="line-height: 20.8px;"><span style="line-height: 20.8px;">(COMPLETE LATER !);</span></p>
-        <br><br>
-        <p><a href="index.html">&Iacute;ndice da ajuda</a></p>
+                        <ul>
+                            <li><span style="line-height: 20.8px;">​ tipo nome_da_matriz [dim 1] [dim 2] [dim n]</span></li>
+                            <ul>
+                            	<li><span style="line-height: 20.8px;"><em>Exemplo Prático: </em></span></li>
+                            	<ul><li><span style="line-height: 20.8px;"> char desenho[3] [3]; - desenho é uma matriz com 3 linhas e cada uma com 3 posições.</span></li></ul>
+                            </ul>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Registos </strong>: conteúdo da variável. O conteúdo da variável tem de ser compatível com o tipo.</li>
+        </ul>
+        <br>
+        <p><u><a href="index.html">Índice da ajuda</a></u></p>
     </body>
 </html>
