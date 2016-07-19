@@ -251,6 +251,9 @@ public class CodeText extends javax.swing.JFrame {
             case 1:
                 txtCode.setText(myProg.getTokens());
                 break;
+             case 2:
+                txtCode.setText(myProg.getHigLevelLang("C"));
+                break;
             case 3:
                 txtCode.setText(myProg.getHigLevelLang("JAVA"));
                 break;

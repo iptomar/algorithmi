@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import languages.AbstractLang;
+import languages.CLang;
 import languages.JavaLang;
 import languages.PythonLang;
 import ui.FLog;
@@ -400,6 +401,9 @@ public class Program implements Cloneable, Serializable {
                 break;
             case "python":
                 AbstractLang.lang = new PythonLang();
+                break;
+            case "c":
+                AbstractLang.lang = new CLang();
                 break;
         }
         StringBuilder code = new StringBuilder();
